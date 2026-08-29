@@ -4,6 +4,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AppController } from "./app.controller.ts";
 import { AppService } from "./app.service.ts";
+import { UsersModule } from "./users/users.module.ts";
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { AppService } from "./app.service.ts";
         };
       },
     }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

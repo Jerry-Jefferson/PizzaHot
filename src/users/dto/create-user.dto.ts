@@ -1,0 +1,25 @@
+import { ApiProperty } from "@nestjs/swagger";
+import { Gender } from "../constants/gender.enum.ts";
+
+export class CreateUserDto {
+  @ApiProperty({ example: "john@example.com", maxLength: 255 })
+  email: string;
+
+  @ApiProperty({ example: "P@ssword1", minLength: 8, maxLength: 128 })
+  password: string;
+
+  @ApiProperty({ example: "John", minLength: 1, maxLength: 100 })
+  name: string;
+
+  @ApiProperty({ example: "Doe", minLength: 1, maxLength: 100 })
+  surname: string;
+
+  @ApiProperty({ enum: Gender, example: Gender.MALE })
+  gender: Gender;
+
+  @ApiProperty({
+    example: "https://example.com/avatar.jpg",
+    description: "URL of the user's profile image",
+  })
+  image: string;
+}
