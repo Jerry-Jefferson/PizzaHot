@@ -5,9 +5,11 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import bcrypt from "bcrypt";
+import { SALT_ROUNDS } from "../shared/constants/salt.constants.ts";
 import { ChangePasswordDto } from "./dto/change-password.dto.ts";
 import { CreateUserDto } from "./dto/create-user.dto.ts";
 import { UpdateUserDto } from "./dto/update-user.dto.ts";
+import { Role } from "../shared/constants/role.enum.ts";
 import { User } from "./entities/user.entity.ts";
 import { UsersRepository } from "./users.repository.ts";
 
@@ -16,25 +18,37 @@ export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
   async create(dto: CreateUserDto): Promise<User> {
+    return this.createWithRole(dto, Role.USER);
+  }
+
+  async createWithRole(dto: CreateUserDto, role: Role): Promise<User> {
     const existing = await this.usersRepository.findByEmail(dto.email);
     if (existing) {
       throw new ConflictException("User with this email already exists");
     }
 
+    const passwordHash = await bcrypt.hash(dto.password, SALT_ROUNDS);
+
     const user = this.usersRepository.create({
       email: dto.email,
-      passwordHash: dto.password,
+      passwordHash,
       name: dto.name,
       surname: dto.surname,
       gender: dto.gender,
       image: dto.image,
+      role,
+      isEmailVerified: false,
     });
 
     return this.usersRepository.save(user);
   }
 
-  async findAll(page: number, limit: number): Promise<{ data: User[]; total: number }> {
-    return this.usersRepository.findPaginated(page, limit);
+  async findAll(
+    page: number,
+    limit: number,
+    search?: string
+  ): Promise<{ data: User[]; total: number }> {
+    return this.usersRepository.findPaginated(page, limit, search);
   }
 
   async findById(id: string): Promise<User> {
@@ -74,8 +88,7 @@ export class UsersService {
       throw new UnauthorizedException("Current password is incorrect");
     }
 
-    const saltRounds = 10;
-    const newPasswordHash = await bcrypt.hash(dto.newPassword, saltRounds);
+    const newPasswordHash = await bcrypt.hash(dto.newPassword, SALT_ROUNDS);
 
     await this.usersRepository.update(id, { passwordHash: newPasswordHash });
   }

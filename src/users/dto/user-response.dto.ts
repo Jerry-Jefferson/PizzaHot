@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Gender } from "../constants/gender.enum.ts";
-import { Role } from "../constants/role.enum.ts";
+import { Role } from "../../shared/constants/role.enum.ts";
 import { User } from "../entities/user.entity.ts";
 
 export class UserResponseDto {
@@ -13,17 +13,20 @@ export class UserResponseDto {
   @ApiProperty({ example: "john@example.com" })
   email: string;
 
-  @ApiProperty({ example: "John" })
-  name: string;
+  @ApiProperty({ example: "John", nullable: true })
+  name: string | null;
 
-  @ApiProperty({ example: "Doe" })
-  surname: string;
+  @ApiProperty({ example: "Doe", nullable: true })
+  surname: string | null;
 
-  @ApiProperty({ enum: Gender, example: Gender.MALE })
-  gender: Gender;
+  @ApiProperty({ enum: Gender, example: Gender.MALE, nullable: true })
+  gender: Gender | null;
 
-  @ApiProperty({ example: "https://example.com/avatar.jpg" })
-  image: string;
+  @ApiProperty({ example: "https://example.com/avatar.jpg", nullable: true })
+  image: string | null;
+
+  @ApiProperty({ example: true })
+  isEmailVerified: boolean;
 
   @ApiProperty()
   createdAt: Date;
@@ -40,6 +43,7 @@ export class UserResponseDto {
     dto.surname = user.surname;
     dto.gender = user.gender;
     dto.image = user.image;
+    dto.isEmailVerified = user.isEmailVerified;
     dto.createdAt = user.createdAt;
     dto.updatedAt = user.updatedAt;
     return dto;

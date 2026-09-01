@@ -8,25 +8,29 @@ export const createUserSchema = z.object({
     .max(255, { error: "Email must be at most 255 characters" }),
 
   password: z
-    .string()
+    .string({ error: "Password is required" })
     .min(8, { error: "Password must be at least 8 characters" })
     .max(128, { error: "Password must be at most 128 characters" }),
 
   name: z
-    .string()
-    .min(1, { error: "Name is required" })
+    .string({ error: "Name must be a string" })
+    .min(1, { error: "Name must not be empty" })
     .max(100, { error: "Name must be at most 100 characters" })
-    .trim(),
+    .trim()
+    .optional(),
 
   surname: z
-    .string()
-    .min(1, { error: "Surname is required" })
+    .string({ error: "Surname must be a string" })
+    .min(1, { error: "Surname must not be empty" })
     .max(100, { error: "Surname must be at most 100 characters" })
-    .trim(),
+    .trim()
+    .optional(),
 
-  gender: z.enum(Gender, {
-    error: `Gender must be one of: ${Object.values(Gender).join(", ")}`,
-  }),
+  gender: z
+    .enum(Gender, {
+      error: `Gender must be one of: ${Object.values(Gender).join(", ")}`,
+    })
+    .optional(),
 
   image: z.url({ error: "Image must be a valid URL" }).optional(),
 });
@@ -34,14 +38,14 @@ export const createUserSchema = z.object({
 export const updateUserSchema = z
   .object({
     name: z
-      .string()
+      .string({ error: "Name must be a string" })
       .min(1, { error: "Name must not be empty" })
       .max(100, { error: "Name must be at most 100 characters" })
       .trim()
       .optional(),
 
     surname: z
-      .string()
+      .string({ error: "Surname must be a string" })
       .min(1, { error: "Surname must not be empty" })
       .max(100, { error: "Surname must be at most 100 characters" })
       .trim()
@@ -67,18 +71,18 @@ export const updateUserSchema = z
   });
 
 export const listUsersQuerySchema = paginationSchema.extend({
-  search: z.string().optional(),
+  search: z.string({ error: "Search must be a string" }).optional(),
 });
 
 export const changePasswordSchema = z
   .object({
     currentPassword: z
-      .string()
+      .string({ error: "Current password is required" })
       .min(8, { error: "Current password must be at least 8 characters" })
       .max(128, { error: "Current password must be at most 128 characters" }),
 
     newPassword: z
-      .string()
+      .string({ error: "New password is required" })
       .min(8, { error: "New password must be at least 8 characters" })
       .max(128, { error: "New password must be at most 128 characters" }),
   })
