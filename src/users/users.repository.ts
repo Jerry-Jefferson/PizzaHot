@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { ILike, Repository } from "typeorm";
 import { User } from "./entities/user.entity.ts";
 
 @Injectable()
@@ -22,8 +22,15 @@ export class UsersRepository {
     return this.repo.find();
   }
 
-  async findPaginated(page: number, limit: number): Promise<{ data: User[]; total: number }> {
+  async findPaginated(
+    page: number,
+    limit: number,
+    search?: string
+  ): Promise<{ data: User[]; total: number }> {
+    const where = search ? [{ name: ILike(`%${search}%`) }, { surname: ILike(`%${search}%`) }] : {};
+
     const [data, total] = await this.repo.findAndCount({
+      where,
       skip: (page - 1) * limit,
       take: limit,
       order: { createdAt: "DESC" },

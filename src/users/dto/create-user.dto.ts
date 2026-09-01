@@ -1,4 +1,4 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Gender } from "../constants/gender.enum.ts";
 
 export class CreateUserDto {
@@ -8,18 +8,18 @@ export class CreateUserDto {
   @ApiProperty({ example: "P@ssword1", minLength: 8, maxLength: 128 })
   password: string;
 
-  @ApiProperty({ example: "John", minLength: 1, maxLength: 100 })
-  name: string;
+  @ApiPropertyOptional({ example: "John", minLength: 1, maxLength: 100 })
+  name?: string;
 
-  @ApiProperty({ example: "Doe", minLength: 1, maxLength: 100 })
-  surname: string;
+  @ApiPropertyOptional({ example: "Doe", minLength: 1, maxLength: 100 })
+  surname?: string;
 
-  @ApiProperty({ enum: Gender, example: Gender.MALE })
-  gender: Gender;
+  @ApiPropertyOptional({ enum: Gender, example: Gender.MALE })
+  gender?: Gender;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: "https://example.com/avatar.jpg",
     description: "URL of the user's profile image",
   })
-  image: string;
+  image?: string;
 }

@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { Gender } from "../constants/gender.enum.ts";
-import { Role } from "../constants/role.enum.ts";
+import { Role } from "../../shared/constants/role.enum.ts";
 
 @Entity("users")
 export class User {
@@ -22,17 +22,20 @@ export class User {
   @Column()
   passwordHash: string;
 
-  @Column()
-  name: string;
+  @Column({ default: false })
+  isEmailVerified: boolean;
 
-  @Column()
-  surname: string;
+  @Column({ type: "varchar", nullable: true })
+  name: string | null;
 
-  @Column({ type: "enum", enum: Gender })
-  gender: Gender;
+  @Column({ type: "varchar", nullable: true })
+  surname: string | null;
 
-  @Column()
-  image: string;
+  @Column({ type: "enum", enum: Gender, nullable: true })
+  gender: Gender | null;
+
+  @Column({ type: "varchar", nullable: true })
+  image: string | null;
 
   @CreateDateColumn()
   createdAt: Date;

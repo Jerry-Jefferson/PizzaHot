@@ -4,6 +4,10 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AppController } from "./app.controller.ts";
 import { AppService } from "./app.service.ts";
+import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
+import { APP_GUARD } from "@nestjs/core";
+import { AuthModule } from "./auth/auth.module.ts";
+import { SeedService } from "./shared/seed/seed.service.ts";
 import { UsersModule } from "./users/users.module.ts";
 
 @Module({
@@ -11,6 +15,12 @@ import { UsersModule } from "./users/users.module.ts";
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 100,
+      },
+    ]),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -40,9 +50,17 @@ import { UsersModule } from "./users/users.module.ts";
         };
       },
     }),
+    AuthModule,
     UsersModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    SeedService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}
