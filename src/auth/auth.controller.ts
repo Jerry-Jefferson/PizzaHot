@@ -7,6 +7,7 @@ import { ZodValidationPipe } from "../shared/pipes/zod-validation.pipe.ts";
 import { AuthService } from "./auth.service.ts";
 import { CurrentUser } from "./decorators/current-user.decorator.ts";
 import { Public } from "./decorators/public.decorator.ts";
+import { AuthResponseDto } from "./dto/auth-response.dto.ts";
 import { LoginDto } from "./dto/login.dto.ts";
 import { SignupDto } from "./dto/signup.dto.ts";
 import type { JwtPayload } from "./types/jwt-payload.interface.ts";
@@ -27,16 +28,16 @@ export class AuthController {
   @ApiResponse({
     status: 201,
     description: "User registered and authenticated successfully",
-    type: UserResponseDto,
+    type: AuthResponseDto,
   })
   @ApiResponse({ status: 409, description: "User with this email already exists" })
   async signup(
     @Body(new ZodValidationPipe(signupSchema)) dto: SignupDto,
     @Res({ passthrough: true }) res: Response
-  ): Promise<UserResponseDto> {
+  ): Promise<AuthResponseDto> {
     const { token, user } = await this.authService.register(dto);
     this.setTokenCookie(res, token);
-    return user;
+    return new AuthResponseDto(token, user);
   }
 
   @Public()
@@ -45,15 +46,15 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: "Log in with email and password" })
   @ApiBody({ type: LoginDto })
-  @ApiResponse({ status: 200, description: "Login successful", type: UserResponseDto })
+  @ApiResponse({ status: 200, description: "Login successful", type: AuthResponseDto })
   @ApiResponse({ status: 401, description: "Invalid email or password" })
   async login(
     @Body(new ZodValidationPipe(loginSchema)) dto: LoginDto,
     @Res({ passthrough: true }) res: Response
-  ): Promise<UserResponseDto> {
+  ): Promise<AuthResponseDto> {
     const { token, user } = await this.authService.login(dto);
     this.setTokenCookie(res, token);
-    return user;
+    return new AuthResponseDto(token, user);
   }
 
   @Get("me")
