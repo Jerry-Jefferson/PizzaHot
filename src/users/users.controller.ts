@@ -50,7 +50,7 @@ export class UsersController {
   @ApiQuery({ name: "page", required: false, type: Number, example: 1 })
   @ApiQuery({ name: "limit", required: false, type: Number, example: 10 })
   @ApiQuery({ name: "search", required: false, type: String })
-  @ApiResponse({ status: 200, description: "Paginated list of users" })
+  @ApiResponse({ status: 200, description: "Paginated list of users", type: PaginatedResponseDto })
   async findAll(
     @Query(new ZodValidationPipe(listUsersQuerySchema))
     query: {
@@ -61,7 +61,7 @@ export class UsersController {
   ): Promise<PaginatedResponseDto<UserResponseDto>> {
     const { data, total } = await this.usersService.findAll(query.page, query.limit, query.search);
     return new PaginatedResponseDto(
-      data.map((entity) => UserResponseDto.fromEntity(entity)),
+      data.map((user) => UserResponseDto.fromEntity(user)),
       query.page,
       query.limit,
       total

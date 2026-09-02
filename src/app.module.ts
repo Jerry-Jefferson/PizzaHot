@@ -9,6 +9,7 @@ import { APP_GUARD } from "@nestjs/core";
 import { AuthModule } from "./auth/auth.module.ts";
 import { SeedService } from "./shared/seed/seed.service.ts";
 import { UsersModule } from "./users/users.module.ts";
+import { PizzasModule } from "./pizzas/pizzas.module.ts";
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { UsersModule } from "./users/users.module.ts";
     }),
     AuthModule,
     UsersModule,
+    PizzasModule,
   ],
   controllers: [AppController],
   providers: [
