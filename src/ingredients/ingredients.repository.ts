@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { ILike, Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 import { Ingredient } from "./entities/ingredient.entity.ts";
 
 @Injectable()
@@ -22,7 +22,6 @@ export class IngredientsRepository {
     return this.repository.find();
   }
 
-
   async findById(id: string): Promise<Ingredient | null> {
     return this.repository.findOneBy({ id });
   }
@@ -31,8 +30,16 @@ export class IngredientsRepository {
     return this.repository.findOne({ where: { name } });
   }
 
+  async findByIds(ids: string[]): Promise<Ingredient[]> {
+    if (ids.length === 0) return [];
+    return this.repository.find({ where: { id: In(ids) } });
+  }
+
   async update(id: string, data: Partial<Ingredient>): Promise<Ingredient | null> {
-    await this.repository.update(id, data);
+    const result = await this.repository.update(id, data);
+    if ((result.affected ?? 0) === 0) {
+      return null;
+    }
     return this.findById(id);
   }
 

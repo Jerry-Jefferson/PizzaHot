@@ -14,10 +14,10 @@ export class IngredientResponseDto {
   @ApiProperty({ example: 1.5, description: "The price of the ingredient" })
   price: number;
 
-  @ApiProperty()
+  @ApiProperty({ example: "2026-09-01T12:00:00.000Z", description: "The date the ingredient was created" })
   createdAt: Date;
 
-  @ApiProperty()
+  @ApiProperty({ example: "2026-09-01T12:00:00.000Z", description: "The date the ingredient was last updated" })
   updatedAt: Date;
 
   static fromEntity(ingredient: Ingredient): IngredientResponseDto {

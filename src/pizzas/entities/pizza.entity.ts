@@ -4,7 +4,10 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  OneToMany,
+  type Relation,
 } from "typeorm";
+import type { PizzaIngredient } from "./pizza-ingredient.entity.ts";
 
 @Entity("pizzas")
 export class Pizza {
@@ -20,8 +23,19 @@ export class Pizza {
   @Column({ type: "varchar", nullable: true })
   image: string | null;
 
-  @Column({ type: "decimal", precision: 10, scale: 2 })
+  @Column({
+    type: "decimal",
+    precision: 10,
+    scale: 2,
+    transformer: {
+      to: (value: number) => value,
+      from: (value: string) => parseFloat(value),
+    },
+  })
   price: number;
+
+  @OneToMany("PizzaIngredient", (pizzaIngredient: PizzaIngredient) => pizzaIngredient.pizza)
+  pizzaIngredients: Relation<PizzaIngredient[]>;
 
   @CreateDateColumn()
   createdAt: Date;

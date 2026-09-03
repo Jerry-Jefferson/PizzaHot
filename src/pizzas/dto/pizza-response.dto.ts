@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Pizza } from "../entities/pizza.entity.ts";
+import { IngredientResponseDto } from "../../ingredients/dto/ingredient-response.dto.ts";
 
 export class PizzaResponseDto {
   @ApiProperty({
@@ -26,10 +27,22 @@ export class PizzaResponseDto {
   @ApiProperty({ example: 9.99, description: "The price of the pizza" })
   price: number;
 
-  @ApiProperty()
+  @ApiPropertyOptional({
+    type: [IngredientResponseDto],
+    description: "List of ingredients on the pizza",
+  })
+  ingredients?: IngredientResponseDto[];
+
+  @ApiProperty({
+    example: "2026-09-01T12:00:00.000Z",
+    description: "The date the pizza was created",
+  })
   createdAt: Date;
 
-  @ApiProperty()
+  @ApiProperty({
+    example: "2026-09-01T12:00:00.000Z",
+    description: "The date the pizza was last updated",
+  })
   updatedAt: Date;
 
   static fromEntity(pizza: Pizza): PizzaResponseDto {
@@ -39,6 +52,11 @@ export class PizzaResponseDto {
     dto.description = pizza.description;
     dto.image = pizza.image;
     dto.price = pizza.price;
+    if (pizza.pizzaIngredients) {
+      dto.ingredients = pizza.pizzaIngredients
+        .map((pi) => (pi.ingredient ? IngredientResponseDto.fromEntity(pi.ingredient) : null))
+        .filter(Boolean) as IngredientResponseDto[];
+    }
     dto.createdAt = pizza.createdAt;
     dto.updatedAt = pizza.updatedAt;
     return dto;

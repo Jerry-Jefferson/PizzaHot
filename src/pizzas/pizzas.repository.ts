@@ -19,7 +19,13 @@ export class PizzasRepository {
   }
 
   async findAll(): Promise<Pizza[]> {
-    return this.repository.find();
+    return this.repository.find({
+      relations: {
+        pizzaIngredients: {
+          ingredient: true,
+        },
+      },
+    });
   }
 
   async findPaginated(
@@ -34,20 +40,42 @@ export class PizzasRepository {
       skip: (page - 1) * limit,
       take: limit,
       order: { createdAt: "DESC" },
+      relations: {
+        pizzaIngredients: {
+          ingredient: true,
+        },
+      },
     });
     return { data, total };
   }
 
   async findById(id: string): Promise<Pizza | null> {
-    return this.repository.findOneBy({ id });
+    return this.repository.findOne({
+      where: { id },
+      relations: {
+        pizzaIngredients: {
+          ingredient: true,
+        },
+      },
+    });
   }
 
   async findByName(name: string): Promise<Pizza | null> {
-    return this.repository.findOne({ where: { name } });
+    return this.repository.findOne({
+      where: { name },
+      relations: {
+        pizzaIngredients: {
+          ingredient: true,
+        },
+      },
+    });
   }
 
   async update(id: string, data: Partial<Pizza>): Promise<Pizza | null> {
-    await this.repository.update(id, data);
+    const result = await this.repository.update(id, data);
+    if ((result.affected ?? 0) === 0) {
+      return null;
+    }
     return this.findById(id);
   }
 

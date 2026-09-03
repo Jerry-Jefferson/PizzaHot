@@ -6,13 +6,19 @@ export const pizzaSchema = z.object({
   description: z
     .string({ error: "Description must be a string" })
     .min(1, { message: "Description cannot be empty" }),
-  image: z.string({ error: "Image must be a string" }).optional().nullable(),
+  image: z.url({ message: "Image must be a valid URL" }).optional().nullable(),
   price: z
     .number({ error: "Price must be a number" })
     .positive({ message: "Price must be positive" }),
+  ingredientIds: z
+    .array(z.uuid())
+    .refine((ids) => new Set(ids).size === ids.length, {
+      message: "Duplicate ingredient IDs are not allowed",
+    })
+    .optional(),
 });
 
-export type Pizza = z.infer<typeof pizzaSchema>;
+export type PizzaInput = z.infer<typeof pizzaSchema>;
 
 export const updatePizzaSchema = z
   .object({
@@ -24,10 +30,16 @@ export const updatePizzaSchema = z
       .string({ error: "Description must be a string" })
       .min(1, { message: "Description cannot be empty" })
       .optional(),
-    image: z.string({ error: "Image must be a string" }).optional().nullable(),
+    image: z.url({ message: "Image must be a valid URL" }).optional().nullable(),
     price: z
       .number({ error: "Price must be a number" })
       .positive({ message: "Price must be positive" })
+      .optional(),
+    ingredientIds: z
+      .array(z.uuid())
+      .refine((ids) => new Set(ids).size === ids.length, {
+        message: "Duplicate ingredient IDs are not allowed",
+      })
       .optional(),
   })
   .refine((data) => Object.keys(data).length > 0, {

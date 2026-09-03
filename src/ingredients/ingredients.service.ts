@@ -30,6 +30,16 @@ export class IngredientsService {
     return ingredient;
   }
 
+  async validateIds(ids: string[]): Promise<void> {
+    if (ids.length === 0) return;
+    const found = await this.ingredientsRepository.findByIds(ids);
+    if (found.length !== ids.length) {
+      const foundIds = new Set(found.map((i) => i.id));
+      const missing = ids.filter((id) => !foundIds.has(id));
+      throw new NotFoundException(`Ingredients not found: ${missing.join(", ")}`);
+    }
+  }
+
   async update(id: string, dto: UpdateIngredientDto): Promise<Ingredient> {
     if (dto.name) {
       const existing = await this.ingredientsRepository.findByName(dto.name);
