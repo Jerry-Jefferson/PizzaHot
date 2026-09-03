@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
-export class PizzaDto {
+export class CreatePizzaDto {
   @ApiProperty({ example: "Margherita", description: "The name of the pizza" })
   name: string;
 
@@ -18,4 +18,11 @@ export class PizzaDto {
 
   @ApiProperty({ example: 9.99, description: "The price of the pizza" })
   price: number;
+
+  @ApiPropertyOptional({
+    example: ["123e4567-e89b-12d3-a456-426614174000"],
+    description: "Array of ingredient UUIDs",
+    type: [String],
+  })
+  ingredientIds?: string[];
 }

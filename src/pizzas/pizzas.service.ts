@@ -1,21 +1,42 @@
 import { Injectable, NotFoundException, ConflictException } from "@nestjs/common";
 import { PizzasRepository } from "./pizzas.repository.ts";
+import { PizzaIngredientsRepository } from "./pizza-ingredients.repository.ts";
 import { Pizza } from "./entities/pizza.entity.ts";
-import { PizzaDto } from "./dto/create-pizza.dto.ts";
+import { IngredientsService } from "../ingredients/ingredients.service.ts";
+import { CreatePizzaDto } from "./dto/create-pizza.dto.ts";
 import { UpdatePizzaDto } from "./dto/update-pizza.dto.ts";
 
 @Injectable()
 export class PizzasService {
-  constructor(private readonly pizzasRepository: PizzasRepository) {}
+  constructor(
+    private readonly pizzasRepository: PizzasRepository,
+    private readonly pizzaIngredientsRepository: PizzaIngredientsRepository,
+    private readonly ingredientsService: IngredientsService
+  ) {}
 
-  async create(dto: PizzaDto): Promise<Pizza> {
+  async create(dto: CreatePizzaDto): Promise<Pizza> {
     const existing = await this.pizzasRepository.findByName(dto.name);
     if (existing) {
       throw new ConflictException("Pizza with this name already exists");
     }
 
-    const pizza = this.pizzasRepository.create(dto);
-    return this.pizzasRepository.save(pizza);
+    if (dto.ingredientIds?.length) {
+      await this.ingredientsService.validateIds(dto.ingredientIds);
+    }
+
+    const { ingredientIds, ...createData } = dto;
+    const pizza = this.pizzasRepository.create(createData);
+    const savedPizza = await this.pizzasRepository.save(pizza);
+
+    if (ingredientIds && ingredientIds.length > 0) {
+      const pizzaIngredients = this.pizzaIngredientsRepository.createMany(
+        savedPizza.id,
+        ingredientIds
+      );
+      await this.pizzaIngredientsRepository.saveMany(pizzaIngredients);
+    }
+
+    return this.findById(savedPizza.id);
   }
 
   async findAll(
@@ -42,11 +63,25 @@ export class PizzasService {
       }
     }
 
-    const pizza = await this.pizzasRepository.update(id, dto);
+    if (dto.ingredientIds?.length) {
+      await this.ingredientsService.validateIds(dto.ingredientIds);
+    }
+
+    const { ingredientIds, ...updateData } = dto;
+    const pizza = await this.pizzasRepository.update(id, updateData);
     if (!pizza) {
       throw new NotFoundException("Pizza not found");
     }
-    return pizza;
+
+    if (ingredientIds) {
+      await this.pizzaIngredientsRepository.deleteByPizzaId(id);
+      if (ingredientIds.length > 0) {
+        const pizzaIngredients = this.pizzaIngredientsRepository.createMany(id, ingredientIds);
+        await this.pizzaIngredientsRepository.saveMany(pizzaIngredients);
+      }
+    }
+
+    return this.findById(id);
   }
 
   async remove(id: string): Promise<void> {

@@ -18,4 +18,11 @@ export class UpdatePizzaDto {
 
   @ApiPropertyOptional({ example: 9.99, description: "The price of the pizza" })
   price?: number;
+
+  @ApiPropertyOptional({
+    example: ["123e4567-e89b-12d3-a456-426614174000"],
+    description: "Array of ingredient UUIDs",
+    type: [String],
+  })
+  ingredientIds?: string[];
 }

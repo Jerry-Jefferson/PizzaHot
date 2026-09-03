@@ -10,12 +10,11 @@ import {
   Patch,
 } from "@nestjs/common";
 import { PizzasService } from "./pizzas.service.ts";
-// import { Pizza } from "./entities/pizza.entity.ts";
 import { Roles } from "../auth/decorators/roles.decorator.ts";
 import { Role } from "../shared/constants/role.enum.ts";
 import { ZodValidationPipe } from "../shared/pipes/zod-validation.pipe.ts";
 import { PaginatedResponseDto } from "../shared/pagination/dto/paginated-response.dto.ts";
-import { PizzaDto } from "./dto/create-pizza.dto.ts";
+import { CreatePizzaDto } from "./dto/create-pizza.dto.ts";
 import { UpdatePizzaDto } from "./dto/update-pizza.dto.ts";
 import { PizzaResponseDto } from "./dto/pizza-response.dto.ts";
 import { pizzaSchema, listPizzasQuerySchema, updatePizzaSchema } from "./schemas/pizza.schema.ts";
@@ -71,12 +70,12 @@ export class PizzasController {
   @Post()
   @Roles(Role.ADMIN)
   @ApiOperation({ summary: "Add a new pizza (Admin only)" })
-  @ApiBody({ type: PizzaDto })
+  @ApiBody({ type: CreatePizzaDto })
   @ApiResponse({ status: 201, description: "Pizza successfully created", type: PizzaResponseDto })
   @ApiResponse({ status: 401, description: "Unauthorized" })
   @ApiResponse({ status: 403, description: "Forbidden - Admin role required" })
   async addPizza(
-    @Body(new ZodValidationPipe(pizzaSchema)) dto: PizzaDto
+    @Body(new ZodValidationPipe(pizzaSchema)) dto: CreatePizzaDto
   ): Promise<PizzaResponseDto> {
     const pizza = await this.pizzasService.create(dto);
     return PizzaResponseDto.fromEntity(pizza);
