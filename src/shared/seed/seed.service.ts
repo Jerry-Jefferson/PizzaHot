@@ -14,7 +14,13 @@ export class SeedService implements OnModuleInit {
   }
 
   private async seedAdmin(): Promise<void> {
-    const adminEmail = "jerryj700@gmail.com";
+    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminPassword = process.env.ADMIN_PASSWORD;
+
+    if (!adminEmail || !adminPassword) {
+      this.logger.warn("ADMIN_EMAIL or ADMIN_PASSWORD not set — skipping admin seed");
+      return;
+    }
 
     const existing = await this.usersService.findByEmail(adminEmail);
     if (existing) {
@@ -25,9 +31,9 @@ export class SeedService implements OnModuleInit {
     const admin = await this.usersService.createWithRole(
       {
         email: adminEmail,
-        password: "9090",
-        name: "Jerry",
-        surname: "Jefferson",
+        password: adminPassword,
+        name: "Admin",
+        surname: "Admin",
         gender: Gender.FEMALE,
         image: "",
       },

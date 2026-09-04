@@ -20,7 +20,7 @@ export class Pizza {
   @Column({ type: "text" })
   description: string;
 
-  @Column({ type: "varchar", nullable: true })
+  @Column({ type: "varchar", nullable: true, default: null })
   image: string | null;
 
   @Column({

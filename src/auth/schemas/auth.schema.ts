@@ -26,7 +26,7 @@ export type SignUp = z.infer<typeof signupSchema>;
 
 export const loginSchema = z.object({
   email: z.email({ error: "Invalid email format" }),
-  password: z.string().min(1, { error: "Password is required" }),
+  password: z.string().min(1, { message: "Password is required" }),
 });
 
 export type LogIn = z.infer<typeof loginSchema>;

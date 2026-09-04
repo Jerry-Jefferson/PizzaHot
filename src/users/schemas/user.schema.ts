@@ -5,24 +5,24 @@ import { paginationSchema } from "../../shared/pagination/pagination.schema.ts";
 export const createUserSchema = z.object({
   email: z
     .email({ error: "Invalid email format" })
-    .max(255, { error: "Email must be at most 255 characters" }),
+    .max(255, { message: "Email must be at most 255 characters" }),
 
   password: z
     .string({ error: "Password is required" })
-    .min(8, { error: "Password must be at least 8 characters" })
-    .max(128, { error: "Password must be at most 128 characters" }),
+    .min(8, { message: "Password must be at least 8 characters" })
+    .max(128, { message: "Password must be at most 128 characters" }),
 
   name: z
     .string({ error: "Name must be a string" })
-    .min(1, { error: "Name must not be empty" })
-    .max(100, { error: "Name must be at most 100 characters" })
+    .min(1, { message: "Name must not be empty" })
+    .max(100, { message: "Name must be at most 100 characters" })
     .trim()
     .optional(),
 
   surname: z
     .string({ error: "Surname must be a string" })
-    .min(1, { error: "Surname must not be empty" })
-    .max(100, { error: "Surname must be at most 100 characters" })
+    .min(1, { message: "Surname must not be empty" })
+    .max(100, { message: "Surname must be at most 100 characters" })
     .trim()
     .optional(),
 
@@ -39,15 +39,15 @@ export const updateUserSchema = z
   .object({
     name: z
       .string({ error: "Name must be a string" })
-      .min(1, { error: "Name must not be empty" })
-      .max(100, { error: "Name must be at most 100 characters" })
+      .min(1, { message: "Name must not be empty" })
+      .max(100, { message: "Name must be at most 100 characters" })
       .trim()
       .optional(),
 
     surname: z
       .string({ error: "Surname must be a string" })
-      .min(1, { error: "Surname must not be empty" })
-      .max(100, { error: "Surname must be at most 100 characters" })
+      .min(1, { message: "Surname must not be empty" })
+      .max(100, { message: "Surname must be at most 100 characters" })
       .trim()
       .optional(),
 
@@ -59,15 +59,8 @@ export const updateUserSchema = z
 
     image: z.url({ error: "Image must be a valid URL" }).optional(),
   })
-  .check((ctx) => {
-    if (Object.keys(ctx.value).length === 0) {
-      ctx.issues.push({
-        code: "custom",
-        message: "At least one field must be provided for update",
-        input: ctx.value,
-        path: [],
-      });
-    }
+  .refine((data) => Object.keys(data).length > 0, {
+    message: "At least one field must be provided for update",
   });
 
 export const listUsersQuerySchema = paginationSchema.extend({
@@ -78,21 +71,15 @@ export const changePasswordSchema = z
   .object({
     currentPassword: z
       .string({ error: "Current password is required" })
-      .min(8, { error: "Current password must be at least 8 characters" })
-      .max(128, { error: "Current password must be at most 128 characters" }),
+      .min(8, { message: "Current password must be at least 8 characters" })
+      .max(128, { message: "Current password must be at most 128 characters" }),
 
     newPassword: z
       .string({ error: "New password is required" })
-      .min(8, { error: "New password must be at least 8 characters" })
-      .max(128, { error: "New password must be at most 128 characters" }),
+      .min(8, { message: "New password must be at least 8 characters" })
+      .max(128, { message: "New password must be at most 128 characters" }),
   })
-  .check((ctx) => {
-    if (ctx.value.currentPassword === ctx.value.newPassword) {
-      ctx.issues.push({
-        code: "custom",
-        message: "New password must be different from the current password",
-        input: ctx.value,
-        path: ["newPassword"],
-      });
-    }
+  .refine((data) => data.currentPassword !== data.newPassword, {
+    message: "New password must be different from the current password",
+    path: ["newPassword"],
   });

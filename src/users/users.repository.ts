@@ -8,7 +8,7 @@ export class UsersRepository {
   constructor(
     @InjectRepository(User)
     private readonly repository: Repository<User>
-  ) { }
+  ) {}
 
   create(data: Partial<User>): User {
     return this.repository.create(data);
@@ -18,16 +18,17 @@ export class UsersRepository {
     return this.repository.save(user);
   }
 
-  async findAll(): Promise<User[]> {
-    return this.repository.find();
-  }
-
   async findPaginated(
     page: number,
     limit: number,
     search?: string
   ): Promise<{ data: User[]; total: number }> {
-    const where = search ? [{ name: ILike(`%${search}%`) }, { surname: ILike(`%${search}%`) }] : {};
+    const where = search
+      ? [
+          { name: ILike(`%${search.replace(/[%_]/g, "\\$&")}%`) },
+          { surname: ILike(`%${search.replace(/[%_]/g, "\\$&")}%`) },
+        ]
+      : {};
 
     const [data, total] = await this.repository.findAndCount({
       where,
@@ -46,9 +47,9 @@ export class UsersRepository {
     return this.repository.findOne({ where: { email } });
   }
 
-  async update(id: string, data: Partial<User>): Promise<User | null> {
-    await this.repository.update(id, data);
-    return this.findById(id);
+  async update(id: string, data: Partial<User>): Promise<boolean> {
+    const result = await this.repository.update(id, data);
+    return (result.affected ?? 0) > 0;
   }
 
   async remove(id: string): Promise<boolean> {
