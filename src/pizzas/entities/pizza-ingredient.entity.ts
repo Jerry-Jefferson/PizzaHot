@@ -11,7 +11,9 @@ export class PizzaIngredient {
   @JoinColumn({ name: "pizza_id" })
   pizza: Relation<Pizza>;
 
-  @ManyToOne("Ingredient", (ingredient: Ingredient) => ingredient.pizzaIngredients, { onDelete: "CASCADE" })
+  @ManyToOne("Ingredient", (ingredient: Ingredient) => ingredient.pizzaIngredients, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "ingredient_id" })
   ingredient: Relation<Ingredient>;
 }

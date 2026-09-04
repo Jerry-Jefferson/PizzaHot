@@ -10,12 +10,6 @@ export class CreatePizzaDto {
   })
   description: string;
 
-  @ApiPropertyOptional({
-    example: "https://example.com/pizza.jpg",
-    description: "URL of the pizza image",
-  })
-  image?: string | null;
-
   @ApiProperty({ example: 9.99, description: "The price of the pizza" })
   price: number;
 

@@ -18,22 +18,12 @@ export class PizzasRepository {
     return this.repository.save(pizza);
   }
 
-  async findAll(): Promise<Pizza[]> {
-    return this.repository.find({
-      relations: {
-        pizzaIngredients: {
-          ingredient: true,
-        },
-      },
-    });
-  }
-
   async findPaginated(
     page: number,
     limit: number,
     search?: string
   ): Promise<{ data: Pizza[]; total: number }> {
-    const where = search ? { name: ILike(`%${search}%`) } : {};
+    const where = search ? { name: ILike(`%${search.replace(/[%_]/g, "\\$&")}%`) } : {};
 
     const [data, total] = await this.repository.findAndCount({
       where,
@@ -71,12 +61,9 @@ export class PizzasRepository {
     });
   }
 
-  async update(id: string, data: Partial<Pizza>): Promise<Pizza | null> {
+  async update(id: string, data: Partial<Pizza>): Promise<boolean> {
     const result = await this.repository.update(id, data);
-    if ((result.affected ?? 0) === 0) {
-      return null;
-    }
-    return this.findById(id);
+    return (result.affected ?? 0) > 0;
   }
 
   async remove(id: string): Promise<boolean> {

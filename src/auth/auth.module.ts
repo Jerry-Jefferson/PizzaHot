@@ -7,7 +7,6 @@ import { AuthController } from "./auth.controller.ts";
 import { AuthService } from "./auth.service.ts";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard.ts";
 import { RolesGuard } from "./guards/roles.guard.ts";
-import { COOKIE_MAX_AGE_MS } from "./constants/auth.constants.ts";
 
 @Module({
   imports: [
@@ -19,7 +18,7 @@ import { COOKIE_MAX_AGE_MS } from "./constants/auth.constants.ts";
         ({
           secret: configService.getOrThrow<string>("JWT_SECRET"),
           signOptions: {
-            expiresIn: configService.get<string>("JWT_EXPIRATION") ?? COOKIE_MAX_AGE_MS,
+            expiresIn: configService.get<string>("JWT_EXPIRATION") ?? "1d",
           },
         }) as JwtModuleOptions,
     }),

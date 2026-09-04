@@ -6,8 +6,7 @@ export const pizzaSchema = z.object({
   description: z
     .string({ error: "Description must be a string" })
     .min(1, { message: "Description cannot be empty" }),
-  image: z.url({ message: "Image must be a valid URL" }).optional().nullable(),
-  price: z
+  price: z.coerce
     .number({ error: "Price must be a number" })
     .positive({ message: "Price must be positive" }),
   ingredientIds: z
@@ -17,8 +16,6 @@ export const pizzaSchema = z.object({
     })
     .optional(),
 });
-
-export type PizzaInput = z.infer<typeof pizzaSchema>;
 
 export const updatePizzaSchema = z
   .object({
@@ -30,8 +27,7 @@ export const updatePizzaSchema = z
       .string({ error: "Description must be a string" })
       .min(1, { message: "Description cannot be empty" })
       .optional(),
-    image: z.url({ message: "Image must be a valid URL" }).optional().nullable(),
-    price: z
+    price: z.coerce
       .number({ error: "Price must be a number" })
       .positive({ message: "Price must be positive" })
       .optional(),

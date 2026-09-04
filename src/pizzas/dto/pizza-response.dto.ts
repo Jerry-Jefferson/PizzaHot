@@ -19,8 +19,8 @@ export class PizzaResponseDto {
   description: string;
 
   @ApiPropertyOptional({
-    example: "https://example.com/pizza.jpg",
-    description: "URL of the pizza image",
+    example: "/uploads/pizzas/abc123.jpg",
+    description: "Relative path to the pizza image file",
   })
   image?: string | null;
 
