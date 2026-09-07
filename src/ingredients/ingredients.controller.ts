@@ -1,13 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  ParseUUIDPipe,
-} from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe } from "@nestjs/common";
 import { IngredientsService } from "./ingredients.service.ts";
 import { CreateIngredientDto } from "./dto/create-ingredient.dto.ts";
 import { UpdateIngredientDto } from "./dto/update-ingredient.dto.ts";
@@ -15,10 +6,7 @@ import { IngredientResponseDto } from "./dto/ingredient-response.dto.ts";
 import { Roles } from "../auth/decorators/roles.decorator.ts";
 import { Role } from "../shared/constants/role.enum.ts";
 import { ZodValidationPipe } from "../shared/pipes/zod-validation.pipe.ts";
-import {
-  ingredientSchema,
-  updateIngredientSchema,
-} from "./schemas/ingredient.schema.ts";
+import { ingredientSchema, updateIngredientSchema } from "./schemas/ingredient.schema.ts";
 import {
   ApiBearerAuth,
   ApiBody,
@@ -38,7 +26,11 @@ export class IngredientsController {
   @Roles(Role.ADMIN)
   @ApiOperation({ summary: "Create a new ingredient (Admin only)" })
   @ApiBody({ type: CreateIngredientDto })
-  @ApiResponse({ status: 201, description: "Ingredient successfully created", type: IngredientResponseDto })
+  @ApiResponse({
+    status: 201,
+    description: "Ingredient successfully created",
+    type: IngredientResponseDto,
+  })
   async create(
     @Body(new ZodValidationPipe(ingredientSchema)) dto: CreateIngredientDto
   ): Promise<IngredientResponseDto> {
@@ -69,7 +61,11 @@ export class IngredientsController {
   @ApiOperation({ summary: "Update an ingredient by ID (Admin only)" })
   @ApiParam({ name: "id", type: "string", format: "uuid" })
   @ApiBody({ type: UpdateIngredientDto })
-  @ApiResponse({ status: 200, description: "Ingredient successfully updated", type: IngredientResponseDto })
+  @ApiResponse({
+    status: 200,
+    description: "Ingredient successfully updated",
+    type: IngredientResponseDto,
+  })
   async update(
     @Param("id", ParseUUIDPipe) id: string,
     @Body(new ZodValidationPipe(updateIngredientSchema)) dto: UpdateIngredientDto

@@ -55,7 +55,7 @@ export class PizzaResponseDto {
     if (pizza.pizzaIngredients) {
       dto.ingredients = pizza.pizzaIngredients
         .map((pi) => (pi.ingredient ? IngredientResponseDto.fromEntity(pi.ingredient) : null))
-        .filter(Boolean) as IngredientResponseDto[];
+        .filter(Boolean);
     }
     dto.createdAt = pizza.createdAt;
     dto.updatedAt = pizza.updatedAt;
