@@ -11,6 +11,7 @@ import { SeedService } from "./shared/seed/seed.service.ts";
 import { UsersModule } from "./users/users.module.ts";
 import { PizzasModule } from "./pizzas/pizzas.module.ts";
 import { IngredientsModule } from "./ingredients/ingredients.module.ts";
+import { CartModule } from "./carts/carts.module.ts";
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { IngredientsModule } from "./ingredients/ingredients.module.ts";
     UsersModule,
     PizzasModule,
     IngredientsModule,
+    CartModule,
   ],
   controllers: [AppController],
   providers: [
