@@ -24,8 +24,11 @@ import { CurrentUser } from "../auth/decorators/current-user.decorator.ts";
 import type { JwtPayload } from "../auth/types/jwt-payload.interface.ts";
 import { ZodValidationPipe } from "../shared/pipes/zod-validation.pipe.ts";
 import { addCartItemSchema, updateCartItemSchema } from "./schemas/cart-item.schema.ts";
+import { applyPromocodeSchema } from "./schemas/apply-promocode.schema.ts";
 import { AddCartItemDto } from "./dto/add-cart-item.dto.ts";
 import { UpdateCartItemDto } from "./dto/update-cart-item.dto.ts";
+import { ApplyPromocodeDto } from "./dto/apply-promocode.dto.ts";
+import { CartResponseDto } from "./dto/cart-response.dto.ts";
 import type { Response } from "express";
 
 @ApiTags("Cart")
@@ -36,10 +39,39 @@ export class CartController {
 
   @Get()
   @ApiOperation({ summary: "Get the current user's cart" })
-  @ApiResponse({ status: 200, description: "Cart with items" })
+  @ApiResponse({
+    status: 200,
+    description: "Cart with items and price calculation",
+    type: CartResponseDto,
+  })
   @ApiResponse({ status: 401, description: "Unauthorized" })
-  async getCart(@CurrentUser() user: JwtPayload) {
+  async getCart(@CurrentUser() user: JwtPayload): Promise<CartResponseDto> {
     return this.cartService.getCart(user.sub);
+  }
+
+  @Post("promocode")
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Apply a promocode to the cart" })
+  @ApiBody({ description: "Promocode to apply", type: ApplyPromocodeDto })
+  @ApiResponse({ status: 200, description: "Promocode applied to cart", type: CartResponseDto })
+  @ApiResponse({ status: 400, description: "Promocode expired or already applied" })
+  @ApiResponse({ status: 401, description: "Unauthorized" })
+  @ApiResponse({ status: 404, description: "Promocode not found" })
+  async applyPromocode(
+    @CurrentUser() user: JwtPayload,
+    @Body(new ZodValidationPipe(applyPromocodeSchema)) dto: ApplyPromocodeDto
+  ): Promise<CartResponseDto> {
+    return this.cartService.applyPromocode(user.sub, dto.code);
+  }
+
+  @Delete("promocode")
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Remove the promocode from the cart" })
+  @ApiResponse({ status: 200, description: "Promocode removed from cart", type: CartResponseDto })
+  @ApiResponse({ status: 401, description: "Unauthorized" })
+  @ApiResponse({ status: 404, description: "Cart or applied promocode not found" })
+  async removePromocode(@CurrentUser() user: JwtPayload): Promise<CartResponseDto> {
+    return this.cartService.removePromocode(user.sub);
   }
 
   @Post("items")

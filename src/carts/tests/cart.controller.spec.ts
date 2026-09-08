@@ -10,6 +10,7 @@ import {
   mockUser,
   mockPizzaId,
   mockCart,
+  mockCartResponse,
   mockCartItem,
   mockUserEntity,
   createMockCart,
@@ -26,6 +27,8 @@ describe("CartController", () => {
       updateItemQuantity: jest.fn(),
       removeItem: jest.fn(),
       clearCart: jest.fn(),
+      applyPromocode: jest.fn(),
+      removePromocode: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -43,12 +46,12 @@ describe("CartController", () => {
 
   describe("getCart", () => {
     it("should return the cart for the authenticated user", async () => {
-      cartService.getCart.mockResolvedValue(mockCart);
+      cartService.getCart.mockResolvedValue(mockCartResponse);
 
       const result = await controller.getCart(mockUser);
 
       expect(cartService.getCart).toHaveBeenCalledWith(mockUser.sub);
-      expect(result).toBe(mockCart);
+      expect(result).toBe(mockCartResponse);
     });
   });
 
@@ -120,6 +123,29 @@ describe("CartController", () => {
     });
   });
 
+  describe("applyPromocode", () => {
+    it("should apply promocode for the authenticated user", async () => {
+      cartService.applyPromocode.mockResolvedValue(mockCartResponse);
+
+      const dto = { code: "PIZZA20" };
+      const result = await controller.applyPromocode(mockUser, dto);
+
+      expect(cartService.applyPromocode).toHaveBeenCalledWith(mockUser.sub, "PIZZA20");
+      expect(result).toBe(mockCartResponse);
+    });
+  });
+
+  describe("removePromocode", () => {
+    it("should remove promocode for the authenticated user", async () => {
+      cartService.removePromocode.mockResolvedValue(mockCartResponse);
+
+      const result = await controller.removePromocode(mockUser);
+
+      expect(cartService.removePromocode).toHaveBeenCalledWith(mockUser.sub);
+      expect(result).toBe(mockCartResponse);
+    });
+  });
+
   describe("User isolation", () => {
     it("should only operate on the authenticated user ID and not allow cross-user access", async () => {
       const otherUser: JwtPayload = {
@@ -129,12 +155,10 @@ describe("CartController", () => {
         isEmailVerified: true,
       };
 
-      cartService.getCart.mockResolvedValue(
-        createMockCart({
-          id: "other-cart",
-          user: { ...mockUserEntity, id: otherUser.sub },
-        })
-      );
+      cartService.getCart.mockResolvedValue({
+        ...mockCartResponse,
+        id: "other-cart",
+      });
 
       await controller.getCart(otherUser);
 
