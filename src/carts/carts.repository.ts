@@ -25,6 +25,7 @@ export class CartRepository {
         cartItems: {
           pizza: true,
         },
+        promocode: true,
       },
     });
   }
@@ -34,7 +35,10 @@ export class CartRepository {
     if (existing) return existing;
 
     const cart = this.create({ user: { id: userId } });
-    return this.save(cart);
+    const saved = await this.save(cart);
+    saved.cartItems = [];
+    saved.promocode = null;
+    return saved;
   }
 
   async remove(id: string): Promise<boolean> {

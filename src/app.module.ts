@@ -12,6 +12,7 @@ import { UsersModule } from "./users/users.module.ts";
 import { PizzasModule } from "./pizzas/pizzas.module.ts";
 import { IngredientsModule } from "./ingredients/ingredients.module.ts";
 import { CartModule } from "./carts/carts.module.ts";
+import { PromocodesModule } from "./promocodes/promocodes.module.ts";
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { CartModule } from "./carts/carts.module.ts";
     PizzasModule,
     IngredientsModule,
     CartModule,
+    PromocodesModule,
   ],
   controllers: [AppController],
   providers: [

@@ -5,7 +5,10 @@ import { CartService } from "../carts.service.ts";
 import { CartRepository } from "../carts.repository.ts";
 import { CartItemsRepository } from "../cart-items.repository.ts";
 import { PizzasService } from "../../pizzas/pizzas.service.ts";
+import { PromocodesService } from "../../promocodes/promocodes.service.ts";
 import { MAX_PIZZA_QUANTITY } from "../../shared/constants/pizza.constants.ts";
+import { CartResponseDto } from "../dto/cart-response.dto.ts";
+import { DiscountType } from "../../promocodes/constants/discount-type.constant.ts";
 import {
   mockUserId,
   mockPizzaId,
@@ -13,6 +16,9 @@ import {
   mockCart,
   mockPizza,
   createMockCartItem,
+  mockPromocodePercentage,
+  mockPromocodeFixed,
+  mockPromocodeExpired,
 } from "./mocks.ts";
 
 describe("CartService", () => {
@@ -20,6 +26,7 @@ describe("CartService", () => {
   let cartRepository: jest.Mocked<CartRepository>;
   let cartItemsRepository: jest.Mocked<CartItemsRepository>;
   let pizzasService: jest.Mocked<PizzasService>;
+  let promocodesService: jest.Mocked<PromocodesService>;
 
   beforeEach(async () => {
     const mockCartRepo = {
@@ -42,12 +49,17 @@ describe("CartService", () => {
       findById: jest.fn(),
     };
 
+    const mockPromocodesServ = {
+      findByCode: jest.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CartService,
         { provide: CartRepository, useValue: mockCartRepo },
         { provide: CartItemsRepository, useValue: mockCartItemsRepo },
         { provide: PizzasService, useValue: mockPizzasServ },
+        { provide: PromocodesService, useValue: mockPromocodesServ },
       ],
     }).compile();
 
@@ -55,6 +67,7 @@ describe("CartService", () => {
     cartRepository = module.get(CartRepository);
     cartItemsRepository = module.get(CartItemsRepository);
     pizzasService = module.get(PizzasService);
+    promocodesService = module.get(PromocodesService);
   });
 
   afterEach(() => {
@@ -62,13 +75,139 @@ describe("CartService", () => {
   });
 
   describe("getCart", () => {
-    it("should return the cart for the user via findOrCreate", async () => {
+    it("should return the cart response for the user via findOrCreate", async () => {
       cartRepository.findOrCreate.mockResolvedValue(mockCart);
 
       const result = await service.getCart(mockUserId);
 
       expect(cartRepository.findOrCreate).toHaveBeenCalledWith(mockUserId);
-      expect(result).toBe(mockCart);
+      const pricing = service.calculatePricing(mockCart);
+      expect(result).toEqual(CartResponseDto.fromEntity(mockCart, pricing));
+    });
+  });
+
+  describe("calculatePricing", () => {
+    it("should calculate zero totals for an empty cart without promocode", () => {
+      const result = service.calculatePricing({
+        ...mockCart,
+        cartItems: [],
+        promocode: null,
+      });
+
+      expect(result.totalPrice).toBe(0);
+      expect(result.discountAmount).toBe(0);
+      expect(result.finalPrice).toBe(0);
+    });
+
+    it("should calculate total price correctly without promocode", () => {
+      const cart = {
+        ...mockCart,
+        cartItems: [
+          createMockCartItem({
+            pizza: { ...mockPizza, price: 12.5 },
+            quantity: 2,
+          }),
+          createMockCartItem({
+            pizza: { ...mockPizza, price: 8.25 },
+            quantity: 1,
+          }),
+        ],
+        promocode: null,
+      };
+
+      const result = service.calculatePricing(cart);
+
+      expect(result.totalPrice).toBe(33.25);
+      expect(result.discountAmount).toBe(0);
+      expect(result.finalPrice).toBe(33.25);
+    });
+
+    it("should calculate percentage discount correctly", () => {
+      const cart = {
+        ...mockCart,
+        cartItems: [
+          createMockCartItem({
+            pizza: { ...mockPizza, price: 50.0 },
+            quantity: 2,
+          }),
+        ],
+        promocode: {
+          ...mockPromocodePercentage,
+          discount: 25,
+          discountType: DiscountType.PERCENTAGE,
+        },
+      };
+
+      const result = service.calculatePricing(cart);
+
+      expect(result.totalPrice).toBe(100.0);
+      expect(result.discountAmount).toBe(25.0);
+      expect(result.finalPrice).toBe(75.0);
+    });
+
+    it("should calculate fixed amount discount correctly", () => {
+      const cart = {
+        ...mockCart,
+        cartItems: [
+          createMockCartItem({
+            pizza: { ...mockPizza, price: 15.0 },
+            quantity: 2,
+          }),
+        ],
+        promocode: {
+          ...mockPromocodeFixed,
+          discount: 7.5,
+          discountType: DiscountType.FIXED_AMOUNT,
+        },
+      };
+
+      const result = service.calculatePricing(cart);
+
+      expect(result.totalPrice).toBe(30.0);
+      expect(result.discountAmount).toBe(7.5);
+      expect(result.finalPrice).toBe(22.5);
+    });
+
+    it("should clamp fixed discount to total price if discount exceeds total", () => {
+      const cart = {
+        ...mockCart,
+        cartItems: [
+          createMockCartItem({
+            pizza: { ...mockPizza, price: 10.0 },
+            quantity: 1,
+          }),
+        ],
+        promocode: {
+          ...mockPromocodeFixed,
+          discount: 25.0,
+          discountType: DiscountType.FIXED_AMOUNT,
+        },
+      };
+
+      const result = service.calculatePricing(cart);
+
+      expect(result.totalPrice).toBe(10.0);
+      expect(result.discountAmount).toBe(10.0);
+      expect(result.finalPrice).toBe(0);
+    });
+
+    it("should not apply discount if promocode has expired", () => {
+      const cart = {
+        ...mockCart,
+        cartItems: [
+          createMockCartItem({
+            pizza: { ...mockPizza, price: 20.0 },
+            quantity: 2,
+          }),
+        ],
+        promocode: mockPromocodeExpired,
+      };
+
+      const result = service.calculatePricing(cart);
+
+      expect(result.totalPrice).toBe(40.0);
+      expect(result.discountAmount).toBe(0);
+      expect(result.finalPrice).toBe(40.0);
     });
   });
 
@@ -253,6 +392,193 @@ describe("CartService", () => {
       await service.clearCart(mockUserId);
 
       expect(cartItemsRepository.removeAllByCartId).toHaveBeenCalledWith(mockCartId);
+    });
+  });
+
+  describe("applyPromocode", () => {
+    it("should convert code to uppercase before searching", async () => {
+      promocodesService.findByCode.mockResolvedValue(mockPromocodePercentage);
+      cartRepository.findOrCreate.mockResolvedValue({ ...mockCart, promocode: null });
+      cartRepository.save.mockImplementation((c) => Promise.resolve(c));
+      cartRepository.findByUserId.mockResolvedValue({
+        ...mockCart,
+        promocode: mockPromocodePercentage,
+      });
+
+      await service.applyPromocode(mockUserId, "  pizza20  ");
+
+      expect(promocodesService.findByCode).toHaveBeenCalledWith("PIZZA20");
+    });
+
+    it("should throw NotFoundException if promocode not found", async () => {
+      promocodesService.findByCode.mockResolvedValue(null);
+
+      await expect(service.applyPromocode(mockUserId, "INVALID")).rejects.toThrow(
+        new NotFoundException("Promocode not found")
+      );
+      expect(cartRepository.findOrCreate).not.toHaveBeenCalled();
+    });
+
+    it("should throw BadRequestException if promocode has expired", async () => {
+      promocodesService.findByCode.mockResolvedValue(mockPromocodeExpired);
+
+      await expect(service.applyPromocode(mockUserId, "EXPIRED")).rejects.toThrow(
+        new BadRequestException("Promocode has expired")
+      );
+      expect(cartRepository.findOrCreate).not.toHaveBeenCalled();
+    });
+
+    it("should throw BadRequestException if a promocode is already applied", async () => {
+      promocodesService.findByCode.mockResolvedValue(mockPromocodePercentage);
+      cartRepository.findOrCreate.mockResolvedValue({
+        ...mockCart,
+        promocode: mockPromocodeFixed,
+      });
+
+      await expect(service.applyPromocode(mockUserId, "PIZZA20")).rejects.toThrow(
+        new BadRequestException("Only one promocode can be applied to the cart")
+      );
+      expect(cartRepository.save).not.toHaveBeenCalled();
+    });
+
+    it("should apply percentage promocode and calculate totals correctly", async () => {
+      promocodesService.findByCode.mockResolvedValue(mockPromocodePercentage);
+
+      const cartWithItems = {
+        ...mockCart,
+        promocode: null,
+        cartItems: [
+          createMockCartItem({
+            id: "item-1",
+            pizza: { ...mockPizza, price: 10.0 },
+            quantity: 2,
+          }),
+        ],
+      };
+
+      cartRepository.findOrCreate.mockResolvedValue(cartWithItems);
+      cartRepository.save.mockImplementation((c) => Promise.resolve(c));
+      cartRepository.findByUserId.mockResolvedValue({
+        ...cartWithItems,
+        promocode: mockPromocodePercentage,
+      });
+
+      const result = await service.applyPromocode(mockUserId, "PIZZA20");
+
+      expect(result.totalPrice).toBe(20.0);
+      expect(result.discountAmount).toBe(4.0);
+      expect(result.finalPrice).toBe(16.0);
+      expect(result.promocode?.code).toBe("PIZZA20");
+    });
+
+    it("should apply fixed amount promocode and calculate totals correctly", async () => {
+      promocodesService.findByCode.mockResolvedValue(mockPromocodeFixed);
+
+      const cartWithItems = {
+        ...mockCart,
+        promocode: null,
+        cartItems: [
+          createMockCartItem({
+            id: "item-1",
+            pizza: { ...mockPizza, price: 10.0 },
+            quantity: 2,
+          }),
+        ],
+      };
+
+      cartRepository.findOrCreate.mockResolvedValue(cartWithItems);
+      cartRepository.save.mockImplementation((c) => Promise.resolve(c));
+      cartRepository.findByUserId.mockResolvedValue({
+        ...cartWithItems,
+        promocode: mockPromocodeFixed,
+      });
+
+      const result = await service.applyPromocode(mockUserId, "FIXED10");
+
+      expect(result.totalPrice).toBe(20.0);
+      expect(result.discountAmount).toBe(10.0);
+      expect(result.finalPrice).toBe(10.0);
+      expect(result.promocode?.code).toBe("FIXED10");
+    });
+
+    it("should clamp fixed discount to total price so finalPrice does not drop below 0", async () => {
+      const largeFixedPromo = {
+        ...mockPromocodeFixed,
+        discount: 50,
+      };
+      promocodesService.findByCode.mockResolvedValue(largeFixedPromo);
+
+      const cartWithItems = {
+        ...mockCart,
+        promocode: null,
+        cartItems: [
+          createMockCartItem({
+            id: "item-1",
+            pizza: { ...mockPizza, price: 10.0 },
+            quantity: 2,
+          }),
+        ],
+      };
+
+      cartRepository.findOrCreate.mockResolvedValue(cartWithItems);
+      cartRepository.save.mockImplementation((c) => Promise.resolve(c));
+      cartRepository.findByUserId.mockResolvedValue({
+        ...cartWithItems,
+        promocode: largeFixedPromo,
+      });
+
+      const result = await service.applyPromocode(mockUserId, "FIXED10");
+
+      expect(result.totalPrice).toBe(20.0);
+      expect(result.discountAmount).toBe(20.0);
+      expect(result.finalPrice).toBe(0);
+    });
+  });
+
+  describe("removePromocode", () => {
+    it("should throw NotFoundException if cart not found", async () => {
+      cartRepository.findByUserId.mockResolvedValue(null);
+
+      await expect(service.removePromocode(mockUserId)).rejects.toThrow(
+        new NotFoundException("Cart not found")
+      );
+    });
+
+    it("should throw NotFoundException if no promocode applied to cart", async () => {
+      cartRepository.findByUserId.mockResolvedValue({ ...mockCart, promocode: null });
+
+      await expect(service.removePromocode(mockUserId)).rejects.toThrow(
+        new NotFoundException("No promocode applied to cart")
+      );
+    });
+
+    it("should remove promocode, save, and return full price without discount", async () => {
+      const cartWithPromo = {
+        ...mockCart,
+        promocode: mockPromocodePercentage,
+        cartItems: [
+          createMockCartItem({
+            id: "item-1",
+            pizza: { ...mockPizza, price: 10.0 },
+            quantity: 2,
+          }),
+        ],
+      };
+
+      cartRepository.findByUserId
+        .mockResolvedValueOnce(cartWithPromo)
+        .mockResolvedValueOnce({ ...cartWithPromo, promocode: null });
+      cartRepository.save.mockImplementation((c) => Promise.resolve(c));
+
+      const result = await service.removePromocode(mockUserId);
+
+      expect(cartRepository.save).toHaveBeenCalledWith(
+        expect.objectContaining({ promocode: null })
+      );
+      expect(result.promocode).toBeNull();
+      expect(result.totalPrice).toBe(20.0);
+      expect(result.discountAmount).toBe(0);
+      expect(result.finalPrice).toBe(20.0);
     });
   });
 });
