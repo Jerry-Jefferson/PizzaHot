@@ -13,7 +13,7 @@ export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService
-  ) {}
+  ) { }
 
   async register(dto: SignUp): Promise<{ token: string; user: UserResponseDto }> {
     const user = await this.usersService.create({
@@ -23,6 +23,7 @@ export class AuthService {
       surname: dto.surname,
       gender: dto.gender,
       image: dto.image,
+      isEmailVerified: false
     });
 
     const token = this.generateToken(user);

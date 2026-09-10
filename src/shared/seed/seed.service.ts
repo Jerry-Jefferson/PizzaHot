@@ -36,6 +36,7 @@ export class SeedService implements OnModuleInit {
         surname: "Admin",
         gender: Gender.FEMALE,
         image: "",
+        isEmailVerified: true,
       },
       Role.ADMIN
     );

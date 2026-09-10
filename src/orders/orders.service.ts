@@ -61,6 +61,8 @@ export class OrdersService {
     let codeApplied: string | null = null;
 
     if (cart.promocode) {
+      await this.cartService.checkPromocodeNotUsed(userId, cart.promocode.id);
+
       if (new Date(cart.promocode.validTill) < new Date()) {
         throw new BadRequestException("Promocode has expired");
       }

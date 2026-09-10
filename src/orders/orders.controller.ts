@@ -9,6 +9,7 @@ import {
   ParseUUIDPipe,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -24,6 +25,7 @@ import { CurrentUser } from "../auth/decorators/current-user.decorator.ts";
 import type { JwtPayload } from "../auth/types/jwt-payload.interface.ts";
 import { Roles } from "../auth/decorators/roles.decorator.ts";
 import { Role } from "../shared/constants/role.enum.ts";
+import { EmailVerifiedGuard } from "../auth/guards/email-verified.guard.ts";
 import { ZodValidationPipe } from "../shared/pipes/zod-validation.pipe.ts";
 import {
   createOrderSchema,
@@ -46,6 +48,7 @@ export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @Post()
+  @UseGuards(EmailVerifiedGuard)
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: "Create a new order (Checkout cart)" })
   @ApiBody({ type: CreateOrderDto })

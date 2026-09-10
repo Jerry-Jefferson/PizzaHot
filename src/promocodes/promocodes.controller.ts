@@ -116,4 +116,20 @@ export class PromocodesController {
   async remove(@Param("id", ParseUUIDPipe) id: string): Promise<void> {
     return this.promocodesService.remove(id);
   }
+
+  @Patch(":id/restore")
+  @ApiOperation({ summary: "Restore a soft-deleted promocode by ID (Admin only)" })
+  @ApiParam({ name: "id", type: "string", format: "uuid" })
+  @ApiResponse({
+    status: 200,
+    description: "Promocode successfully restored",
+    type: PromocodeResponseDto,
+  })
+  @ApiResponse({ status: 401, description: "Unauthorized" })
+  @ApiResponse({ status: 403, description: "Forbidden - Admin role required" })
+  @ApiResponse({ status: 404, description: "Promocode not found" })
+  async restore(@Param("id", ParseUUIDPipe) id: string): Promise<PromocodeResponseDto> {
+    const promocode = await this.promocodesService.restore(id);
+    return PromocodeResponseDto.fromEntity(promocode);
+  }
 }
