@@ -13,6 +13,7 @@ import { PizzasModule } from "./pizzas/pizzas.module.ts";
 import { IngredientsModule } from "./ingredients/ingredients.module.ts";
 import { CartModule } from "./carts/carts.module.ts";
 import { PromocodesModule } from "./promocodes/promocodes.module.ts";
+import { OrdersModule } from "./orders/orders.module.ts";
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { PromocodesModule } from "./promocodes/promocodes.module.ts";
     IngredientsModule,
     CartModule,
     PromocodesModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [
