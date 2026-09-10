@@ -22,4 +22,7 @@ export class CreateUserDto {
     description: "URL of the user's profile image",
   })
   image?: string;
+
+  @ApiProperty({ example: false, default: false })
+  isEmailVerified: boolean;
 }

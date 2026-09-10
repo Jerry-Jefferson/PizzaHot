@@ -1,4 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Not, Repository } from "typeorm";
 import { CartRepository } from "./carts.repository.ts";
 import { CartItemsRepository } from "./cart-items.repository.ts";
 import { PizzasService } from "../pizzas/pizzas.service.ts";
@@ -6,6 +8,8 @@ import { PromocodesService } from "../promocodes/promocodes.service.ts";
 import { CartResponseDto } from "./dto/cart-response.dto.ts";
 import { CartItem } from "./entities/cart-item.entity.ts";
 import { Cart } from "./entities/cart.entity.ts";
+import { Order } from "../orders/entities/order.entity.ts";
+import { OrderStatus } from "../orders/constants/order-status.constant.ts";
 import { MAX_PIZZA_QUANTITY } from "../shared/constants/pizza.constants.ts";
 import { calculatePricing } from "../pricing/pricing.ts";
 
@@ -15,8 +19,28 @@ export class CartService {
     private readonly cartRepository: CartRepository,
     private readonly cartItemsRepository: CartItemsRepository,
     private readonly pizzasService: PizzasService,
-    private readonly promocodesService: PromocodesService
+    private readonly promocodesService: PromocodesService,
+    @InjectRepository(Order)
+    private readonly orderRepository: Repository<Order>
   ) {}
+
+  private async hasUserUsedPromocode(userId: string, promocodeId: string): Promise<boolean> {
+    const count = await this.orderRepository.count({
+      where: {
+        user: { id: userId },
+        promocode: { id: promocodeId },
+        status: Not(OrderStatus.CANCELLED),
+      },
+    });
+    return count > 0;
+  }
+
+  async checkPromocodeNotUsed(userId: string, promocodeId: string): Promise<void> {
+    const alreadyUsed = await this.hasUserUsedPromocode(userId, promocodeId);
+    if (alreadyUsed) {
+      throw new BadRequestException("You have already used this promocode in a previous order");
+    }
+  }
 
   async getCart(userId: string): Promise<CartResponseDto> {
     const cart = await this.cartRepository.findOrCreate(userId);
@@ -41,6 +65,11 @@ export class CartService {
 
     if (new Date(promocode.validTill) < new Date()) {
       throw new BadRequestException("Promocode has expired");
+    }
+
+    const alreadyUsed = await this.hasUserUsedPromocode(userId, promocode.id);
+    if (alreadyUsed) {
+      throw new BadRequestException("You have already used this promocode in a previous order");
     }
 
     const cart = await this.cartRepository.findOrCreate(userId);

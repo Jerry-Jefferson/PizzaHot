@@ -19,7 +19,7 @@ export class PromocodesRepository {
   }
 
   async findAll(): Promise<Promocode[]> {
-    return this.repository.find();
+    return this.repository.find({ withDeleted: true });
   }
 
   async findById(id: string): Promise<Promocode | null> {
@@ -37,6 +37,11 @@ export class PromocodesRepository {
 
   async remove(id: string): Promise<boolean> {
     const result = await this.repository.softDelete(id);
+    return (result.affected ?? 0) > 0;
+  }
+
+  async restore(id: string): Promise<boolean> {
+    const result = await this.repository.restore(id);
     return (result.affected ?? 0) > 0;
   }
 }

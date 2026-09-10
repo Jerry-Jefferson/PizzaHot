@@ -73,4 +73,12 @@ export class PromocodesService {
       throw new NotFoundException("Promocode not found");
     }
   }
+
+  async restore(id: string): Promise<Promocode> {
+    const restored = await this.promocodesRepository.restore(id);
+    if (!restored) {
+      throw new NotFoundException("Promocode not found");
+    }
+    return this.findById(id);
+  }
 }

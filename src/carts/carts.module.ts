@@ -8,9 +8,10 @@ import { CartController } from "./carts.controller.ts";
 import { CartRepository } from "./carts.repository.ts";
 import { CartItemsRepository } from "./cart-items.repository.ts";
 import { CartService } from "./carts.service.ts";
+import { Order } from "../orders/entities/order.entity.ts";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Cart, CartItem]), PizzasModule, PromocodesModule],
+  imports: [TypeOrmModule.forFeature([Cart, CartItem, Order]), PizzasModule, PromocodesModule],
   controllers: [CartController],
   providers: [CartService, CartRepository, CartItemsRepository],
   exports: [CartService],
