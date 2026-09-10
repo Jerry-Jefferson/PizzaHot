@@ -9,6 +9,7 @@ import { PromocodesService } from "../../promocodes/promocodes.service.ts";
 import { MAX_PIZZA_QUANTITY } from "../../shared/constants/pizza.constants.ts";
 import { CartResponseDto } from "../dto/cart-response.dto.ts";
 import { DiscountType } from "../../promocodes/constants/discount-type.constant.ts";
+import { calculatePricing } from "../../pricing/pricing.ts";
 import {
   mockUserId,
   mockPizzaId,
@@ -81,14 +82,34 @@ describe("CartService", () => {
       const result = await service.getCart(mockUserId);
 
       expect(cartRepository.findOrCreate).toHaveBeenCalledWith(mockUserId);
-      const pricing = service.calculatePricing(mockCart);
+      const pricing = calculatePricing(mockCart);
       expect(result).toEqual(CartResponseDto.fromEntity(mockCart, pricing));
+    });
+  });
+
+  describe("getCartEntity", () => {
+    it("should return the cart entity for the user via findByUserId", async () => {
+      cartRepository.findByUserId.mockResolvedValue(mockCart);
+
+      const result = await service.getCartEntity(mockUserId);
+
+      expect(cartRepository.findByUserId).toHaveBeenCalledWith(mockUserId);
+      expect(result).toEqual(mockCart);
+    });
+
+    it("should return null if cart not found", async () => {
+      cartRepository.findByUserId.mockResolvedValue(null);
+
+      const result = await service.getCartEntity(mockUserId);
+
+      expect(cartRepository.findByUserId).toHaveBeenCalledWith(mockUserId);
+      expect(result).toBeNull();
     });
   });
 
   describe("calculatePricing", () => {
     it("should calculate zero totals for an empty cart without promocode", () => {
-      const result = service.calculatePricing({
+      const result = calculatePricing({
         ...mockCart,
         cartItems: [],
         promocode: null,
@@ -115,7 +136,7 @@ describe("CartService", () => {
         promocode: null,
       };
 
-      const result = service.calculatePricing(cart);
+      const result = calculatePricing(cart);
 
       expect(result.totalPrice).toBe(33.25);
       expect(result.discountAmount).toBe(0);
@@ -138,7 +159,7 @@ describe("CartService", () => {
         },
       };
 
-      const result = service.calculatePricing(cart);
+      const result = calculatePricing(cart);
 
       expect(result.totalPrice).toBe(100.0);
       expect(result.discountAmount).toBe(25.0);
@@ -161,7 +182,7 @@ describe("CartService", () => {
         },
       };
 
-      const result = service.calculatePricing(cart);
+      const result = calculatePricing(cart);
 
       expect(result.totalPrice).toBe(30.0);
       expect(result.discountAmount).toBe(7.5);
@@ -184,7 +205,7 @@ describe("CartService", () => {
         },
       };
 
-      const result = service.calculatePricing(cart);
+      const result = calculatePricing(cart);
 
       expect(result.totalPrice).toBe(10.0);
       expect(result.discountAmount).toBe(10.0);
@@ -203,7 +224,7 @@ describe("CartService", () => {
         promocode: mockPromocodeExpired,
       };
 
-      const result = service.calculatePricing(cart);
+      const result = calculatePricing(cart);
 
       expect(result.totalPrice).toBe(40.0);
       expect(result.discountAmount).toBe(0);

@@ -6,8 +6,8 @@ import { PromocodesService } from "../promocodes/promocodes.service.ts";
 import { CartResponseDto } from "./dto/cart-response.dto.ts";
 import { CartItem } from "./entities/cart-item.entity.ts";
 import { Cart } from "./entities/cart.entity.ts";
-import { DiscountType } from "../promocodes/constants/discount-type.constant.ts";
 import { MAX_PIZZA_QUANTITY } from "../shared/constants/pizza.constants.ts";
+import { calculatePricing } from "../pricing/pricing.ts";
 
 @Injectable()
 export class CartService {
@@ -21,9 +21,13 @@ export class CartService {
   async getCart(userId: string): Promise<CartResponseDto> {
     const cart = await this.cartRepository.findOrCreate(userId);
 
-    const pricing = this.calculatePricing(cart);
+    const pricing = calculatePricing(cart);
 
     return CartResponseDto.fromEntity(cart, pricing);
+  }
+
+  async getCartEntity(userId: string): Promise<Cart | null> {
+    return this.cartRepository.findByUserId(userId);
   }
 
   async applyPromocode(userId: string, code: string): Promise<CartResponseDto> {
@@ -52,7 +56,7 @@ export class CartService {
     const updatedCart = await this.cartRepository.findByUserId(userId);
 
     const resultCart = updatedCart ?? cart;
-    const pricing = this.calculatePricing(resultCart);
+    const pricing = calculatePricing(resultCart);
 
     return CartResponseDto.fromEntity(resultCart, pricing);
   }
@@ -75,7 +79,7 @@ export class CartService {
     const updatedCart = await this.cartRepository.findByUserId(userId);
 
     const resultCart = updatedCart ?? cart;
-    const pricing = this.calculatePricing(resultCart);
+    const pricing = calculatePricing(resultCart);
 
     return CartResponseDto.fromEntity(resultCart, pricing);
   }
@@ -166,54 +170,5 @@ export class CartService {
     }
 
     await this.cartItemsRepository.removeAllByCartId(cart.id);
-  }
-
-  private calculateTotalPrice(cart: Cart): number {
-    const rawTotal = (cart.cartItems ?? []).reduce((sum, item) => {
-      const price = Number(item.pizza?.price ?? 0);
-      const quantity = Number(item.quantity ?? 0);
-
-      return sum + price * quantity;
-    }, 0);
-
-    return Math.round(rawTotal * 100) / 100;
-  }
-
-  private calculateDiscount(cart: Cart, totalPrice: number): number {
-    if (!cart.promocode) {
-      return 0;
-    }
-
-    const isExpired = new Date(cart.promocode.validTill) < new Date();
-
-    if (isExpired) {
-      return 0;
-    }
-
-    if (cart.promocode.discountType === DiscountType.PERCENTAGE) {
-      const rawDiscount = (totalPrice * Number(cart.promocode.discount)) / 100;
-
-      return Math.round(rawDiscount * 100) / 100;
-    }
-
-    if (cart.promocode.discountType === DiscountType.FIXED_AMOUNT) {
-      return Math.min(totalPrice, Math.round(Number(cart.promocode.discount) * 100) / 100);
-    }
-
-    return 0;
-  }
-
-  private calculatePricing(cart: Cart) {
-    const totalPrice = this.calculateTotalPrice(cart);
-
-    const discountAmount = this.calculateDiscount(cart, totalPrice);
-
-    const finalPrice = Math.max(0, Math.round((totalPrice - discountAmount) * 100) / 100);
-
-    return {
-      totalPrice,
-      discountAmount,
-      finalPrice,
-    };
   }
 }

@@ -31,9 +31,9 @@ import { ApplyPromocodeDto } from "./dto/apply-promocode.dto.ts";
 import { CartResponseDto } from "./dto/cart-response.dto.ts";
 import type { Response } from "express";
 
-@ApiTags("Cart")
+@ApiTags("Carts")
 @ApiBearerAuth()
-@Controller("cart")
+@Controller("carts")
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 
