@@ -14,6 +14,7 @@ import { IngredientsModule } from "./ingredients/ingredients.module.ts";
 import { CartModule } from "./carts/carts.module.ts";
 import { PromocodesModule } from "./promocodes/promocodes.module.ts";
 import { OrdersModule } from "./orders/orders.module.ts";
+import { AnalyticsModule } from "./analytics/analytics.module.ts";
 
 @Module({
   imports: [
@@ -62,6 +63,7 @@ import { OrdersModule } from "./orders/orders.module.ts";
     CartModule,
     PromocodesModule,
     OrdersModule,
+    AnalyticsModule,
   ],
   controllers: [AppController],
   providers: [
