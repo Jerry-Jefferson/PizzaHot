@@ -1,6 +1,7 @@
 import {
   ConflictException,
   Injectable,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
@@ -12,10 +13,17 @@ import { UpdateUserDto } from "./dto/update-user.dto.ts";
 import { Role } from "../shared/constants/role.enum.ts";
 import { User } from "./entities/user.entity.ts";
 import { UsersRepository } from "./users.repository.ts";
+import { NotificationsService } from "../notifications/notifications.service.ts";
+import { NotificationType } from "../notifications/constants/notification-type.constant.ts";
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly usersRepository: UsersRepository) {}
+  private readonly logger = new Logger(UsersService.name);
+
+  constructor(
+    private readonly usersRepository: UsersRepository,
+    private readonly notificationsService: NotificationsService
+  ) {}
 
   async create(dto: CreateUserDto): Promise<User> {
     return this.createWithRole(dto, Role.USER);
@@ -37,10 +45,24 @@ export class UsersService {
       gender: dto.gender,
       image: dto.image,
       role,
-      isEmailVerified: false,
+      isEmailVerified: dto.isEmailVerified ?? false,
+      verificationToken: dto.verificationToken ?? null,
+      verificationTokenExpiresAt: dto.verificationTokenExpiresAt ?? null,
     });
 
     return this.usersRepository.save(user);
+  }
+
+  async setEmailVerified(id: string, isEmailVerified: boolean): Promise<void> {
+    await this.usersRepository.update(id, { isEmailVerified });
+  }
+
+  async findByVerificationToken(token: string): Promise<User | null> {
+    return this.usersRepository.findByVerificationToken(token);
+  }
+
+  async updateVerificationStatus(id: string, data: Partial<User>): Promise<void> {
+    await this.usersRepository.update(id, data);
   }
 
   async findAll(
@@ -72,9 +94,21 @@ export class UsersService {
   }
 
   async remove(id: string): Promise<void> {
+    const user = await this.findById(id);
+    const email = user.email;
+
     const deleted = await this.usersRepository.remove(id);
     if (!deleted) {
       throw new NotFoundException(`User with id "${id}" not found`);
+    }
+
+    try {
+      await this.notificationsService.send({
+        type: NotificationType.ACCOUNT_DELETED,
+        recipient: email,
+      });
+    } catch (error) {
+      this.logger.error(`Failed to send account deletion notification to ${email}: ${error}`);
     }
   }
 

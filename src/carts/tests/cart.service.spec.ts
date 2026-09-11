@@ -10,6 +10,8 @@ import { MAX_PIZZA_QUANTITY } from "../../shared/constants/pizza.constants.ts";
 import { CartResponseDto } from "../dto/cart-response.dto.ts";
 import { DiscountType } from "../../promocodes/constants/discount-type.constant.ts";
 import { calculatePricing } from "../../pricing/pricing.ts";
+import { getRepositoryToken } from "@nestjs/typeorm";
+import { Order } from "../../orders/entities/order.entity.ts";
 import {
   mockUserId,
   mockPizzaId,
@@ -61,6 +63,10 @@ describe("CartService", () => {
         { provide: CartItemsRepository, useValue: mockCartItemsRepo },
         { provide: PizzasService, useValue: mockPizzasServ },
         { provide: PromocodesService, useValue: mockPromocodesServ },
+        {
+          provide: getRepositoryToken(Order),
+          useValue: { count: jest.fn().mockResolvedValue(0 as never) },
+        },
       ],
     }).compile();
 
