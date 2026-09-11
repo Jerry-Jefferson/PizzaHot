@@ -26,6 +26,8 @@ export const mockUserEntity: User = {
   role: Role.USER,
   passwordHash: "hashed-password",
   isEmailVerified: true,
+  verificationToken: null,
+  verificationTokenExpiresAt: null,
   name: "John",
   surname: "Doe",
   gender: null,

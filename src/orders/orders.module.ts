@@ -8,12 +8,14 @@ import { OrdersRepository } from "./orders.repository.ts";
 import { OrderItemsRepository } from "./order-items.repository.ts";
 import { CartModule } from "../carts/carts.module.ts";
 import { PromocodesModule } from "../promocodes/promocodes.module.ts";
+import { UsersModule } from "../users/users.module.ts";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Order, OrderItem]),
     CartModule,
     PromocodesModule,
+    UsersModule,
   ],
   controllers: [OrdersController],
   providers: [OrdersService, OrdersRepository, OrderItemsRepository],

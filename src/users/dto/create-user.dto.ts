@@ -25,4 +25,10 @@ export class CreateUserDto {
 
   @ApiProperty({ example: false, default: false })
   isEmailVerified: boolean;
+
+  @ApiPropertyOptional()
+  verificationToken?: string | null;
+
+  @ApiPropertyOptional()
+  verificationTokenExpiresAt?: Date | null;
 }

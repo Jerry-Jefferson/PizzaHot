@@ -1,5 +1,12 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Res } from "@nestjs/common";
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Query, Res } from "@nestjs/common";
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from "@nestjs/swagger";
 import { Throttle } from "@nestjs/throttler";
 import type { Response } from "express";
 import { UserResponseDto } from "../users/dto/user-response.dto.ts";
@@ -38,6 +45,26 @@ export class AuthController {
     const { token, user } = await this.authService.register(dto);
     this.setTokenCookie(res, token);
     return new AuthResponseDto(token, user);
+  }
+
+  @Public()
+  @Get("verify-email/accept")
+  @ApiOperation({ summary: "Accept email verification" })
+  @ApiQuery({ name: "token", type: String, description: "Verification token", required: true })
+  @ApiResponse({ status: 200, description: "Email successfully verified" })
+  @ApiResponse({ status: 400, description: "Invalid or expired verification token" })
+  async verifyEmailAccept(@Query("token") token: string): Promise<{ message: string }> {
+    return this.authService.verifyEmailAccept(token);
+  }
+
+  @Public()
+  @Get("verify-email/decline")
+  @ApiOperation({ summary: "Decline email verification" })
+  @ApiQuery({ name: "token", type: String, description: "Verification token", required: true })
+  @ApiResponse({ status: 200, description: "Email verification request declined" })
+  @ApiResponse({ status: 400, description: "Invalid or expired verification token" })
+  async verifyEmailDecline(@Query("token") token: string): Promise<{ message: string }> {
+    return this.authService.verifyEmailDecline(token);
   }
 
   @Public()

@@ -24,7 +24,12 @@ export class SeedService implements OnModuleInit {
 
     const existing = await this.usersService.findByEmail(adminEmail);
     if (existing) {
-      this.logger.log("Admin user already exists, skipping seed");
+      if (!existing.isEmailVerified) {
+        await this.usersService.setEmailVerified(existing.id, true);
+        this.logger.log("Admin user already exists — updated isEmailVerified to true");
+      } else {
+        this.logger.log("Admin user already exists, skipping seed");
+      }
       return;
     }
 

@@ -47,6 +47,10 @@ export class UsersRepository {
     return this.repository.findOne({ where: { email } });
   }
 
+  async findByVerificationToken(token: string): Promise<User | null> {
+    return this.repository.findOne({ where: { verificationToken: token } });
+  }
+
   async update(id: string, data: Partial<User>): Promise<boolean> {
     const result = await this.repository.update(id, data);
     return (result.affected ?? 0) > 0;
