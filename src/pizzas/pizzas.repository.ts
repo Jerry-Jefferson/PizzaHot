@@ -70,4 +70,26 @@ export class PizzasRepository {
     const result = await this.repository.delete(id);
     return (result.affected ?? 0) > 0;
   }
+
+  async deleteNotOrderedMonth(
+    cutoffDate: Date = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+  ): Promise<number> {
+    const result = await this.repository
+      .createQueryBuilder()
+      .delete()
+      .from(Pizza)
+      .where(
+        `id NOT IN (
+          SELECT oi.pizza_id
+          FROM order_items oi
+          INNER JOIN orders o ON o.id = oi.order_id
+          WHERE oi.pizza_id IS NOT NULL
+            AND o."createdAt" >= :cutoffDate
+        )`,
+        { cutoffDate }
+      )
+      .execute();
+
+    return result.affected ?? 0;
+  }
 }
