@@ -1,9 +1,18 @@
-import { Injectable, NotFoundException, ConflictException, Logger } from "@nestjs/common";
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+  InternalServerErrorException,
+  Logger,
+} from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { DataSource } from "typeorm";
 import { PizzasRepository } from "./pizzas.repository.ts";
 import { Pizza } from "./entities/pizza.entity.ts";
 import { PizzaIngredient } from "./entities/pizza-ingredient.entity.ts";
 import { IngredientsService } from "../ingredients/ingredients.service.ts";
+import { NotificationsService } from "../notifications/notifications.service.ts";
+import { NotificationType } from "../notifications/constants/notification-type.constant.ts";
 import { CreatePizzaDto } from "./dto/create-pizza.dto.ts";
 import { UpdatePizzaDto } from "./dto/update-pizza.dto.ts";
 import { unlink } from "fs/promises";
@@ -13,12 +22,17 @@ import { UPLOADS_URL_PREFIX } from "../shared/constants/upload.constants.ts";
 @Injectable()
 export class PizzasService {
   private readonly logger = new Logger(PizzasService.name);
+  private readonly adminEmail: string;
 
   constructor(
     private readonly dataSource: DataSource,
     private readonly pizzasRepository: PizzasRepository,
-    private readonly ingredientsService: IngredientsService
-  ) {}
+    private readonly ingredientsService: IngredientsService,
+    private readonly notificationsService: NotificationsService,
+    configService: ConfigService
+  ) {
+    this.adminEmail = configService.get<string>("CRITICAL_ERROR_EMAIL") ?? "admin@pizzahot.local";
+  }
 
   private buildImagePath(file: Express.Multer.File): string {
     return `${UPLOADS_URL_PREFIX}/pizzas/${file.filename}`;
@@ -131,14 +145,52 @@ export class PizzasService {
       throw new NotFoundException("Pizza not found");
     }
 
-    if (pizza.image) {
-      await this.deleteImageByPath(pizza.image);
-    }
+    try {
+      await this.dataSource.transaction(async (manager) => {
+        const result = await manager.delete(Pizza, id);
+        if ((result.affected ?? 0) === 0) {
+          throw new NotFoundException("Pizza not found");
+        }
 
-    const deleted = await this.pizzasRepository.remove(id);
-    if (!deleted) {
-      throw new NotFoundException("Pizza not found");
+        if (pizza.image) {
+          try {
+            await this.deleteImageFile(pizza.image);
+          } catch (imageError) {
+            this.logger.error(`Failed to delete image for pizza ${id}: ${String(imageError)}`);
+
+            await this.notificationsService
+              .send({
+                type: NotificationType.CRITICAL_ERROR,
+                recipient: this.adminEmail,
+                data: {
+                  message: `Pizza deletion rolled back: failed to delete image file for pizza "${pizza.name}" (${id})`,
+                  errorType: "PizzaImageDeletionError",
+                  path: pizza.image,
+                  timestamp: new Date().toISOString(),
+                },
+              })
+              .catch((notifError) => {
+                this.logger.error(
+                  `Failed to send image deletion error notification: ${String(notifError)}`
+                );
+              });
+
+            throw imageError;
+          }
+        }
+      });
+    } catch (error) {
+      if (error instanceof NotFoundException || error instanceof InternalServerErrorException) {
+        throw error;
+      }
+      throw new InternalServerErrorException("Pizza deletion failed, please try again later");
     }
+  }
+
+  private async deleteImageFile(imagePath: string): Promise<void> {
+    const relativeFsPath = imagePath.replace(`${UPLOADS_URL_PREFIX}/`, "");
+    const absolutePath = join(process.cwd(), "uploads", relativeFsPath);
+    await unlink(absolutePath);
   }
 
   private async deleteImageByPath(imagePath: string): Promise<void> {

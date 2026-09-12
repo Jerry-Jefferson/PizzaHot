@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { IngredientsModule } from "../ingredients/ingredients.module.ts";
+import { NotificationsModule } from "../notifications/notifications.module.ts";
 import { Pizza } from "./entities/pizza.entity.ts";
 import { PizzaIngredient } from "./entities/pizza-ingredient.entity.ts";
 import { PizzasController } from "./pizzas.controller.ts";
@@ -10,7 +11,11 @@ import { PizzasService } from "./pizzas.service.ts";
 import { PizzaCleanupService } from "./pizza-cleanup.service.ts";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Pizza, PizzaIngredient]), IngredientsModule],
+  imports: [
+    TypeOrmModule.forFeature([Pizza, PizzaIngredient]),
+    IngredientsModule,
+    NotificationsModule,
+  ],
   controllers: [PizzasController],
   providers: [PizzasService, PizzasRepository, PizzaIngredientsRepository, PizzaCleanupService],
   exports: [PizzasService, PizzaCleanupService],
