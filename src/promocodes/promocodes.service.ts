@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  Logger,
   NotFoundException,
 } from "@nestjs/common";
 import { PromocodesRepository } from "./promocodes.repository.ts";
@@ -12,6 +13,8 @@ import { DiscountType } from "./constants/discount-type.constant.ts";
 
 @Injectable()
 export class PromocodesService {
+  private readonly logger = new Logger(PromocodesService.name);
+
   constructor(private readonly promocodesRepository: PromocodesRepository) {}
 
   async create(dto: CreatePromocodeDto): Promise<Promocode> {
@@ -25,7 +28,9 @@ export class PromocodesService {
     }
 
     const promocode = this.promocodesRepository.create(dto);
-    return this.promocodesRepository.save(promocode);
+    const saved = await this.promocodesRepository.save(promocode);
+    this.logger.log(`Promocode created: "${saved.code}" (discount: ${saved.discount})`);
+    return saved;
   }
 
   async findAll(): Promise<Promocode[]> {
@@ -72,6 +77,7 @@ export class PromocodesService {
     if (!deleted) {
       throw new NotFoundException("Promocode not found");
     }
+    this.logger.log(`Promocode deleted: id ${id}`);
   }
 
   async restore(id: string): Promise<Promocode> {

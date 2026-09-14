@@ -7,7 +7,7 @@ export class AnalyticsService {
 
   async getMostOrderedPizzaInMonth(
     month: number,
-    year: number,
+    year: number
   ): Promise<{ pizzaName: string; orderCount: number } | null> {
     const rows = await this.dataSource.query(
       `
@@ -22,7 +22,7 @@ export class AnalyticsService {
       ORDER BY "orderCount" DESC
       LIMIT 1
       `,
-      [month, year],
+      [month, year]
     );
 
     if (rows.length === 0) {

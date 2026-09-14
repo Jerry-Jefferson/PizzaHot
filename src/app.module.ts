@@ -6,7 +6,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { AppController } from "./app.controller.ts";
 import { AppService } from "./app.service.ts";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
-import { APP_FILTER, APP_GUARD } from "@nestjs/core";
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from "@nestjs/core";
 import { AuthModule } from "./auth/auth.module.ts";
 import { SeedService } from "./shared/seed/seed.service.ts";
 import { UsersModule } from "./users/users.module.ts";
@@ -18,6 +18,8 @@ import { OrdersModule } from "./orders/orders.module.ts";
 import { AnalyticsModule } from "./analytics/analytics.module.ts";
 import { NotificationsModule } from "./notifications/notifications.module.ts";
 import { CriticalErrorFilter } from "./notifications/filters/critical-error.filter.ts";
+import { LogsModule } from "./logs/logs.module.ts";
+import { HttpLoggingInterceptor } from "./logs/interceptors/http-logging.interceptor.ts";
 
 @Module({
   imports: [
@@ -69,6 +71,7 @@ import { CriticalErrorFilter } from "./notifications/filters/critical-error.filt
     OrdersModule,
     AnalyticsModule,
     NotificationsModule,
+    LogsModule,
   ],
   controllers: [AppController],
   providers: [
@@ -81,6 +84,10 @@ import { CriticalErrorFilter } from "./notifications/filters/critical-error.filt
     {
       provide: APP_FILTER,
       useClass: CriticalErrorFilter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: HttpLoggingInterceptor,
     },
   ],
 })

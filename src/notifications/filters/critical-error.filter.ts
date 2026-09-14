@@ -78,6 +78,28 @@ export class CriticalErrorFilter implements ExceptionFilter {
         });
     }
 
+    const reqMethod = request?.method ?? "HTTP";
+    const reqUrl = request?.url ?? "N/A";
+    const stack = exception instanceof Error ? exception.stack : undefined;
+
+    const requestObj = request as unknown as Record<string, unknown> | undefined;
+    if (!requestObj?.__errorLogged) {
+      if (requestObj) {
+        requestObj.__errorLogged = true;
+      }
+      this.logger.error(
+        {
+          message: `[${reqMethod}] ${reqUrl} ${status} - ${message}`,
+          statusCode: status,
+          method: reqMethod,
+          path: reqUrl,
+          errorType,
+        },
+        stack,
+        CriticalErrorFilter.name
+      );
+    }
+
     if (exception instanceof HttpException) {
       const res = exception.getResponse();
 
@@ -92,12 +114,6 @@ export class CriticalErrorFilter implements ExceptionFilter {
         });
       }
     } else {
-      const errorMessage = exception instanceof Error ? exception.message : "Unknown error";
-
-      const errorStack = exception instanceof Error ? exception.stack : undefined;
-
-      this.logger.error(`Unhandled exception: ${errorMessage}`, errorStack);
-
       response.status(status).json({
         statusCode: status,
         message: "Internal server error",

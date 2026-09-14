@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
+import { ConflictException, Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { IngredientsRepository } from "./ingredients.repository.ts";
 import { Ingredient } from "./entities/ingredient.entity.ts";
 import { CreateIngredientDto } from "./dto/create-ingredient.dto.ts";
@@ -6,6 +6,8 @@ import { UpdateIngredientDto } from "./dto/update-ingredient.dto.ts";
 
 @Injectable()
 export class IngredientsService {
+  private readonly logger = new Logger(IngredientsService.name);
+
   constructor(private readonly ingredientsRepository: IngredientsRepository) {}
 
   async create(dto: CreateIngredientDto): Promise<Ingredient> {
@@ -15,7 +17,9 @@ export class IngredientsService {
     }
 
     const ingredient = this.ingredientsRepository.create(dto);
-    return this.ingredientsRepository.save(ingredient);
+    const saved = await this.ingredientsRepository.save(ingredient);
+    this.logger.log(`Ingredient created: "${saved.name}" (id: ${saved.id})`);
+    return saved;
   }
 
   async findAll(): Promise<Ingredient[]> {
@@ -58,9 +62,11 @@ export class IngredientsService {
   }
 
   async remove(id: string): Promise<void> {
+    const ingredient = await this.findById(id);
     const deleted = await this.ingredientsRepository.remove(id);
     if (!deleted) {
       throw new NotFoundException("Ingredient not found");
     }
+    this.logger.log(`Ingredient deleted: "${ingredient.name}" (id: ${id})`);
   }
 }

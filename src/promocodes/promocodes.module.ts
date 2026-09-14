@@ -11,4 +11,4 @@ import { PromocodesService } from "./promocodes.service.ts";
   providers: [PromocodesService, PromocodesRepository],
   exports: [PromocodesService],
 })
-export class PromocodesModule { }
+export class PromocodesModule {}

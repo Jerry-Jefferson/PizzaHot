@@ -67,7 +67,9 @@ export class PizzasService {
       return saved;
     });
 
-    return this.findById(savedPizza.id);
+    const created = await this.findById(savedPizza.id);
+    this.logger.log(`Pizza created: "${created.name}" (id: ${created.id})`);
+    return created;
   }
 
   async findAll(
@@ -119,7 +121,9 @@ export class PizzasService {
       }
     });
 
-    return this.findById(id);
+    const updated = await this.findById(id);
+    this.logger.log(`Pizza updated: "${updated.name}" (id: ${id})`);
+    return updated;
   }
 
   async uploadImage(id: string, imageFile: Express.Multer.File): Promise<Pizza> {
@@ -179,6 +183,8 @@ export class PizzasService {
           }
         }
       });
+
+      this.logger.log(`Pizza deleted: "${pizza.name}" (id: ${id})`);
     } catch (error) {
       if (error instanceof NotFoundException || error instanceof InternalServerErrorException) {
         throw error;
