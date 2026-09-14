@@ -5,9 +5,11 @@ import express from "express";
 import { AppModule } from "./app.module.ts";
 import { UPLOADS_URL_PREFIX, UPLOADS_DIR } from "./shared/constants/upload.constants.ts";
 import { existsSync, mkdirSync } from "fs";
+import { MongoLoggerService } from "./logs/mongo-logger.service.ts";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  app.useLogger(app.get(MongoLoggerService));
   app.setGlobalPrefix("api");
   app.use(cookieParser());
   app.enableCors();

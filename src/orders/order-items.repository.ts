@@ -14,8 +14,6 @@ export class OrderItemsRepository {
     return this.repository.create(data);
   }
 
-
-
   async save(item: OrderItem): Promise<OrderItem> {
     return this.repository.save(item);
   }

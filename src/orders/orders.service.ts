@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { OrdersRepository } from "./orders.repository.ts";
 import { OrderItemsRepository } from "./order-items.repository.ts";
 import { CartService } from "../carts/carts.service.ts";
@@ -16,6 +16,8 @@ import { PaymentMethod } from "./constants/payment-method.constant.ts";
 
 @Injectable()
 export class OrdersService {
+  private readonly logger = new Logger(OrdersService.name);
+
   constructor(
     private readonly ordersRepository: OrdersRepository,
     private readonly orderItemsRepository: OrderItemsRepository,
@@ -108,6 +110,10 @@ export class OrdersService {
       throw new NotFoundException("Created order was not found");
     }
 
+    this.logger.log(
+      `Order placed: #${savedOrder.id} by user ${userId} with total $${finalPrice} (${orderItemsToCreate.length} items)`
+    );
+
     return OrderResponseDto.fromEntity(fullOrder);
   }
 
@@ -182,6 +188,10 @@ export class OrdersService {
     if (!updatedOrder) {
       throw new NotFoundException("Updated order was not found");
     }
+
+    this.logger.log(
+      `Order #${orderId} status changed from "${order.status}" to "${status}"`
+    );
 
     return OrderResponseDto.fromEntity(updatedOrder);
   }

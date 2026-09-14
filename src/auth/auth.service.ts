@@ -53,6 +53,8 @@ export class AuthService {
       this.logger.error(`Failed to send verification notification to ${user.email}: ${error}`);
     }
 
+    this.logger.log(`User registered: ${user.email} (id: ${user.id})`);
+
     return { token, user: UserResponseDto.fromEntity(user) };
   }
 
@@ -86,6 +88,8 @@ export class AuthService {
       verificationTokenExpiresAt: null,
     });
 
+    this.logger.log(`User email verified: ${user.email} (id: ${user.id})`);
+
     return { message: "Email successfully verified" };
   }
 
@@ -113,6 +117,7 @@ export class AuthService {
     }
 
     const token = this.generateToken(user);
+    this.logger.log(`User logged in: ${user.email} (id: ${user.id})`);
     return { token, user: UserResponseDto.fromEntity(user) };
   }
 

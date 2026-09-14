@@ -90,7 +90,9 @@ export class UsersService {
 
     await this.usersRepository.update(id, dto);
 
-    return this.findById(id);
+    const updated = await this.findById(id);
+    this.logger.log(`User profile updated: ${updated.email} (id: ${id})`);
+    return updated;
   }
 
   async remove(id: string): Promise<void> {
@@ -110,6 +112,8 @@ export class UsersService {
     } catch (error) {
       this.logger.error(`Failed to send account deletion notification to ${email}: ${error}`);
     }
+
+    this.logger.log(`User deleted: ${email} (id: ${id})`);
   }
 
   async changePassword(id: string, dto: ChangePasswordDto): Promise<void> {
@@ -123,5 +127,6 @@ export class UsersService {
     const newPasswordHash = await bcrypt.hash(dto.newPassword, SALT_ROUNDS);
 
     await this.usersRepository.update(id, { passwordHash: newPasswordHash });
+    this.logger.log(`User changed password: ${user.email} (id: ${id})`);
   }
 }
