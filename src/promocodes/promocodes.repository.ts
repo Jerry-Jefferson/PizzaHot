@@ -2,9 +2,10 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Promocode } from "./entities/promocode.entity.ts";
+import type { IPromocodesRepository } from "./interfaces/promocodes.repository.interface.ts";
 
 @Injectable()
-export class PromocodesRepository {
+export class PromocodesRepository implements IPromocodesRepository {
   constructor(
     @InjectRepository(Promocode)
     private readonly repository: Repository<Promocode>

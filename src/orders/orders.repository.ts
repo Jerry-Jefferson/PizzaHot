@@ -1,22 +1,17 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { DeepPartial, FindOptionsWhere, Repository } from "typeorm";
+import { DeepPartial, FindOptionsWhere, Not, Repository } from "typeorm";
 import { Order } from "./entities/order.entity.ts";
 import { OrderStatus } from "./constants/order-status.constant.ts";
-import { DeliveryType } from "./constants/delivery-type.constant.ts";
-import { PaymentMethod } from "./constants/payment-method.constant.ts";
+import type {
+  FindOrdersFilter,
+  IOrdersRepository,
+} from "./interfaces/orders.repository.interface.ts";
 
-export interface FindOrdersFilter {
-  page: number;
-  limit: number;
-  userId?: string;
-  status?: OrderStatus;
-  delivery?: DeliveryType;
-  paymentMethod?: PaymentMethod;
-}
+export type { FindOrdersFilter };
 
 @Injectable()
-export class OrdersRepository {
+export class OrdersRepository implements IOrdersRepository {
   constructor(
     @InjectRepository(Order)
     private readonly repository: Repository<Order>
@@ -90,5 +85,16 @@ export class OrdersRepository {
   async updateStatus(id: string, status: OrderStatus): Promise<boolean> {
     const result = await this.repository.update(id, { status });
     return (result.affected ?? 0) > 0;
+  }
+
+  async hasUserUsedPromocode(userId: string, promocodeId: string): Promise<boolean> {
+    const count = await this.repository.count({
+      where: {
+        user: { id: userId },
+        promocode: { id: promocodeId },
+        status: Not(OrderStatus.CANCELLED),
+      },
+    });
+    return count > 0;
   }
 }

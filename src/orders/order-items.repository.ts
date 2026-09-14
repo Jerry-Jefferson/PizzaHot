@@ -2,9 +2,10 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DeepPartial, Repository } from "typeorm";
 import { OrderItem } from "./entities/order-item.entity.ts";
+import type { IOrderItemsRepository } from "./interfaces/order-items.repository.interface.ts";
 
 @Injectable()
-export class OrderItemsRepository {
+export class OrderItemsRepository implements IOrderItemsRepository {
   constructor(
     @InjectRepository(OrderItem)
     private readonly repository: Repository<OrderItem>

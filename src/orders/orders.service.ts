@@ -1,6 +1,7 @@
-import { BadRequestException, Injectable, Logger, NotFoundException } from "@nestjs/common";
-import { OrdersRepository } from "./orders.repository.ts";
-import { OrderItemsRepository } from "./order-items.repository.ts";
+import { BadRequestException, Inject, Injectable, Logger, NotFoundException } from "@nestjs/common";
+import { ORDERS_REPOSITORY, ORDER_ITEMS_REPOSITORY } from "../shared/database/tokens.ts";
+import type { IOrdersRepository } from "./interfaces/orders.repository.interface.ts";
+import type { IOrderItemsRepository } from "./interfaces/order-items.repository.interface.ts";
 import { CartService } from "../carts/carts.service.ts";
 import { PromocodesService } from "../promocodes/promocodes.service.ts";
 import { OrderResponseDto } from "./dto/order-response.dto.ts";
@@ -19,8 +20,10 @@ export class OrdersService {
   private readonly logger = new Logger(OrdersService.name);
 
   constructor(
-    private readonly ordersRepository: OrdersRepository,
-    private readonly orderItemsRepository: OrderItemsRepository,
+    @Inject(ORDERS_REPOSITORY)
+    private readonly ordersRepository: IOrdersRepository,
+    @Inject(ORDER_ITEMS_REPOSITORY)
+    private readonly orderItemsRepository: IOrderItemsRepository,
     private readonly cartService: CartService,
     private readonly promocodesService: PromocodesService
   ) {}
@@ -189,9 +192,7 @@ export class OrdersService {
       throw new NotFoundException("Updated order was not found");
     }
 
-    this.logger.log(
-      `Order #${orderId} status changed from "${order.status}" to "${status}"`
-    );
+    this.logger.log(`Order #${orderId} status changed from "${order.status}" to "${status}"`);
 
     return OrderResponseDto.fromEntity(updatedOrder);
   }
