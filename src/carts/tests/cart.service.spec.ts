@@ -2,16 +2,19 @@ import { jest, describe, it, expect, beforeEach, afterEach } from "@jest/globals
 import { Test, TestingModule } from "@nestjs/testing";
 import { NotFoundException, BadRequestException } from "@nestjs/common";
 import { CartService } from "../carts.service.ts";
-import { CartRepository } from "../carts.repository.ts";
-import { CartItemsRepository } from "../cart-items.repository.ts";
 import { PizzasService } from "../../pizzas/pizzas.service.ts";
 import { PromocodesService } from "../../promocodes/promocodes.service.ts";
 import { MAX_PIZZA_QUANTITY } from "../../shared/constants/pizza.constants.ts";
 import { CartResponseDto } from "../dto/cart-response.dto.ts";
 import { DiscountType } from "../../promocodes/constants/discount-type.constant.ts";
 import { calculatePricing } from "../../pricing/pricing.ts";
-import { getRepositoryToken } from "@nestjs/typeorm";
-import { Order } from "../../orders/entities/order.entity.ts";
+import {
+  CART_REPOSITORY,
+  CART_ITEMS_REPOSITORY,
+  ORDERS_REPOSITORY,
+} from "../../shared/database/tokens.ts";
+import type { ICartRepository } from "../interfaces/carts.repository.interface.ts";
+import type { ICartItemsRepository } from "../interfaces/cart-items.repository.interface.ts";
 import {
   mockUserId,
   mockPizzaId,
@@ -26,8 +29,8 @@ import {
 
 describe("CartService", () => {
   let service: CartService;
-  let cartRepository: jest.Mocked<CartRepository>;
-  let cartItemsRepository: jest.Mocked<CartItemsRepository>;
+  let cartRepository: jest.Mocked<ICartRepository>;
+  let cartItemsRepository: jest.Mocked<ICartItemsRepository>;
   let pizzasService: jest.Mocked<PizzasService>;
   let promocodesService: jest.Mocked<PromocodesService>;
 
@@ -59,20 +62,22 @@ describe("CartService", () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CartService,
-        { provide: CartRepository, useValue: mockCartRepo },
-        { provide: CartItemsRepository, useValue: mockCartItemsRepo },
+        { provide: CART_REPOSITORY, useValue: mockCartRepo },
+        { provide: CART_ITEMS_REPOSITORY, useValue: mockCartItemsRepo },
         { provide: PizzasService, useValue: mockPizzasServ },
         { provide: PromocodesService, useValue: mockPromocodesServ },
         {
-          provide: getRepositoryToken(Order),
-          useValue: { count: jest.fn().mockResolvedValue(0 as never) },
+          provide: ORDERS_REPOSITORY,
+          useValue: {
+            hasUserUsedPromocode: jest.fn().mockResolvedValue(false as never),
+          },
         },
       ],
     }).compile();
 
     service = module.get<CartService>(CartService);
-    cartRepository = module.get(CartRepository);
-    cartItemsRepository = module.get(CartItemsRepository);
+    cartRepository = module.get(CART_REPOSITORY);
+    cartItemsRepository = module.get(CART_ITEMS_REPOSITORY);
     pizzasService = module.get(PizzasService);
     promocodesService = module.get(PromocodesService);
   });

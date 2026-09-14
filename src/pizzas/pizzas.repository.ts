@@ -1,13 +1,16 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { ILike, Repository } from "typeorm";
+import { DataSource, ILike, Repository } from "typeorm";
 import { Pizza } from "./entities/pizza.entity.ts";
+import { PizzaIngredient } from "./entities/pizza-ingredient.entity.ts";
+import type { IPizzasRepository } from "./interfaces/pizzas.repository.interface.ts";
 
 @Injectable()
-export class PizzasRepository {
+export class PizzasRepository implements IPizzasRepository {
   constructor(
     @InjectRepository(Pizza)
-    private readonly repository: Repository<Pizza>
+    private readonly repository: Repository<Pizza>,
+    private readonly dataSource: DataSource
   ) {}
 
   create(data: Partial<Pizza>): Pizza {
@@ -91,5 +94,52 @@ export class PizzasRepository {
       .execute();
 
     return result.affected ?? 0;
+  }
+
+  async createWithIngredients(
+    createData: Partial<Pizza>,
+    ingredientIds?: string[]
+  ): Promise<Pizza> {
+    return this.dataSource.transaction(async (manager) => {
+      const pizza = manager.create(Pizza, createData);
+      const saved = await manager.save(pizza);
+
+      if (ingredientIds && ingredientIds.length > 0) {
+        const entities = ingredientIds.map((ingredientId) =>
+          manager.create(PizzaIngredient, {
+            pizza: { id: saved.id },
+            ingredient: { id: ingredientId },
+          })
+        );
+        await manager.save(entities);
+      }
+
+      return saved;
+    });
+  }
+
+  async updateWithIngredients(
+    id: string,
+    updateData: Partial<Pizza>,
+    ingredientIds?: string[]
+  ): Promise<void> {
+    await this.dataSource.transaction(async (manager) => {
+      if (Object.keys(updateData).length > 0) {
+        await manager.update(Pizza, id, updateData);
+      }
+
+      if (ingredientIds) {
+        await manager.delete(PizzaIngredient, { pizza: { id } });
+        if (ingredientIds.length > 0) {
+          const entities = ingredientIds.map((ingredientId) =>
+            manager.create(PizzaIngredient, {
+              pizza: { id },
+              ingredient: { id: ingredientId },
+            })
+          );
+          await manager.save(entities);
+        }
+      }
+    });
   }
 }

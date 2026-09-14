@@ -6,15 +6,7 @@ import { CartService } from "../carts.service.ts";
 import type { JwtPayload } from "../../auth/types/jwt-payload.interface.ts";
 import { Role } from "../../shared/constants/role.enum.ts";
 import type { Response } from "express";
-import {
-  mockUser,
-  mockPizzaId,
-  mockCart,
-  mockCartResponse,
-  mockCartItem,
-  mockUserEntity,
-  createMockCart,
-} from "./mocks.ts";
+import { mockUser, mockPizzaId, mockCartResponse, mockCartItem } from "./mocks.ts";
 
 describe("CartController", () => {
   let controller: CartController;

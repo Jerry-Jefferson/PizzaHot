@@ -1,12 +1,16 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Inject, Injectable, Logger } from "@nestjs/common";
 import { Cron } from "@nestjs/schedule";
-import { PizzasRepository } from "./pizzas.repository.ts";
+import { PIZZAS_REPOSITORY } from "../shared/database/tokens.ts";
+import type { IPizzasRepository } from "./interfaces/pizzas.repository.interface.ts";
 
 @Injectable()
 export class PizzaCleanupService {
   private readonly logger = new Logger(PizzaCleanupService.name);
 
-  constructor(private readonly pizzasRepository: PizzasRepository) {}
+  constructor(
+    @Inject(PIZZAS_REPOSITORY)
+    private readonly pizzasRepository: IPizzasRepository
+  ) {}
 
   @Cron("0 3 * * *")
   async handleCleanup(): Promise<number> {

@@ -8,6 +8,7 @@ import { AppService } from "./app.service.ts";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from "@nestjs/core";
 import { AuthModule } from "./auth/auth.module.ts";
+import { PersistenceModule } from "./shared/database/persistence.module.ts";
 import { SeedService } from "./shared/seed/seed.service.ts";
 import { UsersModule } from "./users/users.module.ts";
 import { PizzasModule } from "./pizzas/pizzas.module.ts";
@@ -62,6 +63,7 @@ import { HttpLoggingInterceptor } from "./logs/interceptors/http-logging.interce
         };
       },
     }),
+    PersistenceModule,
     AuthModule,
     UsersModule,
     PizzasModule,

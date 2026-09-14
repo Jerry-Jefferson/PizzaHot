@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  Inject,
   Injectable,
   Logger,
   NotFoundException,
@@ -12,7 +13,8 @@ import { CreateUserDto } from "./dto/create-user.dto.ts";
 import { UpdateUserDto } from "./dto/update-user.dto.ts";
 import { Role } from "../shared/constants/role.enum.ts";
 import { User } from "./entities/user.entity.ts";
-import { UsersRepository } from "./users.repository.ts";
+import { USERS_REPOSITORY } from "../shared/database/tokens.ts";
+import type { IUsersRepository } from "./interfaces/users.repository.interface.ts";
 import { NotificationsService } from "../notifications/notifications.service.ts";
 import { NotificationType } from "../notifications/constants/notification-type.constant.ts";
 
@@ -21,7 +23,8 @@ export class UsersService {
   private readonly logger = new Logger(UsersService.name);
 
   constructor(
-    private readonly usersRepository: UsersRepository,
+    @Inject(USERS_REPOSITORY)
+    private readonly usersRepository: IUsersRepository,
     private readonly notificationsService: NotificationsService
   ) {}
 

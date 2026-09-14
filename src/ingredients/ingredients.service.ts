@@ -1,5 +1,6 @@
-import { ConflictException, Injectable, Logger, NotFoundException } from "@nestjs/common";
-import { IngredientsRepository } from "./ingredients.repository.ts";
+import { ConflictException, Inject, Injectable, Logger, NotFoundException } from "@nestjs/common";
+import { INGREDIENTS_REPOSITORY } from "../shared/database/tokens.ts";
+import type { IIngredientsRepository } from "./interfaces/ingredients.repository.interface.ts";
 import { Ingredient } from "./entities/ingredient.entity.ts";
 import { CreateIngredientDto } from "./dto/create-ingredient.dto.ts";
 import { UpdateIngredientDto } from "./dto/update-ingredient.dto.ts";
@@ -8,7 +9,10 @@ import { UpdateIngredientDto } from "./dto/update-ingredient.dto.ts";
 export class IngredientsService {
   private readonly logger = new Logger(IngredientsService.name);
 
-  constructor(private readonly ingredientsRepository: IngredientsRepository) {}
+  constructor(
+    @Inject(INGREDIENTS_REPOSITORY)
+    private readonly ingredientsRepository: IIngredientsRepository
+  ) {}
 
   async create(dto: CreateIngredientDto): Promise<Ingredient> {
     const existing = await this.ingredientsRepository.findByName(dto.name);

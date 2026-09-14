@@ -1,38 +1,35 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Not, Repository } from "typeorm";
-import { CartRepository } from "./carts.repository.ts";
-import { CartItemsRepository } from "./cart-items.repository.ts";
+import { BadRequestException, Inject, Injectable, NotFoundException } from "@nestjs/common";
+import {
+  CART_REPOSITORY,
+  CART_ITEMS_REPOSITORY,
+  ORDERS_REPOSITORY,
+} from "../shared/database/tokens.ts";
+import type { ICartRepository } from "./interfaces/carts.repository.interface.ts";
+import type { ICartItemsRepository } from "./interfaces/cart-items.repository.interface.ts";
+import type { IOrdersRepository } from "../orders/interfaces/orders.repository.interface.ts";
 import { PizzasService } from "../pizzas/pizzas.service.ts";
 import { PromocodesService } from "../promocodes/promocodes.service.ts";
 import { CartResponseDto } from "./dto/cart-response.dto.ts";
 import { CartItem } from "./entities/cart-item.entity.ts";
 import { Cart } from "./entities/cart.entity.ts";
-import { Order } from "../orders/entities/order.entity.ts";
-import { OrderStatus } from "../orders/constants/order-status.constant.ts";
 import { MAX_PIZZA_QUANTITY } from "../shared/constants/pizza.constants.ts";
 import { calculatePricing } from "../pricing/pricing.ts";
 
 @Injectable()
 export class CartService {
   constructor(
-    private readonly cartRepository: CartRepository,
-    private readonly cartItemsRepository: CartItemsRepository,
+    @Inject(CART_REPOSITORY)
+    private readonly cartRepository: ICartRepository,
+    @Inject(CART_ITEMS_REPOSITORY)
+    private readonly cartItemsRepository: ICartItemsRepository,
     private readonly pizzasService: PizzasService,
     private readonly promocodesService: PromocodesService,
-    @InjectRepository(Order)
-    private readonly orderRepository: Repository<Order>
+    @Inject(ORDERS_REPOSITORY)
+    private readonly ordersRepository: IOrdersRepository
   ) {}
 
   private async hasUserUsedPromocode(userId: string, promocodeId: string): Promise<boolean> {
-    const count = await this.orderRepository.count({
-      where: {
-        user: { id: userId },
-        promocode: { id: promocodeId },
-        status: Not(OrderStatus.CANCELLED),
-      },
-    });
-    return count > 0;
+    return this.ordersRepository.hasUserUsedPromocode(userId, promocodeId);
   }
 
   async checkPromocodeNotUsed(userId: string, promocodeId: string): Promise<void> {

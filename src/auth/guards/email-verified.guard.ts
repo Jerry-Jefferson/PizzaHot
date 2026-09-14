@@ -32,6 +32,7 @@ export class EmailVerifiedGuard implements CanActivate {
         const dbUser = await this.usersService.findById(user.sub);
 
         if (dbUser?.isEmailVerified) {
+          user.isEmailVerified = true;
           return true;
         }
       } catch (error) {

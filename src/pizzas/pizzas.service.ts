@@ -1,15 +1,15 @@
 import {
-  Injectable,
-  NotFoundException,
   ConflictException,
+  Inject,
+  Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { DataSource } from "typeorm";
-import { PizzasRepository } from "./pizzas.repository.ts";
+import { PIZZAS_REPOSITORY } from "../shared/database/tokens.ts";
+import type { IPizzasRepository } from "./interfaces/pizzas.repository.interface.ts";
 import { Pizza } from "./entities/pizza.entity.ts";
-import { PizzaIngredient } from "./entities/pizza-ingredient.entity.ts";
 import { IngredientsService } from "../ingredients/ingredients.service.ts";
 import { NotificationsService } from "../notifications/notifications.service.ts";
 import { NotificationType } from "../notifications/constants/notification-type.constant.ts";
@@ -25,8 +25,8 @@ export class PizzasService {
   private readonly adminEmail: string;
 
   constructor(
-    private readonly dataSource: DataSource,
-    private readonly pizzasRepository: PizzasRepository,
+    @Inject(PIZZAS_REPOSITORY)
+    private readonly pizzasRepository: IPizzasRepository,
     private readonly ingredientsService: IngredientsService,
     private readonly notificationsService: NotificationsService,
     configService: ConfigService
@@ -50,22 +50,7 @@ export class PizzasService {
 
     const { ingredientIds, ...createData } = dto;
 
-    const savedPizza = await this.dataSource.transaction(async (manager) => {
-      const pizza = manager.create(Pizza, createData);
-      const saved = await manager.save(pizza);
-
-      if (ingredientIds && ingredientIds.length > 0) {
-        const entities = ingredientIds.map((ingredientId) =>
-          manager.create(PizzaIngredient, {
-            pizza: { id: saved.id },
-            ingredient: { id: ingredientId },
-          })
-        );
-        await manager.save(entities);
-      }
-
-      return saved;
-    });
+    const savedPizza = await this.pizzasRepository.createWithIngredients(createData, ingredientIds);
 
     const created = await this.findById(savedPizza.id);
     this.logger.log(`Pizza created: "${created.name}" (id: ${created.id})`);
@@ -104,22 +89,7 @@ export class PizzasService {
 
     const { ingredientIds, ...updateData } = dto;
 
-    await this.dataSource.transaction(async (manager) => {
-      await manager.update(Pizza, id, updateData);
-
-      if (ingredientIds) {
-        await manager.delete(PizzaIngredient, { pizza: { id } });
-        if (ingredientIds.length > 0) {
-          const entities = ingredientIds.map((ingredientId) =>
-            manager.create(PizzaIngredient, {
-              pizza: { id },
-              ingredient: { id: ingredientId },
-            })
-          );
-          await manager.save(entities);
-        }
-      }
-    });
+    await this.pizzasRepository.updateWithIngredients(id, updateData, ingredientIds);
 
     const updated = await this.findById(id);
     this.logger.log(`Pizza updated: "${updated.name}" (id: ${id})`);
@@ -149,48 +119,51 @@ export class PizzasService {
       throw new NotFoundException("Pizza not found");
     }
 
-    try {
-      await this.dataSource.transaction(async (manager) => {
-        const result = await manager.delete(Pizza, id);
-        if ((result.affected ?? 0) === 0) {
-          throw new NotFoundException("Pizza not found");
-        }
-
-        if (pizza.image) {
-          try {
-            await this.deleteImageFile(pizza.image);
-          } catch (imageError) {
-            this.logger.error(`Failed to delete image for pizza ${id}: ${String(imageError)}`);
-
-            await this.notificationsService
-              .send({
-                type: NotificationType.CRITICAL_ERROR,
-                recipient: this.adminEmail,
-                data: {
-                  message: `Pizza deletion rolled back: failed to delete image file for pizza "${pizza.name}" (${id})`,
-                  errorType: "PizzaImageDeletionError",
-                  path: pizza.image,
-                  timestamp: new Date().toISOString(),
-                },
-              })
-              .catch((notifError) => {
-                this.logger.error(
-                  `Failed to send image deletion error notification: ${String(notifError)}`
-                );
-              });
-
-            throw imageError;
-          }
-        }
-      });
-
-      this.logger.log(`Pizza deleted: "${pizza.name}" (id: ${id})`);
-    } catch (error) {
-      if (error instanceof NotFoundException || error instanceof InternalServerErrorException) {
-        throw error;
+    // The image is removed first: if the unlink fails, nothing has been written to
+    // the database yet, so the pizza stays as it is instead of being deleted with
+    // its file left behind on disk.
+    if (pizza.image) {
+      try {
+        await this.deleteImageFile(pizza.image);
+      } catch (imageError) {
+        this.logger.error(`Failed to delete image for pizza ${id}: ${String(imageError)}`);
+        await this.notifyImageDeletionFailure(pizza);
+        throw new InternalServerErrorException("Pizza deletion failed, please try again later");
       }
+    }
+
+    let deleted: boolean;
+    try {
+      deleted = await this.pizzasRepository.remove(id);
+    } catch (error) {
+      this.logger.error(`Failed to delete pizza ${id}: ${String(error)}`);
       throw new InternalServerErrorException("Pizza deletion failed, please try again later");
     }
+
+    if (!deleted) {
+      throw new NotFoundException("Pizza not found");
+    }
+
+    this.logger.log(`Pizza deleted: "${pizza.name}" (id: ${id})`);
+  }
+
+  private async notifyImageDeletionFailure(pizza: Pizza): Promise<void> {
+    await this.notificationsService
+      .send({
+        type: NotificationType.CRITICAL_ERROR,
+        recipient: this.adminEmail,
+        data: {
+          message: `Pizza deletion aborted: failed to delete image file for pizza "${pizza.name}" (${pizza.id}). The pizza was not deleted.`,
+          errorType: "PizzaImageDeletionError",
+          path: pizza.image,
+          timestamp: new Date().toISOString(),
+        },
+      })
+      .catch((notifError) => {
+        this.logger.error(
+          `Failed to send image deletion error notification: ${String(notifError)}`
+        );
+      });
   }
 
   private async deleteImageFile(imagePath: string): Promise<void> {

@@ -1,11 +1,13 @@
 import {
   BadRequestException,
   ConflictException,
+  Inject,
   Injectable,
   Logger,
   NotFoundException,
 } from "@nestjs/common";
-import { PromocodesRepository } from "./promocodes.repository.ts";
+import { PROMOCODES_REPOSITORY } from "../shared/database/tokens.ts";
+import type { IPromocodesRepository } from "./interfaces/promocodes.repository.interface.ts";
 import { Promocode } from "./entities/promocode.entity.ts";
 import { CreatePromocodeDto } from "./dto/create-promocode.dto.ts";
 import { UpdatePromocodeDto } from "./dto/update-promocode.dto.ts";
@@ -15,7 +17,10 @@ import { DiscountType } from "./constants/discount-type.constant.ts";
 export class PromocodesService {
   private readonly logger = new Logger(PromocodesService.name);
 
-  constructor(private readonly promocodesRepository: PromocodesRepository) {}
+  constructor(
+    @Inject(PROMOCODES_REPOSITORY)
+    private readonly promocodesRepository: IPromocodesRepository
+  ) {}
 
   async create(dto: CreatePromocodeDto): Promise<Promocode> {
     const existing = await this.promocodesRepository.findByCode(dto.code);
