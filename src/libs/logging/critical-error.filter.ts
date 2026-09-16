@@ -57,9 +57,12 @@ export class CriticalErrorFilter implements ExceptionFilter {
       message = exception.message;
     }
 
-    const is4xx = status >= 400 && status < 500;
+    // Only server-side failures are worth waking an administrator for. 4xx responses
+    // are client mistakes - a wrong password or a mistyped URL - and alerting on them
+    // meant any bot probing the API could flood the mailbox.
+    const is5xx = status >= 500;
 
-    if (is4xx) {
+    if (is5xx) {
       const event: CriticalErrorEvent = {
         message,
         statusCode: status,
