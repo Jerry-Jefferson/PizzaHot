@@ -1,22 +1,23 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { INestApplication } from "@nestjs/common";
 import request from "supertest";
-import { AppModule } from "./../src/app.module.ts";
+import { GatewayModule } from "./../src/apps/api-gateway/gateway.module.ts";
 
 describe("AppController (e2e)", () => {
   let app: INestApplication;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [GatewayModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.setGlobalPrefix("api");
     await app.init();
   });
 
-  it("/ (GET)", () => {
-    return request(app.getHttpServer()).get("/").expect(200).expect("Hello World!");
+  it("/api (GET)", () => {
+    return request(app.getHttpServer()).get("/api").expect(200).expect("Hello World!");
   });
 
   afterEach(async () => {

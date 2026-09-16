@@ -1,0 +1,228 @@
+x-service-base: &service-base
+  build:
+    context: .
+    dockerfile: Dockerfile
+  restart: unless-stopped
+  env_file:
+    - ./.env
+  depends_on:
+    rabbitmq:
+      condition: service_healthy
+
+x-postgres-service: &postgres-service
+  <<: *service-base
+  depends_on:
+    rabbitmq:
+      condition: service_healthy
+    pgdb:
+      condition: service_healthy
+
+services:
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    container_name: pizzahot-rabbitmq
+    restart: unless-stopped
+    ports:
+      - "${RABBITMQ_PORT:-5672}:5672"
+      - "${RABBITMQ_MANAGEMENT_PORT:-15672}:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-guest}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-guest}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  pgdb:
+    image: postgres:17
+    container_name: pizzahot-pgdb
+    restart: unless-stopped
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    env_file:
+      - ./.env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./docker/postgres/init-databases.sh:/docker-entrypoint-initdb.d/init-databases.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  mongodb:
+    image: mongo:latest
+    container_name: pizzahot-mongodb
+    restart: unless-stopped
+    ports:
+      - "${MONGO_PORT:-27018}:27017"
+    env_file:
+      - ./.env
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: pizzahot-mailhog
+    restart: unless-stopped
+    ports:
+      - "${SMTP_PORT:-1025}:1025"
+      - "8025:8025"
+
+  api-gateway:
+    <<: *service-base
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: api-gateway
+    container_name: pizzahot-gateway
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      APP_NAME: api-gateway
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-guest}:${RABBITMQ_PASSWORD:-guest}@rabbitmq:5672
+    volumes:
+      # Read-write: multer (FileInterceptor) runs here, so the gateway is the writer
+      # that creates new image files. catalog-service owns their lifecycle and deletes them.
+      - ./uploads:/app/uploads
+
+  identity-service:
+    <<: *postgres-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: identity-service
+    container_name: pizzahot-identity
+    environment:
+      APP_NAME: identity-service
+      POSTGRES_HOST: pgdb
+      POSTGRES_PORT: 5432
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-guest}:${RABBITMQ_PASSWORD:-guest}@rabbitmq:5672
+
+  catalog-service:
+    <<: *postgres-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: catalog-service
+    container_name: pizzahot-catalog
+    environment:
+      APP_NAME: catalog-service
+      POSTGRES_HOST: pgdb
+      POSTGRES_PORT: 5432
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-guest}:${RABBITMQ_PASSWORD:-guest}@rabbitmq:5672
+    volumes:
+      - ./uploads:/app/uploads
+
+  cart-service:
+    <<: *postgres-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: cart-service
+    container_name: pizzahot-cart
+    environment:
+      APP_NAME: cart-service
+      POSTGRES_HOST: pgdb
+      POSTGRES_PORT: 5432
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-guest}:${RABBITMQ_PASSWORD:-guest}@rabbitmq:5672
+
+  order-service:
+    <<: *postgres-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: order-service
+    container_name: pizzahot-order
+    environment:
+      APP_NAME: order-service
+      POSTGRES_HOST: pgdb
+      POSTGRES_PORT: 5432
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-guest}:${RABBITMQ_PASSWORD:-guest}@rabbitmq:5672
+
+  promocode-service:
+    <<: *postgres-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: promocode-service
+    container_name: pizzahot-promocode
+    environment:
+      APP_NAME: promocode-service
+      POSTGRES_HOST: pgdb
+      POSTGRES_PORT: 5432
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-guest}:${RABBITMQ_PASSWORD:-guest}@rabbitmq:5672
+
+  analytics-service:
+    <<: *postgres-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: analytics-service
+    container_name: pizzahot-analytics
+    environment:
+      APP_NAME: analytics-service
+      POSTGRES_HOST: pgdb
+      POSTGRES_PORT: 5432
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-guest}:${RABBITMQ_PASSWORD:-guest}@rabbitmq:5672
+
+  notification-service:
+    <<: *service-base
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: notification-service
+    container_name: pizzahot-notification
+    environment:
+      APP_NAME: notification-service
+      SMTP_HOST: mailhog
+      SMTP_PORT: 1025
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-guest}:${RABBITMQ_PASSWORD:-guest}@rabbitmq:5672
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      mailhog:
+        condition: service_started
+
+  log-service:
+    <<: *service-base
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: log-service
+    container_name: pizzahot-log
+    environment:
+      APP_NAME: log-service
+      MONGO_HOST: mongodb
+      MONGO_PORT: 27017
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-guest}:${RABBITMQ_PASSWORD:-guest}@rabbitmq:5672
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+
+volumes:
+  pg_data:
+  mongo_data:
+  rabbitmq_data:
