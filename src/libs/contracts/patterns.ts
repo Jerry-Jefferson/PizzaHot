@@ -1,0 +1,83 @@
+export const RPC = {
+  identity: {
+    register: "identity.auth.register",
+    login: "identity.auth.login",
+    verifyEmail: "identity.auth.verify_email",
+    declineEmail: "identity.auth.decline_email",
+    findById: "identity.user.find_by_id",
+    findAll: "identity.user.find_all",
+    updateMe: "identity.user.update_me",
+    changePassword: "identity.user.change_password",
+    deleteMe: "identity.user.delete_me",
+  },
+  catalog: {
+    pizzaList: "catalog.pizza.list",
+    pizzaFindById: "catalog.pizza.find_by_id",
+    pizzaCreate: "catalog.pizza.create",
+    pizzaUpdate: "catalog.pizza.update",
+    pizzaSetImage: "catalog.pizza.set_image",
+    pizzaRemove: "catalog.pizza.remove",
+    pizzaResolve: "catalog.pizza.resolve",
+    ingredientList: "catalog.ingredient.list",
+    ingredientFindById: "catalog.ingredient.find_by_id",
+    ingredientCreate: "catalog.ingredient.create",
+    ingredientUpdate: "catalog.ingredient.update",
+    ingredientRemove: "catalog.ingredient.remove",
+  },
+  cart: {
+    get: "cart.get",
+    addItem: "cart.add_item",
+    updateItemQuantity: "cart.update_item_quantity",
+    removeItem: "cart.remove_item",
+    clear: "cart.clear",
+    applyPromocode: "cart.apply_promocode",
+    removePromocode: "cart.remove_promocode",
+    checkoutSnapshot: "cart.checkout_snapshot",
+  },
+  order: {
+    create: "order.create",
+    findMine: "order.find_mine",
+    findMineById: "order.find_mine_by_id",
+    findAll: "order.find_all",
+    findByUserId: "order.find_by_user_id",
+    findById: "order.find_by_id",
+    updateStatus: "order.update_status",
+  },
+  promocode: {
+    list: "promocode.list",
+    findById: "promocode.find_by_id",
+    findByCode: "promocode.find_by_code",
+    create: "promocode.create",
+    update: "promocode.update",
+    remove: "promocode.remove",
+    restore: "promocode.restore",
+    checkAvailable: "promocode.check_available",
+    reserve: "promocode.reserve",
+  },
+  analytics: {
+    popularPizza: "analytics.popular_pizza",
+    highestChecks: "analytics.highest_checks",
+  },
+  log: {
+    query: "log.query",
+  },
+} as const;
+
+export const EVENTS = {
+  userRegistered: "user.registered",
+  userEmailVerified: "user.email_verified",
+  userDeleted: "user.deleted",
+
+  pizzaCreated: "pizza.created",
+  pizzaUpdated: "pizza.updated",
+  pizzaDeleted: "pizza.deleted",
+
+  promocodeDeleted: "promocode.deleted",
+
+  orderCreated: "order.created",
+  orderFailed: "order.failed",
+  orderStatusChanged: "order.status_changed",
+
+  criticalError: "system.critical_error",
+  logWritten: "log.written",
+} as const;
