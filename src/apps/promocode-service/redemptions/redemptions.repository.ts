@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { LessThan, Repository } from "typeorm";
-import { PromocodeRedemption } from "./entities/promocode-redemption.entity.ts";
-import { RedemptionStatus } from "./constants/redemption-status.constant.ts";
-import type { IRedemptionsRepository } from "./interfaces/redemptions.repository.interface.ts";
+import { PromocodeRedemption } from "./promocode-redemption.entity.ts";
+import { RedemptionStatus } from "./redemption-status.constant.ts";
+import type { IRedemptionsRepository } from "../promocode.types.ts";
 
 @Injectable()
 export class RedemptionsRepository implements IRedemptionsRepository {

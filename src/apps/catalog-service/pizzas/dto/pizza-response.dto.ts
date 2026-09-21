@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { Pizza } from "../entities/pizza.entity.ts";
+import { Pizza } from "../pizza.entity.ts";
 import { IngredientResponseDto } from "../../ingredients/dto/ingredient-response.dto.ts";
 
 export class PizzaResponseDto {
@@ -60,5 +60,9 @@ export class PizzaResponseDto {
     dto.createdAt = pizza.createdAt;
     dto.updatedAt = pizza.updatedAt;
     return dto;
+  }
+
+  static fromEntities(pizzas: Pizza[]): PizzaResponseDto[] {
+    return pizzas.map((pizza) => PizzaResponseDto.fromEntity(pizza));
   }
 }

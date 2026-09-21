@@ -1,56 +1,26 @@
 import { Controller, Get, Query } from "@nestjs/common";
-import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { ApiGetLogs } from "./logs.api-docs.ts";
+import { ApiOwnerOnly } from "../../../libs/common/swagger/api-responses.decorator.ts";
 import { Roles } from "../../../libs/auth/decorators/roles.decorator.ts";
-import { Role } from "../../../libs/common/constants/role.enum.ts";
+import { Role } from "../../../libs/common/constants/role.constant.ts";
 import { ZodValidationPipe } from "../../../libs/common/pipes/zod-validation.pipe.ts";
 import { LogClient } from "../clients/analytics.client.ts";
 import {
-  type ListLogsQuery,
   listLogsQuerySchema,
-} from "../../log-service/logs/schemas/log-query.schema.ts";
-import { LogLevel } from "../../../libs/logging/log-level.enum.ts";
+  type ListLogsQuery,
+} from "../../log-service/schemas/log-query.schema.ts";
 
 @ApiTags("Logs")
 @ApiBearerAuth()
 @Roles(Role.ADMIN)
+@ApiOwnerOnly()
 @Controller("logs")
 export class LogsController {
   constructor(private readonly logsService: LogClient) {}
 
   @Get()
-  @ApiOperation({ summary: "Get paginated system logs with optional level filter (Admin only)" })
-  @ApiQuery({
-    name: "page",
-    required: false,
-    type: Number,
-    example: 1,
-    description: "Page number (defaults to 1)",
-  })
-  @ApiQuery({
-    name: "limit",
-    required: false,
-    type: Number,
-    example: 10,
-    description: "Items per page (defaults to 10, max 100)",
-  })
-  @ApiQuery({
-    name: "level",
-    required: false,
-    enum: LogLevel,
-    description: "Filter by log level (info, error)",
-  })
-  @ApiQuery({
-    name: "context",
-    required: false,
-    type: String,
-    description: "Filter by log context (e.g. HTTP, CriticalErrorFilter)",
-  })
-  @ApiResponse({
-    status: 200,
-    description: "Paginated list of logs",
-  })
-  @ApiResponse({ status: 401, description: "Unauthorized" })
-  @ApiResponse({ status: 403, description: "Forbidden - Insufficient permissions" })
+  @ApiGetLogs()
   async getLogs(@Query(new ZodValidationPipe(listLogsQuerySchema)) query: ListLogsQuery) {
     return this.logsService.findAll(query);
   }

@@ -1,10 +1,10 @@
 import { Inject, Injectable } from "@nestjs/common";
 import type { ClientProxy } from "@nestjs/microservices";
-import { CART_CLIENT } from "../../../libs/messaging/tokens.ts";
-import { RPC } from "../../../libs/contracts/patterns.ts";
+import { CART_CLIENT } from "../../../libs/messaging/tokens.constant.ts";
+import { RPC } from "../../../libs/contracts/index.ts";
 import { rpc } from "../../../libs/messaging/rpc.util.ts";
-import type { CartResponseDto } from "../../cart-service/carts/dto/cart-response.dto.ts";
-import type { CartItem } from "../../cart-service/carts/entities/cart-item.entity.ts";
+import type { CartResponseDto } from "../../cart-service/dto/cart-response.dto.ts";
+import type { CartItemResponseDto } from "../../cart-service/cart-items/dto/cart-item-response.dto.ts";
 
 @Injectable()
 export class CartClient {
@@ -14,11 +14,15 @@ export class CartClient {
     return rpc(this.client, RPC.cart.get, { userId });
   }
 
-  addItem(userId: string, pizzaId: string, quantity: number): Promise<CartItem> {
+  addItem(userId: string, pizzaId: string, quantity: number): Promise<CartItemResponseDto> {
     return rpc(this.client, RPC.cart.addItem, { userId, pizzaId, quantity });
   }
 
-  updateItemQuantity(userId: string, pizzaId: string, quantity: number): Promise<CartItem | null> {
+  updateItemQuantity(
+    userId: string,
+    pizzaId: string,
+    quantity: number
+  ): Promise<CartItemResponseDto | null> {
     return rpc(this.client, RPC.cart.updateItemQuantity, { userId, pizzaId, quantity });
   }
 

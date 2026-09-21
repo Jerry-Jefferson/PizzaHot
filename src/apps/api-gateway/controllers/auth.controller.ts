@@ -1,12 +1,13 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Query, Res } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 import {
-  ApiBearerAuth,
-  ApiBody,
-  ApiOperation,
-  ApiQuery,
-  ApiResponse,
-  ApiTags,
-} from "@nestjs/swagger";
+  ApiGetMeAuth,
+  ApiLoginAuth,
+  ApiLogoutAuth,
+  ApiSignupAuth,
+  ApiVerifyEmailAcceptAuth,
+  ApiVerifyEmailDeclineAuth,
+} from "./auth.api-docs.ts";
 import { Throttle } from "@nestjs/throttler";
 import type { Response } from "express";
 import { UserResponseDto } from "../../identity-service/users/dto/user-response.dto.ts";
@@ -17,10 +18,10 @@ import { Public } from "../../../libs/auth/decorators/public.decorator.ts";
 import { AuthResponseDto } from "../../identity-service/auth/dto/auth-response.dto.ts";
 import { LoginDto } from "../../identity-service/auth/dto/login.dto.ts";
 import { SignupDto } from "../../identity-service/auth/dto/signup.dto.ts";
-import type { JwtPayload } from "../../../libs/auth/jwt-payload.interface.ts";
+import type { JwtPayload } from "../../../libs/auth/jwt-payload.schema.ts";
 import { loginSchema, signupSchema } from "../../identity-service/auth/schemas/auth.schema.ts";
 import { COOKIE_MAX_AGE_MS } from "../../../libs/auth/auth.constants.ts";
-import { COOKIE_NAME } from "../../../libs/common/constants/cookie.constants.ts";
+import { COOKIE_NAME } from "../../../libs/auth/auth.constants.ts";
 
 @ApiTags("Auth")
 @Controller("auth")
@@ -30,14 +31,7 @@ export class AuthController {
   @Public()
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post("signup")
-  @ApiOperation({ summary: "Register a new user account" })
-  @ApiBody({ type: SignupDto })
-  @ApiResponse({
-    status: 201,
-    description: "User registered and authenticated successfully",
-    type: AuthResponseDto,
-  })
-  @ApiResponse({ status: 409, description: "User with this email already exists" })
+  @ApiSignupAuth()
   async signup(
     @Body(new ZodValidationPipe(signupSchema)) dto: SignupDto,
     @Res({ passthrough: true }) res: Response
@@ -49,20 +43,14 @@ export class AuthController {
 
   @Public()
   @Get("verify-email/accept")
-  @ApiOperation({ summary: "Accept email verification" })
-  @ApiQuery({ name: "token", type: String, description: "Verification token", required: true })
-  @ApiResponse({ status: 200, description: "Email successfully verified" })
-  @ApiResponse({ status: 400, description: "Invalid or expired verification token" })
+  @ApiVerifyEmailAcceptAuth()
   async verifyEmailAccept(@Query("token") token: string): Promise<{ message: string }> {
     return this.authService.verifyEmailAccept(token);
   }
 
   @Public()
   @Get("verify-email/decline")
-  @ApiOperation({ summary: "Decline email verification" })
-  @ApiQuery({ name: "token", type: String, description: "Verification token", required: true })
-  @ApiResponse({ status: 200, description: "Email verification request declined" })
-  @ApiResponse({ status: 400, description: "Invalid or expired verification token" })
+  @ApiVerifyEmailDeclineAuth()
   async verifyEmailDecline(@Query("token") token: string): Promise<{ message: string }> {
     return this.authService.verifyEmailDecline(token);
   }
@@ -71,10 +59,7 @@ export class AuthController {
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post("login")
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: "Log in with email and password" })
-  @ApiBody({ type: LoginDto })
-  @ApiResponse({ status: 200, description: "Login successful", type: AuthResponseDto })
-  @ApiResponse({ status: 401, description: "Invalid email or password" })
+  @ApiLoginAuth()
   async login(
     @Body(new ZodValidationPipe(loginSchema)) dto: LoginDto,
     @Res({ passthrough: true }) res: Response
@@ -85,20 +70,14 @@ export class AuthController {
   }
 
   @Get("me")
-  @ApiBearerAuth()
-  @ApiOperation({ summary: "Get the current authenticated user's profile" })
-  @ApiResponse({ status: 200, description: "Current user profile", type: UserResponseDto })
-  @ApiResponse({ status: 401, description: "Unauthorized" })
+  @ApiGetMeAuth()
   async getMe(@CurrentUser() user: JwtPayload): Promise<UserResponseDto> {
     return this.authService.getProfile(user.sub);
   }
 
   @Post("logout")
   @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: "Log out and clear authentication cookie" })
-  @ApiResponse({ status: 204, description: "Logged out successfully" })
-  @ApiResponse({ status: 401, description: "Unauthorized" })
+  @ApiLogoutAuth()
   logout(@Res({ passthrough: true }) res: Response): void {
     res.clearCookie(COOKIE_NAME);
   }

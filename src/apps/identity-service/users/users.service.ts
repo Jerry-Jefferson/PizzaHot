@@ -7,18 +7,19 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import bcrypt from "bcrypt";
-import { SALT_ROUNDS } from "../../../libs/common/constants/salt.constants.ts";
+import { SALT_ROUNDS } from "./constants/salt.constant.ts";
 import { ChangePasswordDto } from "./dto/change-password.dto.ts";
 import { CreateUserDto } from "./dto/create-user.dto.ts";
 import { UpdateUserDto } from "./dto/update-user.dto.ts";
-import { Role } from "../../../libs/common/constants/role.enum.ts";
-import { User } from "./entities/user.entity.ts";
+import { Role } from "../../../libs/common/constants/role.constant.ts";
+import { User } from "./user.entity.ts";
 import { USERS_REPOSITORY } from "../../../libs/common/database/tokens.ts";
-import type { IUsersRepository } from "./interfaces/users.repository.interface.ts";
+import type { IUsersRepository } from "./user.types.ts";
 import type { ClientProxy } from "@nestjs/microservices";
-import { EVENTS } from "../../../libs/contracts/patterns.ts";
-import type { UserDeletedEvent } from "../../../libs/contracts/events.ts";
-import { EVENTS_CLIENT } from "../../../libs/messaging/tokens.ts";
+import { EVENTS } from "../../../libs/contracts/index.ts";
+import type { UserDeletedEvent } from "../../../libs/contracts/index.ts";
+import { EVENTS_CLIENT } from "../../../libs/messaging/tokens.constant.ts";
+import { UserResponseDto } from "./dto/user-response.dto.ts";
 
 @Injectable()
 export class UsersService {
@@ -75,23 +76,36 @@ export class UsersService {
     page: number,
     limit: number,
     search?: string
-  ): Promise<{ data: User[]; total: number }> {
-    return this.usersRepository.findPaginated(page, limit, search);
+  ): Promise<{ data: UserResponseDto[]; total: number }> {
+    const { data, total } = await this.usersRepository.findPaginated(page, limit, search);
+    return { data: UserResponseDto.fromEntities(data), total };
   }
 
-  async findById(id: string): Promise<User> {
+  /**
+   * Entity form, for code inside this service that needs fields the response hides -
+   * changePassword compares against passwordHash. Callers answering a message want
+   * findById instead.
+   */
+  async findEntityById(id: string): Promise<User> {
     const user = await this.usersRepository.findById(id);
     if (!user) {
       throw new NotFoundException(`User with id "${id}" not found`);
     }
+
     return user;
+  }
+
+  async findById(id: string): Promise<UserResponseDto> {
+    // Mapping is not optional here: User is structurally assignable to the response DTO,
+    // so returning the entity would compile and quietly put passwordHash on the wire.
+    return UserResponseDto.fromEntity(await this.findEntityById(id));
   }
 
   async findByEmail(email: string): Promise<User | null> {
     return this.usersRepository.findByEmail(email);
   }
 
-  async update(id: string, dto: UpdateUserDto): Promise<User> {
+  async update(id: string, dto: UpdateUserDto): Promise<UserResponseDto> {
     await this.findById(id);
 
     await this.usersRepository.update(id, dto);
@@ -122,7 +136,7 @@ export class UsersService {
   }
 
   async changePassword(id: string, dto: ChangePasswordDto): Promise<void> {
-    const user = await this.findById(id);
+    const user = await this.findEntityById(id);
 
     const isCurrentPasswordValid = await bcrypt.compare(dto.currentPassword, user.passwordHash);
     if (!isCurrentPasswordValid) {

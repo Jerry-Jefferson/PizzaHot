@@ -1,14 +1,14 @@
 import { Inject, Injectable } from "@nestjs/common";
 import type { ClientProxy } from "@nestjs/microservices";
-import { IDENTITY_CLIENT } from "../../../libs/messaging/tokens.ts";
-import { RPC } from "../../../libs/contracts/patterns.ts";
+import { IDENTITY_CLIENT } from "../../../libs/messaging/tokens.constant.ts";
+import { RPC } from "../../../libs/contracts/index.ts";
 import { rpc } from "../../../libs/messaging/rpc.util.ts";
 import type { SignUp } from "../../identity-service/auth/schemas/auth.schema.ts";
 import type { LoginDto } from "../../identity-service/auth/dto/login.dto.ts";
 import type { UpdateUserDto } from "../../identity-service/users/dto/update-user.dto.ts";
 import type { ChangePasswordDto } from "../../identity-service/users/dto/change-password.dto.ts";
 import type { UserResponseDto } from "../../identity-service/users/dto/user-response.dto.ts";
-import type { PaginatedResponseDto } from "../../../libs/common/pagination/dto/paginated-response.dto.ts";
+import type { PaginatedResponseDto } from "../../../libs/common/pagination/paginated-response.dto.ts";
 
 @Injectable()
 export class IdentityClient {

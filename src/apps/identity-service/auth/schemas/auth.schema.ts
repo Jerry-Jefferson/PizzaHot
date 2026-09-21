@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { passwordSchema } from "./password.schema.ts";
-import { Gender } from "../../users/constants/gender.enum.ts";
+import { Gender } from "../../users/constants/gender.constant.ts";
 
 export const signupSchema = z
   .object({

@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { Gender } from "../../users/constants/gender.enum.ts";
+import { Gender } from "../../users/constants/gender.constant.ts";
 
 export class SignupDto {
   @ApiProperty({ example: "john@example.com" })

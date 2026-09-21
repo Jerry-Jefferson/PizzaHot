@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ILike, Repository } from "typeorm";
-import { User } from "./entities/user.entity.ts";
-import type { IUsersRepository } from "./interfaces/users.repository.interface.ts";
+import { User } from "./user.entity.ts";
+import type { IUsersRepository } from "./user.types.ts";
 
 @Injectable()
 export class UsersRepository implements IUsersRepository {

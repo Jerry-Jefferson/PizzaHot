@@ -8,11 +8,12 @@ import {
   Logger,
 } from "@nestjs/common";
 import { Inject } from "@nestjs/common";
-import type { ClientProxy } from "@nestjs/microservices";
-import type { Request, Response } from "express";
-import { EVENTS } from "../contracts/patterns.ts";
-import type { CriticalErrorEvent } from "../contracts/events.ts";
-import { EVENTS_CLIENT } from "../messaging/tokens.ts";
+import type { Response } from "express";
+import { EVENTS } from "../contracts/patterns.constant.ts";
+import type { CriticalErrorEvent } from "../contracts/events.types.ts";
+import { EVENTS_CLIENT } from "../messaging/tokens.constant.ts";
+import type { EventPublisher } from "../messaging/message-client.types.ts";
+import type { LoggedRequest } from "./logged-request.types.ts";
 
 @Injectable()
 @Catch()
@@ -21,13 +22,13 @@ export class CriticalErrorFilter implements ExceptionFilter {
 
   constructor(
     @Inject(EVENTS_CLIENT)
-    private readonly events: ClientProxy
+    private readonly events: EventPublisher
   ) {}
 
   catch(exception: unknown, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
+    const request = ctx.getRequest<LoggedRequest>();
 
     const status =
       exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
@@ -57,9 +58,6 @@ export class CriticalErrorFilter implements ExceptionFilter {
       message = exception.message;
     }
 
-    // Only server-side failures are worth waking an administrator for. 4xx responses
-    // are client mistakes - a wrong password or a mistyped URL - and alerting on them
-    // meant any bot probing the API could flood the mailbox.
     const is5xx = status >= 500;
 
     if (is5xx) {
@@ -83,10 +81,9 @@ export class CriticalErrorFilter implements ExceptionFilter {
     const reqUrl = request?.url ?? "N/A";
     const stack = exception instanceof Error ? exception.stack : undefined;
 
-    const requestObj = request as unknown as Record<string, unknown> | undefined;
-    if (!requestObj?.__errorLogged) {
-      if (requestObj) {
-        requestObj.__errorLogged = true;
+    if (!request?.errorLogged) {
+      if (request) {
+        request.errorLogged = true;
       }
       this.logger.error(
         {

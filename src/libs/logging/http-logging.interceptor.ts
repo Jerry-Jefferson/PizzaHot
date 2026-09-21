@@ -7,7 +7,8 @@ import {
   Logger,
   type NestInterceptor,
 } from "@nestjs/common";
-import type { Request, Response } from "express";
+import type { Response } from "express";
+import type { LoggedRequest } from "./logged-request.types.ts";
 import { type Observable, throwError } from "rxjs";
 import { catchError, tap } from "rxjs/operators";
 
@@ -21,13 +22,12 @@ export class HttpLoggingInterceptor implements NestInterceptor {
     }
 
     const ctx = context.switchToHttp();
-    const request = ctx.getRequest<Request>();
+    const request = ctx.getRequest<LoggedRequest>();
     const response = ctx.getResponse<Response>();
 
     const { method, originalUrl, url, ip } = request;
     const reqUrl = originalUrl || url;
-    const user = (request as unknown as { user?: { sub?: string; id?: string } }).user;
-    const userId = user?.sub || user?.id;
+    const userId = request.user?.sub;
     const startTime = Date.now();
 
     return next.handle().pipe(
@@ -67,7 +67,7 @@ export class HttpLoggingInterceptor implements NestInterceptor {
           errorMessage,
         };
 
-        (request as unknown as Record<string, unknown>).__errorLogged = true;
+        request.errorLogged = true;
         this.logger.error(metadata, stack, "HTTP");
 
         return throwError(() => error);

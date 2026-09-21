@@ -94,8 +94,6 @@ services:
       APP_NAME: api-gateway
       RABBITMQ_URL: amqp://${RABBITMQ_USER:-guest}:${RABBITMQ_PASSWORD:-guest}@rabbitmq:5672
     volumes:
-      # Read-write: multer (FileInterceptor) runs here, so the gateway is the writer
-      # that creates new image files. catalog-service owns their lifecycle and deletes them.
       - ./uploads:/app/uploads
 
   identity-service:

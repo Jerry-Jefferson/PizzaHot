@@ -12,7 +12,7 @@ import {
   LOG_CLIENT,
   ORDER_CLIENT,
   PROMOCODE_CLIENT,
-} from "../../libs/messaging/tokens.ts";
+} from "../../libs/messaging/tokens.constant.ts";
 import { JwtAuthGuard } from "../../libs/auth/guards/jwt-auth.guard.ts";
 import { RolesGuard } from "../../libs/auth/guards/roles.guard.ts";
 import { RmqLoggerService } from "../../libs/logging/rmq-logger.service.ts";
