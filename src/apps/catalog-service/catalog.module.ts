@@ -11,6 +11,7 @@ import { Ingredient } from "./ingredients/ingredient.entity.ts";
 import { PizzasModule } from "./pizzas/pizzas.module.ts";
 import { IngredientsModule } from "./ingredients/ingredients.module.ts";
 import { CatalogMessagesController } from "./catalog.controller.ts";
+import { SeedService } from "./seed/seed.service.ts";
 
 @Module({
   imports: [
@@ -22,6 +23,6 @@ import { CatalogMessagesController } from "./catalog.controller.ts";
     IngredientsModule,
   ],
   controllers: [CatalogMessagesController],
-  providers: [RmqLoggerService],
+  providers: [RmqLoggerService, SeedService],
 })
 export class CatalogServiceModule {}

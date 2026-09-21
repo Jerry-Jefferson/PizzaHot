@@ -8,7 +8,6 @@ import { User } from "./users/user.entity.ts";
 import { UsersModule } from "./users/users.module.ts";
 import { AuthModule } from "./auth/auth.module.ts";
 import { IdentityMessagesController } from "./identity.controller.ts";
-import { SeedService } from "./seed.service.ts";
 
 @Module({
   imports: [
@@ -19,6 +18,6 @@ import { SeedService } from "./seed.service.ts";
     AuthModule,
   ],
   controllers: [IdentityMessagesController],
-  providers: [RmqLoggerService, SeedService],
+  providers: [RmqLoggerService],
 })
 export class IdentityServiceModule {}
