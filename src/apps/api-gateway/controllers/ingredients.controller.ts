@@ -15,8 +15,6 @@ import { CatalogClient } from "../clients/catalog.client.ts";
 import { CreateIngredientDto } from "../../catalog-service/ingredients/dto/create-ingredient.dto.ts";
 import { UpdateIngredientDto } from "../../catalog-service/ingredients/dto/update-ingredient.dto.ts";
 import { IngredientResponseDto } from "../../catalog-service/ingredients/dto/ingredient-response.dto.ts";
-import { Roles } from "../../../libs/auth/decorators/roles.decorator.ts";
-import { Role } from "../../../libs/auth/auth.constant.ts";
 import { ZodValidationPipe } from "../../../libs/validation/zod-validation.pipe.ts";
 import {
   ingredientSchema,
@@ -29,6 +27,8 @@ import {
   ApiListIngredients,
   ApiUpdateIngredient,
 } from "./ingredients.api-docs.ts";
+import { Can } from "../../../libs/auth/decorators/can.decorator.ts";
+import { Permission } from "../../../libs/auth/permission.constant.ts";
 
 @ApiTags("Ingredients")
 @ApiBearerAuth()
@@ -37,7 +37,7 @@ export class IngredientsController {
   constructor(private readonly ingredientsService: CatalogClient) {}
 
   @Post()
-  @Roles(Role.ADMIN)
+  @Can(Permission.INGREDIENT_WRITE)
   @ApiCreateIngredient()
   async create(
     @Body(new ZodValidationPipe(ingredientSchema)) dto: CreateIngredientDto
@@ -46,19 +46,21 @@ export class IngredientsController {
   }
 
   @Get()
+  @Can(Permission.INGREDIENT_READ)
   @ApiListIngredients()
   async findAll(): Promise<IngredientResponseDto[]> {
     return this.ingredientsService.findAllIngredients();
   }
 
   @Get(":id")
+  @Can(Permission.INGREDIENT_READ)
   @ApiGetIngredient()
   async findOne(@Param("id", ParseUUIDPipe) id: string): Promise<IngredientResponseDto> {
     return this.ingredientsService.findIngredientById(id);
   }
 
   @Patch(":id")
-  @Roles(Role.ADMIN)
+  @Can(Permission.INGREDIENT_WRITE)
   @ApiUpdateIngredient()
   async update(
     @Param("id", ParseUUIDPipe) id: string,
@@ -69,7 +71,7 @@ export class IngredientsController {
 
   @Delete(":id")
   @HttpCode(HttpStatus.NO_CONTENT)
-  @Roles(Role.ADMIN)
+  @Can(Permission.INGREDIENT_DELETE)
   @ApiDeleteIngredient()
   async remove(@Param("id", ParseUUIDPipe) id: string): Promise<void> {
     await this.ingredientsService.removeIngredient(id);

@@ -4,6 +4,7 @@ import { ILike, Repository } from "typeorm";
 import { User } from "./user.entity.ts";
 import type { IUsersRepository } from "./user.types.ts";
 import type { PaginatedResult } from "../../../libs/pagination/pagination.types.ts";
+import type { Role } from "../../../libs/auth/auth.constant.ts";
 
 @Injectable()
 export class UsersRepository implements IUsersRepository {
@@ -56,6 +57,10 @@ export class UsersRepository implements IUsersRepository {
   async update(id: string, data: Partial<User>): Promise<boolean> {
     const result = await this.repository.update(id, data);
     return (result.affected ?? 0) > 0;
+  }
+
+  async countByRole(role: Role): Promise<number> {
+    return this.repository.countBy({ role });
   }
 
   async remove(id: string): Promise<boolean> {

@@ -9,12 +9,14 @@ import {
   ApiNotFound,
   ApiUpdated,
 } from "../../../libs/swagger/api-crud.decorator.ts";
+import { ApiAdminOnly } from "../../../libs/swagger/api-responses.decorator.ts";
 
 export const ApiCreateIngredient = () =>
   applyDecorators(
     ApiOperation({ summary: "Create a new ingredient (Admin only)" }),
     ApiBody({ type: CreateIngredientDto }),
-    ApiCreated("Ingredient", IngredientResponseDto)
+    ApiCreated("Ingredient", IngredientResponseDto),
+    ApiAdminOnly()
   );
 
 export const ApiListIngredients = () =>
@@ -36,12 +38,14 @@ export const ApiUpdateIngredient = () =>
     ApiOperation({ summary: "Update an ingredient by ID (Admin only)" }),
     ApiParam({ name: "id", type: "string", format: "uuid" }),
     ApiBody({ type: UpdateIngredientDto }),
-    ApiUpdated("Ingredient", IngredientResponseDto)
+    ApiUpdated("Ingredient", IngredientResponseDto),
+    ApiAdminOnly()
   );
 
 export const ApiDeleteIngredient = () =>
   applyDecorators(
     ApiOperation({ summary: "Delete an ingredient by ID (Admin only)" }),
     ApiParam({ name: "id", type: "string", format: "uuid" }),
-    ApiDeleted("Ingredient")
+    ApiDeleted("Ingredient"),
+    ApiAdminOnly()
   );

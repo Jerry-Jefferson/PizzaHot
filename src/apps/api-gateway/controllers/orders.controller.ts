@@ -24,8 +24,6 @@ import {
 import { OrderClient } from "../clients/order.client.ts";
 import { CurrentUser } from "../../../libs/auth/decorators/current-user.decorator.ts";
 import type { JwtPayload } from "../../../libs/auth/jwt-payload.schema.ts";
-import { Roles } from "../../../libs/auth/decorators/roles.decorator.ts";
-import { Role } from "../../../libs/auth/auth.constant.ts";
 import { EmailVerifiedGuard } from "../../../libs/auth/guards/email-verified.guard.ts";
 import { ZodValidationPipe } from "../../../libs/validation/zod-validation.pipe.ts";
 import {
@@ -42,6 +40,8 @@ import { UpdateOrderStatusDto } from "../../order-service/dto/update-order-statu
 import { OrderResponseDto } from "../../order-service/dto/order-response.dto.ts";
 import { PaginatedResponseDto } from "../../../libs/pagination/paginated-response.dto.ts";
 import type { ListOrdersQuery } from "../../order-service/order.types.ts";
+import { Can } from "../../../libs/auth/decorators/can.decorator.ts";
+import { Permission } from "../../../libs/auth/permission.constant.ts";
 
 @ApiTags("Orders")
 @ApiBearerAuth()
@@ -50,6 +50,7 @@ export class OrdersController {
   constructor(private readonly ordersService: OrderClient) {}
 
   @Post()
+  @Can(Permission.ORDER_CREATE)
   @UseGuards(EmailVerifiedGuard)
   @HttpCode(HttpStatus.CREATED)
   @ApiCreateOrder()
@@ -61,6 +62,7 @@ export class OrdersController {
   }
 
   @Get("my")
+  @Can(Permission.ORDER_READ_OWN)
   @ApiGetMyOrders()
   async getMyOrders(
     @CurrentUser() user: JwtPayload,
@@ -71,6 +73,7 @@ export class OrdersController {
   }
 
   @Get("my/:id")
+  @Can(Permission.ORDER_READ_OWN)
   @ApiGetMyOrderByIdOrder()
   async getMyOrderById(
     @CurrentUser() user: JwtPayload,
@@ -85,7 +88,7 @@ export class OrdersController {
    */
   @Post("search")
   @HttpCode(HttpStatus.OK)
-  @Roles(Role.ADMIN)
+  @Can(Permission.ORDER_READ_ANY)
   @ApiSearchOrders()
   async searchOrders(
     @Body(new ZodValidationPipe(listOrdersQuerySchema))
@@ -95,7 +98,7 @@ export class OrdersController {
   }
 
   @Get("user/:userId")
-  @Roles(Role.ADMIN)
+  @Can(Permission.ORDER_READ_ANY)
   @ApiGetOrdersByUserOrder()
   async getOrdersByUser(
     @Param("userId", ParseUUIDPipe) userId: string,
@@ -106,14 +109,14 @@ export class OrdersController {
   }
 
   @Get(":id")
-  @Roles(Role.ADMIN)
+  @Can(Permission.ORDER_READ_ANY)
   @ApiGetOrderByIdOrder()
   async getOrderById(@Param("id", ParseUUIDPipe) id: string): Promise<OrderResponseDto> {
     return this.ordersService.findById(id);
   }
 
   @Patch(":id/status")
-  @Roles(Role.ADMIN)
+  @Can(Permission.ORDER_STATUS_WRITE)
   @ApiUpdateStatusOrder()
   async updateStatus(
     @Param("id", ParseUUIDPipe) id: string,

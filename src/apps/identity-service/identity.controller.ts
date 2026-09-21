@@ -12,6 +12,7 @@ import type { UpdateUserDto } from "./users/dto/update-user.dto.ts";
 import type { ChangePasswordDto } from "./users/dto/change-password.dto.ts";
 import { UserResponseDto } from "./users/dto/user-response.dto.ts";
 import { PaginatedResponseDto } from "../../libs/pagination/paginated-response.dto.ts";
+import type { Role } from "../../libs/auth/auth.constant.ts";
 
 @Controller()
 export class IdentityMessagesController {
@@ -76,6 +77,13 @@ export class IdentityMessagesController {
   @MessagePattern(RPC.identity.setImage)
   setImage(@Payload() payload: { userId: string; imagePath: string }): Promise<UserResponseDto> {
     return this.users.setImagePath(payload.userId, payload.imagePath);
+  }
+
+  @MessagePattern(RPC.identity.setRole)
+  setRole(
+    @Payload() payload: { id: string; role: Role; actingUserId: string }
+  ): Promise<UserResponseDto> {
+    return this.users.setRole(payload.id, payload.role, payload.actingUserId);
   }
 
   @MessagePattern(RPC.identity.changePassword)

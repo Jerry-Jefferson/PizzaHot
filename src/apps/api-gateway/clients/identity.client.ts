@@ -9,6 +9,7 @@ import type { UpdateUserDto } from "../../identity-service/users/dto/update-user
 import type { ChangePasswordDto } from "../../identity-service/users/dto/change-password.dto.ts";
 import type { UserResponseDto } from "../../identity-service/users/dto/user-response.dto.ts";
 import type { PaginatedResponseDto } from "../../../libs/pagination/paginated-response.dto.ts";
+import type { Role } from "../../../libs/auth/auth.constant.ts";
 
 @Injectable()
 export class IdentityClient {
@@ -52,6 +53,10 @@ export class IdentityClient {
 
   setImage(userId: string, imagePath: string): Promise<UserResponseDto> {
     return rpc(this.client, RPC.identity.setImage, { userId, imagePath });
+  }
+
+  setRole(id: string, role: Role, actingUserId: string): Promise<UserResponseDto> {
+    return rpc(this.client, RPC.identity.setRole, { id, role, actingUserId });
   }
 
   changePassword(userId: string, dto: ChangePasswordDto): Promise<{ ok: true }> {

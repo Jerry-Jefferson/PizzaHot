@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Inject,
   Injectable,
@@ -85,11 +86,6 @@ export class UsersService {
     return { data: UserResponseDto.fromEntities(data), total };
   }
 
-  /**
-   * Entity form, for code inside this service that needs fields the response hides -
-   * changePassword compares against passwordHash. Callers answering a message want
-   * findById instead.
-   */
   async findEntityById(id: string): Promise<User> {
     const user = await this.usersRepository.findById(id);
     if (!user) {
@@ -100,8 +96,6 @@ export class UsersService {
   }
 
   async findById(id: string): Promise<UserResponseDto> {
-    // Mapping is not optional here: User is structurally assignable to the response DTO,
-    // so returning the entity would compile and quietly put passwordHash on the wire.
     return UserResponseDto.fromEntity(await this.findEntityById(id));
   }
 
@@ -119,10 +113,6 @@ export class UsersService {
     return updated;
   }
 
-  /**
-   * Same shape as the pizza flow: the file is on disk before the handler runs, so every exit
-   * that does not end with the path in the database has to take the file back down.
-   */
   async setImagePath(id: string, imagePath: string): Promise<UserResponseDto> {
     const existing = await this.usersRepository.findById(id);
     if (!existing) {
@@ -143,12 +133,34 @@ export class UsersService {
     return this.findById(id);
   }
 
+  async setRole(id: string, role: Role, actingUserId: string): Promise<UserResponseDto> {
+    const user = await this.findEntityById(id);
+
+    if (user.role === role) {
+      return UserResponseDto.fromEntity(user);
+    }
+
+    if (id === actingUserId) {
+      throw new BadRequestException("You cannot change your own role");
+    }
+
+    if (user.role === Role.ADMIN) {
+      const admins = await this.usersRepository.countByRole(Role.ADMIN);
+      if (admins <= 1) {
+        throw new BadRequestException("Cannot demote the last remaining admin");
+      }
+    }
+
+    await this.usersRepository.update(id, { role });
+    this.logger.log(`Role changed: ${user.email} (id: ${id}) ${user.role} -> ${role}`);
+
+    return this.findById(id);
+  }
+
   async remove(id: string): Promise<void> {
     const user = await this.findEntityById(id);
     const email = user.email;
 
-    // The avatar goes with the account. A failure here must not block the deletion, so it is
-    // logged rather than thrown: an orphaned file costs disk, a blocked deletion costs trust.
     try {
       const avatarWasThere = await this.images.remove(user.image);
       if (user.image && !avatarWasThere) {
@@ -174,7 +186,6 @@ export class UsersService {
     this.logger.log(`User deleted: ${email} (id: ${id})`);
   }
 
-  /** Same signal as the pizza flow: the database named a file that the disk does not have. */
   private notifyMissingAvatar(user: User, action: "deleted" | "replaced"): void {
     const event: CriticalErrorEvent = {
       message: `Avatar file of user ${user.email} (${user.id}) was already missing when it was ${action}. The database pointed at ${user.image}. An unreferenced file may be left in uploads.`,

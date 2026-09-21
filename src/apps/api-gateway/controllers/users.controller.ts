@@ -22,6 +22,7 @@ import {
   ApiFindOneUser,
   ApiRemoveMeUser,
   ApiUpdateMeUser,
+  ApiUpdateUserRole,
   ApiUploadAvatarUser,
 } from "./users.api-docs.ts";
 import { CurrentUser } from "../../../libs/auth/decorators/current-user.decorator.ts";
@@ -41,11 +42,13 @@ import {
   changePasswordSchema,
   listUsersQuerySchema,
   updateUserSchema,
+  updateUserRoleSchema,
 } from "../../identity-service/users/user.schema.ts";
 import { IdentityClient } from "../clients/identity.client.ts";
-import { Role } from "../../../libs/auth/auth.constant.ts";
-import { Roles } from "../../../libs/auth/decorators/roles.decorator.ts";
 import { COOKIE_NAME } from "../../../libs/auth/auth.constant.ts";
+import { Can } from "../../../libs/auth/decorators/can.decorator.ts";
+import { Permission } from "../../../libs/auth/permission.constant.ts";
+import { UpdateUserRoleDto } from "../../identity-service/users/dto/update-user-role.dto.ts";
 
 @ApiTags("Users")
 @ApiBearerAuth()
@@ -54,7 +57,7 @@ export class UsersController {
   constructor(private readonly usersService: IdentityClient) {}
 
   @Get()
-  @Roles(Role.ADMIN)
+  @Can(Permission.USER_READ_ANY)
   @ApiFindAllUser()
   async findAll(
     @Query(new ZodValidationPipe(listUsersQuerySchema))
@@ -68,13 +71,25 @@ export class UsersController {
   }
 
   @Get(":id")
-  @Roles(Role.ADMIN)
+  @Can(Permission.USER_READ_ANY)
   @ApiFindOneUser()
   async findOne(@Param("id", ParseUUIDPipe) id: string): Promise<UserResponseDto> {
     return this.usersService.findById(id);
   }
 
+  @Patch(":id/role")
+  @Can(Permission.USER_ROLE_WRITE)
+  @ApiUpdateUserRole()
+  async updateRole(
+    @CurrentUser() currentUser: JwtPayload,
+    @Param("id", ParseUUIDPipe) id: string,
+    @Body(new ZodValidationPipe(updateUserRoleSchema)) dto: UpdateUserRoleDto
+  ): Promise<UserResponseDto> {
+    return this.usersService.setRole(id, dto.role, currentUser.sub);
+  }
+
   @Patch("me")
+  @Can(Permission.USER_MANAGE_OWN)
   @ApiUpdateMeUser()
   async updateMe(
     @CurrentUser() currentUser: JwtPayload,
@@ -84,6 +99,7 @@ export class UsersController {
   }
 
   @Patch("me/image")
+  @Can(Permission.USER_MANAGE_OWN)
   @UseInterceptors(FileInterceptor("image", imageMulterOptions(ImageCategory.USERS)))
   @ApiUploadAvatarUser()
   async uploadAvatar(
@@ -95,6 +111,7 @@ export class UsersController {
   }
 
   @Patch("me/password")
+  @Can(Permission.USER_MANAGE_OWN)
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiChangePasswordUser()
   async changePassword(
@@ -105,6 +122,7 @@ export class UsersController {
   }
 
   @Delete("me")
+  @Can(Permission.USER_MANAGE_OWN)
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiRemoveMeUser()
   async removeMe(

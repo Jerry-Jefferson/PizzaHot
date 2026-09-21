@@ -36,6 +36,8 @@ import { UpdateCartItemDto } from "../../cart-service/cart-items/dto/update-cart
 import { ApplyPromocodeDto } from "../../cart-service/dto/apply-promocode.dto.ts";
 import { CartResponseDto } from "../../cart-service/dto/cart-response.dto.ts";
 import type { Response } from "express";
+import { Can } from "../../../libs/auth/decorators/can.decorator.ts";
+import { Permission } from "../../../libs/auth/permission.constant.ts";
 
 @ApiTags("Carts")
 @ApiBearerAuth()
@@ -45,12 +47,14 @@ export class CartController {
   constructor(private readonly cartService: CartClient) {}
 
   @Get()
+  @Can(Permission.CART_MANAGE)
   @ApiGetCart()
   async getCart(@CurrentUser() user: JwtPayload): Promise<CartResponseDto> {
     return this.cartService.getCart(user.sub);
   }
 
   @Post("promocode")
+  @Can(Permission.CART_MANAGE)
   @HttpCode(HttpStatus.OK)
   @ApiApplyPromocodeCart()
   async applyPromocode(
@@ -61,6 +65,7 @@ export class CartController {
   }
 
   @Delete("promocode")
+  @Can(Permission.CART_MANAGE)
   @HttpCode(HttpStatus.OK)
   @ApiRemovePromocodeCart()
   async removePromocode(@CurrentUser() user: JwtPayload): Promise<CartResponseDto> {
@@ -68,6 +73,7 @@ export class CartController {
   }
 
   @Post("items")
+  @Can(Permission.CART_MANAGE)
   @ApiAddItemCart()
   async addItem(
     @CurrentUser() user: JwtPayload,
@@ -77,6 +83,7 @@ export class CartController {
   }
 
   @Patch("items/:pizzaId")
+  @Can(Permission.CART_MANAGE)
   @ApiUpdateItemQuantityCart()
   async updateItemQuantity(
     @CurrentUser() user: JwtPayload,
@@ -93,6 +100,7 @@ export class CartController {
   }
 
   @Delete("items/:pizzaId")
+  @Can(Permission.CART_MANAGE)
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiRemoveItemCart()
   async removeItem(
@@ -103,6 +111,7 @@ export class CartController {
   }
 
   @Delete()
+  @Can(Permission.CART_MANAGE)
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiClearCart()
   async clearCart(@CurrentUser() user: JwtPayload): Promise<void> {
