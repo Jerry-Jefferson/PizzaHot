@@ -1,4 +1,5 @@
 import type { User } from "./user.entity.ts";
+import type { Role } from "../../../libs/auth/auth.constant.ts";
 import type { PaginatedResult } from "../../../libs/pagination/pagination.types.ts";
 
 export interface IUsersRepository {
@@ -10,4 +11,5 @@ export interface IUsersRepository {
   findByVerificationToken(token: string): Promise<User | null>;
   update(id: string, data: Partial<User>): Promise<boolean>;
   remove(id: string): Promise<boolean>;
+  countByRole(role: Role): Promise<number>;
 }

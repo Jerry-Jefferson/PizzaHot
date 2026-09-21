@@ -14,7 +14,7 @@ import {
   PROMOCODE_CLIENT,
 } from "../../libs/messaging/tokens.constant.ts";
 import { JwtAuthGuard } from "../../libs/auth/guards/jwt-auth.guard.ts";
-import { RolesGuard } from "../../libs/auth/guards/roles.guard.ts";
+import { PermissionsGuard } from "../../libs/auth/guards/permissions.guard.ts";
 import { RmqLoggerService } from "../../libs/logging/rmq-logger.service.ts";
 import { HttpLoggingInterceptor } from "../../libs/logging/http-logging.interceptor.ts";
 import { CriticalErrorFilter } from "../../libs/logging/critical-error.filter.ts";
@@ -83,7 +83,7 @@ import { AnalyticsClient, LogClient } from "./clients/analytics.client.ts";
     LogClient,
     { provide: APP_GUARD, useClass: ThrottlerGuard },
     { provide: APP_GUARD, useClass: JwtAuthGuard },
-    { provide: APP_GUARD, useClass: RolesGuard },
+    { provide: APP_GUARD, useClass: PermissionsGuard },
     { provide: APP_FILTER, useClass: CriticalErrorFilter },
     { provide: APP_INTERCEPTOR, useClass: HttpLoggingInterceptor },
   ],

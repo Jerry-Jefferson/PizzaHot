@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { Gender } from "./constants/gender.constant.ts";
 import { paginationSchema } from "../../../libs/pagination/pagination.schema.ts";
+import { ROLES } from "../../../libs/auth/auth.constant.ts";
 
 export const createUserSchema = z.object({
   email: z
@@ -58,6 +59,10 @@ export const updateUserSchema = z
   .refine((data) => Object.keys(data).length > 0, {
     message: "At least one field must be provided for update",
   });
+
+export const updateUserRoleSchema = z.object({
+  role: z.enum(ROLES, { error: `Role must be one of: ${ROLES.join(", ")}` }),
+});
 
 export const listUsersQuerySchema = paginationSchema.extend({
   search: z.string({ error: "Search must be a string" }).optional(),

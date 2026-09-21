@@ -17,8 +17,6 @@ import {
 import { FileInterceptor } from "@nestjs/platform-express";
 import { CatalogClient } from "../clients/catalog.client.ts";
 
-import { Roles } from "../../../libs/auth/decorators/roles.decorator.ts";
-import { Role } from "../../../libs/auth/auth.constant.ts";
 import { ZodValidationPipe } from "../../../libs/validation/zod-validation.pipe.ts";
 import {
   ImageCategory,
@@ -45,6 +43,8 @@ import {
   ApiUpdatePizza,
   ApiUploadImagePizza,
 } from "./pizzas.api-docs.ts";
+import { Can } from "../../../libs/auth/decorators/can.decorator.ts";
+import { Permission } from "../../../libs/auth/permission.constant.ts";
 
 @ApiTags("Pizzas")
 @ApiBearerAuth()
@@ -53,6 +53,7 @@ export class PizzasController {
   constructor(private readonly pizzasService: CatalogClient) {}
 
   @Get()
+  @Can(Permission.PIZZA_READ)
   @ApiFindAllPizza()
   async findAll(
     @Query(new ZodValidationPipe(listPizzasQuerySchema))
@@ -66,13 +67,14 @@ export class PizzasController {
   }
 
   @Get(":id")
+  @Can(Permission.PIZZA_READ)
   @ApiFindOnePizza()
   async findOne(@Param("id", ParseUUIDPipe) id: string): Promise<PizzaResponseDto> {
     return this.pizzasService.findById(id);
   }
 
   @Post()
-  @Roles(Role.ADMIN)
+  @Can(Permission.PIZZA_WRITE)
   @ApiAddPizza()
   async addPizza(
     @Body(new ZodValidationPipe(pizzaSchema)) dto: CreatePizzaDto
@@ -81,7 +83,7 @@ export class PizzasController {
   }
 
   @Patch(":id")
-  @Roles(Role.ADMIN)
+  @Can(Permission.PIZZA_WRITE)
   @ApiUpdatePizza()
   async update(
     @Param("id", ParseUUIDPipe) id: string,
@@ -94,7 +96,7 @@ export class PizzasController {
   }
 
   @Patch(":id/image")
-  @Roles(Role.ADMIN)
+  @Can(Permission.PIZZA_WRITE)
   @UseInterceptors(FileInterceptor("image", imageMulterOptions(ImageCategory.PIZZAS)))
   @ApiUploadImagePizza()
   async uploadImage(
@@ -107,7 +109,7 @@ export class PizzasController {
 
   @Delete(":id")
   @HttpCode(HttpStatus.NO_CONTENT)
-  @Roles(Role.ADMIN)
+  @Can(Permission.PIZZA_DELETE)
   @ApiRemovePizza()
   async remove(@Param("id", ParseUUIDPipe) id: string): Promise<void> {
     await this.pizzasService.remove(id);

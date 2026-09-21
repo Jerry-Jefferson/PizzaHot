@@ -14,8 +14,6 @@ import { PromocodeClient } from "../clients/promocode.client.ts";
 import { CreatePromocodeDto } from "../../promocode-service/dto/create-promocode.dto.ts";
 import { UpdatePromocodeDto } from "../../promocode-service/dto/update-promocode.dto.ts";
 import { PromocodeResponseDto } from "../../promocode-service/dto/promocode-response.dto.ts";
-import { Roles } from "../../../libs/auth/decorators/roles.decorator.ts";
-import { Role } from "../../../libs/auth/auth.constant.ts";
 import { ZodValidationPipe } from "../../../libs/validation/zod-validation.pipe.ts";
 import {
   createPromocodeSchema,
@@ -31,16 +29,18 @@ import {
   ApiUpdatePromocode,
 } from "./promocodes.api-docs.ts";
 import { ApiAdminOnly } from "../../../libs/swagger/api-responses.decorator.ts";
+import { Can } from "../../../libs/auth/decorators/can.decorator.ts";
+import { Permission } from "../../../libs/auth/permission.constant.ts";
 
 @ApiTags("Promocodes")
 @ApiBearerAuth()
-@Roles(Role.ADMIN)
 @ApiAdminOnly()
 @Controller("promocodes")
 export class PromocodesController {
   constructor(private readonly promocodesService: PromocodeClient) {}
 
   @Post()
+  @Can(Permission.PROMOCODE_WRITE)
   @ApiCreatePromocode()
   async create(
     @Body(new ZodValidationPipe(createPromocodeSchema)) dto: CreatePromocodeDto
@@ -49,18 +49,21 @@ export class PromocodesController {
   }
 
   @Get()
+  @Can(Permission.PROMOCODE_READ)
   @ApiFindAllPromocode()
   async findAll(): Promise<PromocodeResponseDto[]> {
     return this.promocodesService.findAll();
   }
 
   @Get(":id")
+  @Can(Permission.PROMOCODE_READ)
   @ApiFindOnePromocode()
   async findOne(@Param("id", ParseUUIDPipe) id: string): Promise<PromocodeResponseDto> {
     return this.promocodesService.findById(id);
   }
 
   @Patch(":id")
+  @Can(Permission.PROMOCODE_WRITE)
   @ApiUpdatePromocode()
   async update(
     @Param("id", ParseUUIDPipe) id: string,
@@ -70,6 +73,7 @@ export class PromocodesController {
   }
 
   @Delete(":id")
+  @Can(Permission.PROMOCODE_DELETE)
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiRemovePromocode()
   async remove(@Param("id", ParseUUIDPipe) id: string): Promise<void> {
@@ -77,6 +81,7 @@ export class PromocodesController {
   }
 
   @Patch(":id/restore")
+  @Can(Permission.PROMOCODE_WRITE)
   @ApiRestorePromocode()
   async restore(@Param("id", ParseUUIDPipe) id: string): Promise<PromocodeResponseDto> {
     return this.promocodesService.restore(id);
