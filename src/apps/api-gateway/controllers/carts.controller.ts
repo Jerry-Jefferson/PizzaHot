@@ -21,11 +21,11 @@ import {
   ApiRemovePromocodeCart,
   ApiUpdateItemQuantityCart,
 } from "./carts.api-docs.ts";
-import { ApiAuth } from "../../../libs/common/swagger/api-responses.decorator.ts";
+import { ApiAuth } from "../../../libs/swagger/api-responses.decorator.ts";
 import { CartClient } from "../clients/cart.client.ts";
 import { CurrentUser } from "../../../libs/auth/decorators/current-user.decorator.ts";
 import type { JwtPayload } from "../../../libs/auth/jwt-payload.schema.ts";
-import { ZodValidationPipe } from "../../../libs/common/pipes/zod-validation.pipe.ts";
+import { ZodValidationPipe } from "../../../libs/validation/zod-validation.pipe.ts";
 import {
   addCartItemSchema,
   updateCartItemSchema,

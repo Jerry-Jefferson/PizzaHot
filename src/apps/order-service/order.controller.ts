@@ -7,11 +7,12 @@ import { EVENTS_CLIENT } from "../../libs/messaging/tokens.constant.ts";
 import { ack } from "../../libs/messaging/ack.ts";
 import { OrdersService } from "./orders.service.ts";
 import { OrderResponseDto } from "./dto/order-response.dto.ts";
-import type { PaginatedResponseDto } from "../../libs/common/pagination/paginated-response.dto.ts";
-import { ORDERS_REPOSITORY } from "../../libs/common/database/tokens.ts";
+import type { PaginatedResponseDto } from "../../libs/pagination/paginated-response.dto.ts";
+import { ORDERS_REPOSITORY } from "../../libs/database/tokens.ts";
 import type { IOrdersRepository, ListOrdersQuery } from "./order.types.ts";
 import type { CreateOrderDto } from "./dto/create-order.dto.ts";
 import type { OrderStatus } from "./constants/order-status.constant.ts";
+import type { PaginatedResult } from "../../libs/pagination/pagination.types.ts";
 
 @Controller()
 export class OrderMessagesController {
@@ -50,7 +51,7 @@ export class OrderMessagesController {
   @MessagePattern(RPC.order.findAll)
   findAll(
     @Payload() payload: Partial<ListOrdersQuery>
-  ): Promise<{ data: OrderResponseDto[]; total: number }> {
+  ): Promise<PaginatedResult<OrderResponseDto>> {
     return this.orders.findAll({
       ...payload,
       page: payload.page ?? 1,

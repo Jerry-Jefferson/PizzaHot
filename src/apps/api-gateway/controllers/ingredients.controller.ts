@@ -16,8 +16,8 @@ import { CreateIngredientDto } from "../../catalog-service/ingredients/dto/creat
 import { UpdateIngredientDto } from "../../catalog-service/ingredients/dto/update-ingredient.dto.ts";
 import { IngredientResponseDto } from "../../catalog-service/ingredients/dto/ingredient-response.dto.ts";
 import { Roles } from "../../../libs/auth/decorators/roles.decorator.ts";
-import { Role } from "../../../libs/common/constants/role.constant.ts";
-import { ZodValidationPipe } from "../../../libs/common/pipes/zod-validation.pipe.ts";
+import { Role } from "../../../libs/auth/auth.constant.ts";
+import { ZodValidationPipe } from "../../../libs/validation/zod-validation.pipe.ts";
 import {
   ingredientSchema,
   updateIngredientSchema,

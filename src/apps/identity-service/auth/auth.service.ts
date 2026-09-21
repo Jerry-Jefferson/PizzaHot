@@ -35,7 +35,6 @@ export class AuthService {
       name: dto.name,
       surname: dto.surname,
       gender: dto.gender,
-      image: dto.image,
       isEmailVerified: false,
       verificationToken: rawToken,
       verificationTokenExpiresAt: expiresAt,

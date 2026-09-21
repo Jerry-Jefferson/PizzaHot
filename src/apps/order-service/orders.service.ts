@@ -1,6 +1,6 @@
 import { BadRequestException, Inject, Injectable, Logger, NotFoundException } from "@nestjs/common";
 import type { ClientProxy } from "@nestjs/microservices";
-import { ORDERS_REPOSITORY, ORDER_ITEMS_REPOSITORY } from "../../libs/common/database/tokens.ts";
+import { ORDERS_REPOSITORY, ORDER_ITEMS_REPOSITORY } from "../../libs/database/tokens.ts";
 import type { IOrderItemsRepository, IOrdersRepository, ListOrdersQuery } from "./order.types.ts";
 import {
   CART_CLIENT,
@@ -20,10 +20,11 @@ import { rpc } from "../../libs/messaging/rpc.util.ts";
 import { OrderResponseDto } from "./dto/order-response.dto.ts";
 import { CreateOrderDto } from "./dto/create-order.dto.ts";
 import { OrderStatus } from "./constants/order-status.constant.ts";
-import { PaginatedResponseDto } from "../../libs/common/pagination/paginated-response.dto.ts";
+import { PaginatedResponseDto } from "../../libs/pagination/paginated-response.dto.ts";
 import { calculatePrice } from "../../libs/price-calculation/price-calculation.ts";
-import { MAX_PIZZA_QUANTITY } from "../../libs/common/constants/pizza.constant.ts";
+import { MAX_PIZZA_QUANTITY } from "../../libs/contracts/order-limit.constant.ts";
 import { Order } from "./order.entity.ts";
+import type { PaginatedResult } from "../../libs/pagination/pagination.types.ts";
 
 @Injectable()
 export class OrdersService {
@@ -218,7 +219,7 @@ export class OrdersService {
     return OrderResponseDto.fromEntity(order);
   }
 
-  async findAll(query: ListOrdersQuery): Promise<{ data: OrderResponseDto[]; total: number }> {
+  async findAll(query: ListOrdersQuery): Promise<PaginatedResult<OrderResponseDto>> {
     const { data, total } = await this.ordersRepository.findPaginated(query);
 
     return { data: OrderResponseDto.fromEntities(data), total };

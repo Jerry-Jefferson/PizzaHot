@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { DiscountMode } from "../../libs/contracts/index.ts";
-import { checkIn, checkName } from "../../libs/common/database/check-in.util.ts";
+import { checkIn, checkName } from "../../libs/database/check-in.util.ts";
 
 @Entity("promocodes")
 @Check(

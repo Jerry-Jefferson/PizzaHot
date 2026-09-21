@@ -1,6 +1,6 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import type { ClientProxy } from "@nestjs/microservices";
-import { CART_REPOSITORY, CART_ITEMS_REPOSITORY } from "../../libs/common/database/tokens.ts";
+import { CART_REPOSITORY, CART_ITEMS_REPOSITORY } from "../../libs/database/tokens.ts";
 import type { ICartRepository } from "./cart.types.ts";
 import type { ICartItemsRepository } from "./cart.types.ts";
 import { PROMOCODE_CLIENT } from "../../libs/messaging/tokens.constant.ts";
@@ -10,7 +10,7 @@ import { rpc } from "../../libs/messaging/rpc.util.ts";
 import { PizzaSnapshotRepository } from "./snapshots/pizza-snapshot.repository.ts";
 import { CartResponseDto } from "./dto/cart-response.dto.ts";
 import { Cart } from "./cart.entity.ts";
-import { MAX_PIZZA_QUANTITY } from "../../libs/common/constants/pizza.constant.ts";
+import { MAX_PIZZA_QUANTITY } from "../../libs/contracts/order-limit.constant.ts";
 import { priceCart } from "./cart.pricing.ts";
 import { CartItemResponseDto } from "./cart-items/dto/cart-item-response.dto.ts";
 

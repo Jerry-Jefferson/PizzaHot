@@ -1,10 +1,11 @@
 import type { OrderItem } from "./order-items/order-item.entity.ts";
-import type { DeepPartial } from "../../libs/common/common.types.ts";
+import type { DeepPartial } from "../../libs/database/database.types.ts";
 import type { Order } from "./order.entity.ts";
 import type { OrderStatus } from "./constants/order-status.constant.ts";
 import type { DeliveryType } from "./constants/delivery-type.constant.ts";
 import type { PaymentMethod } from "./constants/payment-method.constant.ts";
-import type { PaginationQuery } from "../../libs/common/pagination/pagination.schema.ts";
+import type { PaginationQuery } from "../../libs/pagination/pagination.schema.ts";
+import type { PaginatedResult } from "../../libs/pagination/pagination.types.ts";
 
 export interface IOrderItemsRepository {
   create(data: DeepPartial<OrderItem>): OrderItem;
@@ -26,7 +27,7 @@ export interface IOrdersRepository {
   save(order: Order): Promise<Order>;
   findById(id: string): Promise<Order | null>;
   findByUserId(userId: string): Promise<Order[]>;
-  findPaginated(query: ListOrdersQuery): Promise<{ data: Order[]; total: number }>;
+  findPaginated(query: ListOrdersQuery): Promise<PaginatedResult<Order>>;
   updateStatus(id: string, status: OrderStatus): Promise<boolean>;
   detachUser(userId: string): Promise<number>;
 }

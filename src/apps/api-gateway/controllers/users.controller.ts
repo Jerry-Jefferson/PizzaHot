@@ -10,8 +10,11 @@ import {
   Patch,
   Query,
   Res,
+  UploadedFile,
+  UseInterceptors,
 } from "@nestjs/common";
 import type { Response } from "express";
+import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import {
   ApiChangePasswordUser,
@@ -19,11 +22,18 @@ import {
   ApiFindOneUser,
   ApiRemoveMeUser,
   ApiUpdateMeUser,
+  ApiUploadAvatarUser,
 } from "./users.api-docs.ts";
 import { CurrentUser } from "../../../libs/auth/decorators/current-user.decorator.ts";
 import type { JwtPayload } from "../../../libs/auth/jwt-payload.schema.ts";
-import { PaginatedResponseDto } from "../../../libs/common/pagination/paginated-response.dto.ts";
-import { ZodValidationPipe } from "../../../libs/common/pipes/zod-validation.pipe.ts";
+import { PaginatedResponseDto } from "../../../libs/pagination/paginated-response.dto.ts";
+import { ZodValidationPipe } from "../../../libs/validation/zod-validation.pipe.ts";
+import {
+  ImageCategory,
+  ImageValidationPipe,
+  UPLOADS_URL_PREFIX,
+  imageMulterOptions,
+} from "../../../libs/upload/index.ts";
 import { ChangePasswordDto } from "../../identity-service/users/dto/change-password.dto.ts";
 import { UpdateUserDto } from "../../identity-service/users/dto/update-user.dto.ts";
 import { UserResponseDto } from "../../identity-service/users/dto/user-response.dto.ts";
@@ -33,9 +43,9 @@ import {
   updateUserSchema,
 } from "../../identity-service/users/user.schema.ts";
 import { IdentityClient } from "../clients/identity.client.ts";
-import { Role } from "../../../libs/common/constants/role.constant.ts";
+import { Role } from "../../../libs/auth/auth.constant.ts";
 import { Roles } from "../../../libs/auth/decorators/roles.decorator.ts";
-import { COOKIE_NAME } from "../../../libs/auth/auth.constants.ts";
+import { COOKIE_NAME } from "../../../libs/auth/auth.constant.ts";
 
 @ApiTags("Users")
 @ApiBearerAuth()
@@ -71,6 +81,17 @@ export class UsersController {
     @Body(new ZodValidationPipe(updateUserSchema)) dto: UpdateUserDto
   ): Promise<UserResponseDto> {
     return this.usersService.update(currentUser.sub, dto);
+  }
+
+  @Patch("me/image")
+  @UseInterceptors(FileInterceptor("image", imageMulterOptions(ImageCategory.USERS)))
+  @ApiUploadAvatarUser()
+  async uploadAvatar(
+    @CurrentUser() currentUser: JwtPayload,
+    @UploadedFile(new ImageValidationPipe()) image: Express.Multer.File
+  ): Promise<UserResponseDto> {
+    const imagePath = `${UPLOADS_URL_PREFIX}/${ImageCategory.USERS}/${image.filename}`;
+    return this.usersService.setImage(currentUser.sub, imagePath);
   }
 
   @Patch("me/password")

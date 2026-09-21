@@ -4,7 +4,7 @@ import { Ctx, EventPattern, MessagePattern, Payload, RmqContext } from "@nestjs/
 import { EVENTS, RPC } from "../../libs/contracts/index.ts";
 import type { OrderCreatedEvent, ResolvedPizza } from "../../libs/contracts/index.ts";
 import { EVENTS_CLIENT } from "../../libs/messaging/tokens.constant.ts";
-import { PIZZAS_REPOSITORY } from "../../libs/common/database/tokens.ts";
+import { PIZZAS_REPOSITORY } from "../../libs/database/tokens.ts";
 import type { IPizzasRepository } from "./pizzas/pizza.types.ts";
 import { ack } from "../../libs/messaging/ack.ts";
 import { PizzasService } from "./pizzas/pizzas.service.ts";
@@ -15,6 +15,7 @@ import type { CreatePizzaDto } from "./pizzas/dto/create-pizza.dto.ts";
 import type { UpdatePizzaDto } from "./pizzas/dto/update-pizza.dto.ts";
 import type { CreateIngredientDto } from "./ingredients/dto/create-ingredient.dto.ts";
 import type { UpdateIngredientDto } from "./ingredients/dto/update-ingredient.dto.ts";
+import type { PaginatedResult } from "../../libs/pagination/pagination.types.ts";
 
 @Controller()
 export class CatalogMessagesController {
@@ -32,7 +33,7 @@ export class CatalogMessagesController {
   @MessagePattern(RPC.catalog.pizzaList)
   list(
     @Payload() payload: { page?: number; limit?: number; search?: string }
-  ): Promise<{ data: PizzaResponseDto[]; total: number }> {
+  ): Promise<PaginatedResult<PizzaResponseDto>> {
     return this.pizzas.findAll(payload.page, payload.limit, payload.search);
   }
 

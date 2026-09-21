@@ -1,5 +1,5 @@
 import type { CartItem } from "./cart-items/cart-item.entity.ts";
-import type { DeepPartial } from "../../libs/common/common.types.ts";
+import type { DeepPartial } from "../../libs/database/database.types.ts";
 import type { Cart } from "./cart.entity.ts";
 
 export interface ICartItemsRepository {

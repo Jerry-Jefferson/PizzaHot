@@ -5,7 +5,7 @@ import type { RpcSender } from "../../../../libs/messaging/message-client.types.
 import { createHttpExecutionContext } from "../../../../libs/testing/http-context.mock.ts";
 import { of } from "rxjs";
 import type { JwtPayload } from "../../../../libs/auth/jwt-payload.schema.ts";
-import { Role } from "../../../../libs/common/constants/role.constant.ts";
+import { Role } from "../../../../libs/auth/auth.constant.ts";
 import { RPC } from "../../../../libs/contracts/index.ts";
 
 describe("EmailVerifiedGuard", () => {

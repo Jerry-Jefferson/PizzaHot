@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { ScheduleModule } from "@nestjs/schedule";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { typeOrmConfig } from "../../libs/common/database/typeorm.config.ts";
+import { typeOrmConfig } from "../../libs/database/typeorm.config.ts";
 import { MessagingModule } from "../../libs/messaging/messaging.module.ts";
 import { RmqLoggerService } from "../../libs/logging/rmq-logger.service.ts";
 import { Pizza } from "./pizzas/pizza.entity.ts";

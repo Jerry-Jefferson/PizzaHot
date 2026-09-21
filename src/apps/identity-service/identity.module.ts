@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { typeOrmConfig } from "../../libs/common/database/typeorm.config.ts";
+import { typeOrmConfig } from "../../libs/database/typeorm.config.ts";
 import { MessagingModule } from "../../libs/messaging/messaging.module.ts";
 import { RmqLoggerService } from "../../libs/logging/rmq-logger.service.ts";
 import { User } from "./users/user.entity.ts";

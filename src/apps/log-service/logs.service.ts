@@ -4,7 +4,7 @@ import { Model } from "mongoose";
 import { Log, type LogDocument } from "./schemas/log.schema.ts";
 import type { CreateLogDto } from "./create-log.dto.ts";
 import type { ListLogsQuery } from "./schemas/log-query.schema.ts";
-import { PaginatedResponseDto } from "../../libs/common/pagination/paginated-response.dto.ts";
+import { PaginatedResponseDto } from "../../libs/pagination/paginated-response.dto.ts";
 
 @Injectable()
 export class LogsService {

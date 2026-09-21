@@ -1,11 +1,15 @@
 import { applyDecorators } from "@nestjs/common";
-import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse } from "@nestjs/swagger";
-import { ApiNotFound } from "../../../libs/common/swagger/api-crud.decorator.ts";
 import {
-  ApiAuth,
-  ApiPaginationQuery,
-} from "../../../libs/common/swagger/api-responses.decorator.ts";
-import { PaginatedResponseDto } from "../../../libs/common/pagination/paginated-response.dto.ts";
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+} from "@nestjs/swagger";
+import { ApiNotFound } from "../../../libs/swagger/api-crud.decorator.ts";
+import { ApiAuth, ApiPaginationQuery } from "../../../libs/swagger/api-responses.decorator.ts";
+import { PaginatedResponseDto } from "../../../libs/pagination/paginated-response.dto.ts";
 import { ChangePasswordDto } from "../../identity-service/users/dto/change-password.dto.ts";
 import { UpdateUserDto } from "../../identity-service/users/dto/update-user.dto.ts";
 import { UserResponseDto } from "../../identity-service/users/dto/user-response.dto.ts";
@@ -31,6 +35,33 @@ export const ApiUpdateMeUser = () =>
     ApiOperation({ summary: "Update your profile" }),
     ApiBody({ type: UpdateUserDto }),
     ApiResponse({ status: 200, description: "Profile updated", type: UserResponseDto }),
+    ApiAuth()
+  );
+
+export const ApiUploadAvatarUser = () =>
+  applyDecorators(
+    ApiOperation({ summary: "Upload or replace your avatar" }),
+    ApiConsumes("multipart/form-data"),
+    ApiBody({
+      description: "Avatar image file",
+      schema: {
+        type: "object",
+        required: ["image"],
+        properties: {
+          image: {
+            type: "string",
+            format: "binary",
+            description: "Avatar image file (jpeg, png, webp)",
+          },
+        },
+      },
+    }),
+    ApiResponse({
+      status: 200,
+      description: "Avatar successfully uploaded",
+      type: UserResponseDto,
+    }),
+    ApiResponse({ status: 400, description: "Bad request - invalid file" }),
     ApiAuth()
   );
 

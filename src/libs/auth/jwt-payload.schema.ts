@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Role } from "../common/constants/role.constant.ts";
+import { Role } from "./auth.constant.ts";
 
 export const jwtPayloadSchema = z.object({
   sub: z.uuid({ error: "Token subject must be a UUID" }),

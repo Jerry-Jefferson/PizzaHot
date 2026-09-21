@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from "@nestjs/common";
 import { Cron } from "@nestjs/schedule";
-import { PIZZAS_REPOSITORY } from "../../../libs/common/database/tokens.ts";
+import { PIZZAS_REPOSITORY } from "../../../libs/database/tokens.ts";
 import type { IPizzasRepository } from "./pizza.types.ts";
 
 const CLEANUP_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;

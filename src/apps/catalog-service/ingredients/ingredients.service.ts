@@ -1,5 +1,5 @@
 import { ConflictException, Inject, Injectable, Logger, NotFoundException } from "@nestjs/common";
-import { INGREDIENTS_REPOSITORY } from "../../../libs/common/database/tokens.ts";
+import { INGREDIENTS_REPOSITORY } from "../../../libs/database/tokens.ts";
 import type { IIngredientsRepository } from "./ingredient.types.ts";
 import { CreateIngredientDto } from "./dto/create-ingredient.dto.ts";
 import { UpdateIngredientDto } from "./dto/update-ingredient.dto.ts";

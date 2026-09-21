@@ -7,6 +7,7 @@ export const RPC = {
     findById: "identity.user.find_by_id",
     findAll: "identity.user.find_all",
     updateMe: "identity.user.update_me",
+    setImage: "identity.user.set_image",
     changePassword: "identity.user.change_password",
     deleteMe: "identity.user.delete_me",
   },

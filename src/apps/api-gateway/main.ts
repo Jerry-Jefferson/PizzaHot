@@ -5,7 +5,7 @@ import express from "express";
 import { existsSync, mkdirSync } from "fs";
 import { GatewayModule } from "./gateway.module.ts";
 import { RmqLoggerService } from "../../libs/logging/rmq-logger.service.ts";
-import { UPLOADS_URL_PREFIX, UPLOADS_DIR } from "../../libs/common/constants/upload.constant.ts";
+import { UPLOADS_URL_PREFIX, UPLOADS_DIR } from "../../libs/upload/index.ts";
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(GatewayModule, { bufferLogs: true });

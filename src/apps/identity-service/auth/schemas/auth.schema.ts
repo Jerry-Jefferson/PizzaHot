@@ -12,7 +12,6 @@ export const signupSchema = z
         error: `Gender must be one of: ${Object.values(Gender).join(", ")}`,
       })
       .optional(),
-    image: z.string({ error: "Imagе must be a string" }).optional(),
     password: passwordSchema,
     confirmPassword: z.string({ error: "Password confirmation is required" }),
   })

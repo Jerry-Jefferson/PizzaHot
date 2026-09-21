@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { RedemptionStatus } from "./redemption-status.constant.ts";
-import { checkIn, checkName } from "../../../libs/common/database/check-in.util.ts";
+import { checkIn, checkName } from "../../../libs/database/check-in.util.ts";
 
 @Entity("promocode_redemptions")
 @Index(["userId", "promocodeId"], { unique: true })

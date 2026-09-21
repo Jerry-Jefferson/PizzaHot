@@ -6,7 +6,7 @@ import type { Promocode } from "../../promocode-service/promocode.entity.ts";
 import type { CartResponseDto } from "../dto/cart-response.dto.ts";
 import { DiscountMode } from "../../../libs/contracts/index.ts";
 import type { JwtPayload } from "../../../libs/auth/jwt-payload.schema.ts";
-import { Role } from "../../../libs/common/constants/role.constant.ts";
+import { Role } from "../../../libs/auth/auth.constant.ts";
 
 export const mockUserId = "user-uuid-123";
 export const mockPizzaId = "pizza-uuid-456";

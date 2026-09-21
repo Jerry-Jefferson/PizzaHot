@@ -109,6 +109,8 @@ services:
       POSTGRES_HOST: pgdb
       POSTGRES_PORT: 5432
       RABBITMQ_URL: amqp://${RABBITMQ_USER:-guest}:${RABBITMQ_PASSWORD:-guest}@rabbitmq:5672
+    volumes:
+      - ./uploads:/app/uploads
 
   catalog-service:
     <<: *postgres-service

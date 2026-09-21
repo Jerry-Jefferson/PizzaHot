@@ -4,7 +4,7 @@ import { HttpStatus } from "@nestjs/common";
 import { CartController } from "./carts.controller.ts";
 import { CartClient } from "../clients/cart.client.ts";
 import type { JwtPayload } from "../../../libs/auth/jwt-payload.schema.ts";
-import { Role } from "../../../libs/common/constants/role.constant.ts";
+import { Role } from "../../../libs/auth/auth.constant.ts";
 import type { Response } from "express";
 import {
   mockUser,
