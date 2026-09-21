@@ -5,10 +5,10 @@ export class SignupDto {
   @ApiProperty({ example: "john@example.com" })
   email: string;
 
-  @ApiProperty({ example: "P@ssword123!", minLength: 10 })
+  @ApiProperty({ example: "P@ssword123!!", minLength: 10 })
   password: string;
 
-  @ApiProperty({ example: "P@ssword123!" })
+  @ApiProperty({ example: "P@ssword123!!" })
   confirmPassword: string;
 
   @ApiPropertyOptional({ example: "John" })

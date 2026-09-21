@@ -20,7 +20,7 @@ describe("EmailVerifiedGuard", () => {
     guard = new EmailVerifiedGuard(mockIdentityClient);
   });
 
-  it("should throw ForbiddenException if user is not authenticated", async () => {
+  it("should throw ForbiddenException if user isn't authenticated", async () => {
     const context = createMockContext(undefined);
     await expect(guard.canActivate(context)).rejects.toThrow(ForbiddenException);
   });

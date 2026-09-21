@@ -49,7 +49,6 @@ export class UserResponseDto {
     return dto;
   }
 
-  /** Maps a list in one call, so callers do not repeat the .map(...) each time. */
   static fromEntities(users: User[]): UserResponseDto[] {
     return users.map((user) => UserResponseDto.fromEntity(user));
   }
