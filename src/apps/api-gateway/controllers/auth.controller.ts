@@ -11,7 +11,7 @@ import {
 import { Throttle } from "@nestjs/throttler";
 import type { Response } from "express";
 import { UserResponseDto } from "../../identity-service/users/dto/user-response.dto.ts";
-import { ZodValidationPipe } from "../../../libs/common/pipes/zod-validation.pipe.ts";
+import { ZodValidationPipe } from "../../../libs/validation/zod-validation.pipe.ts";
 import { IdentityClient } from "../clients/identity.client.ts";
 import { CurrentUser } from "../../../libs/auth/decorators/current-user.decorator.ts";
 import { Public } from "../../../libs/auth/decorators/public.decorator.ts";
@@ -20,8 +20,8 @@ import { LoginDto } from "../../identity-service/auth/dto/login.dto.ts";
 import { SignupDto } from "../../identity-service/auth/dto/signup.dto.ts";
 import type { JwtPayload } from "../../../libs/auth/jwt-payload.schema.ts";
 import { loginSchema, signupSchema } from "../../identity-service/auth/schemas/auth.schema.ts";
-import { COOKIE_MAX_AGE_MS } from "../../../libs/auth/auth.constants.ts";
-import { COOKIE_NAME } from "../../../libs/auth/auth.constants.ts";
+import { COOKIE_MAX_AGE_MS } from "../../../libs/auth/auth.constant.ts";
+import { COOKIE_NAME } from "../../../libs/auth/auth.constant.ts";
 
 @ApiTags("Auth")
 @Controller("auth")

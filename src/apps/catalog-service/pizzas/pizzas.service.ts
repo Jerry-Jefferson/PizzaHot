@@ -6,7 +6,7 @@ import {
   Logger,
   NotFoundException,
 } from "@nestjs/common";
-import { PIZZAS_REPOSITORY } from "../../../libs/common/database/tokens.ts";
+import { PIZZAS_REPOSITORY } from "../../../libs/database/tokens.ts";
 import type { IPizzasRepository } from "./pizza.types.ts";
 import { Pizza } from "./pizza.entity.ts";
 import { IngredientsService } from "../ingredients/ingredients.service.ts";
@@ -16,11 +16,11 @@ import type { CriticalErrorEvent } from "../../../libs/contracts/index.ts";
 import { EVENTS_CLIENT } from "../../../libs/messaging/tokens.constant.ts";
 import { CreatePizzaDto } from "./dto/create-pizza.dto.ts";
 import { UpdatePizzaDto } from "./dto/update-pizza.dto.ts";
-import { unlink } from "fs/promises";
-import { join } from "path";
-import { UPLOADS_URL_PREFIX } from "../../../libs/common/constants/upload.constant.ts";
+import { IMAGE_STORAGE } from "../../../libs/upload/index.ts";
+import type { IImageStorage } from "../../../libs/upload/index.ts";
 import { PizzaResponseDto } from "./dto/pizza-response.dto.ts";
 import type { PizzaUpsertedEvent } from "../../../libs/contracts/index.ts";
+import type { PaginatedResult } from "../../../libs/pagination/pagination.types.ts";
 
 @Injectable()
 export class PizzasService {
@@ -31,7 +31,9 @@ export class PizzasService {
     private readonly pizzasRepository: IPizzasRepository,
     private readonly ingredientsService: IngredientsService,
     @Inject(EVENTS_CLIENT)
-    private readonly events: ClientProxy
+    private readonly events: ClientProxy,
+    @Inject(IMAGE_STORAGE)
+    private readonly images: IImageStorage
   ) {}
 
   async create(dto: CreatePizzaDto): Promise<PizzaResponseDto> {
@@ -59,13 +61,12 @@ export class PizzasService {
     page: number,
     limit: number,
     search?: string
-  ): Promise<{ data: PizzaResponseDto[]; total: number }> {
+  ): Promise<PaginatedResult<PizzaResponseDto>> {
     const { data, total } = await this.pizzasRepository.findPaginated(page, limit, search);
 
     return { data: PizzaResponseDto.fromEntities(data), total };
   }
 
-  /** Entity form, for callers inside this service. Message handlers want getById. */
   async findById(id: string): Promise<Pizza> {
     const pizza = await this.pizzasRepository.findById(id);
     if (!pizza) {
@@ -102,12 +103,15 @@ export class PizzasService {
   async setImagePath(id: string, imagePath: string): Promise<PizzaResponseDto> {
     const existingPizza = await this.pizzasRepository.findById(id);
     if (!existingPizza) {
-      await this.deleteImageByPath(imagePath);
+      await this.images.remove(imagePath);
       throw new NotFoundException("Pizza not found");
     }
 
-    if (existingPizza.image && existingPizza.image !== imagePath) {
-      await this.deleteImageByPath(existingPizza.image);
+    if (existingPizza.image !== imagePath) {
+      const oldImageWasThere = await this.images.remove(existingPizza.image);
+      if (existingPizza.image && !oldImageWasThere) {
+        this.notifyMissingImage(existingPizza, "replaced");
+      }
     }
 
     await this.pizzasRepository.update(id, { image: imagePath });
@@ -124,9 +128,10 @@ export class PizzasService {
       throw new NotFoundException("Pizza not found");
     }
 
+    let imageWasThere = false;
     if (pizza.image) {
       try {
-        await this.deleteImageFile(pizza.image);
+        imageWasThere = await this.images.remove(pizza.image);
       } catch (imageError) {
         this.logger.error(`Failed to delete image for pizza ${id}: ${String(imageError)}`);
         this.notifyImageDeletionFailure(pizza);
@@ -147,6 +152,31 @@ export class PizzasService {
     }
 
     this.logger.log(`Pizza deleted: "${pizza.name}" (id: ${id})`);
+
+    if (pizza.image && !imageWasThere) {
+      this.notifyMissingImage(pizza, "deleted");
+    }
+  }
+
+  /**
+   * The row and the disk disagreed: the file named in the database was not there. Deleting the
+   * pizza still succeeded, so this is not an error the caller can act on - but somebody renamed
+   * or removed a file behind the application's back, and whatever is on disk now carries a name
+   * nothing refers to. Only an alert makes that visible.
+   */
+  private notifyMissingImage(pizza: Pizza, action: "deleted" | "replaced"): void {
+    const event: CriticalErrorEvent = {
+      message: `Image file of pizza "${pizza.name}" (${pizza.id}) was already missing when the image was ${action}. The database pointed at ${pizza.image}. An unreferenced file may be left in uploads.`,
+      errorType: "PizzaImageMissing",
+      path: pizza.image ?? undefined,
+      timestamp: new Date().toISOString(),
+    };
+
+    try {
+      this.events.emit(EVENTS.criticalError, event);
+    } catch (error) {
+      this.logger.error(`Failed to publish missing image alert: ${String(error)}`);
+    }
   }
 
   private notifyImageDeletionFailure(pizza: Pizza): void {
@@ -164,30 +194,6 @@ export class PizzasService {
     }
   }
 
-  private async deleteImageFile(imagePath: string): Promise<void> {
-    const relativeFsPath = imagePath.replace(`${UPLOADS_URL_PREFIX}/`, "");
-    const absolutePath = join(process.cwd(), "uploads", relativeFsPath);
-    await unlink(absolutePath);
-  }
-
-  private async deleteImageByPath(imagePath: string): Promise<void> {
-    const relativeFsPath = imagePath.replace(`${UPLOADS_URL_PREFIX}/`, "");
-    const absolutePath = join(process.cwd(), "uploads", relativeFsPath);
-    await this.deleteFileQuietly(absolutePath);
-  }
-
-  private async deleteFileQuietly(absolutePath: string): Promise<void> {
-    try {
-      await unlink(absolutePath);
-    } catch (error) {
-      this.logger.warn(`Failed to delete file at ${absolutePath}: ${String(error)}`);
-    }
-  }
-
-  /**
-   * Publishing lives here rather than in the controller so the controller never needs the
-   * entity: subscribers get the full shape, the caller gets the response DTO.
-   */
   private publishUpsert(pattern: string, pizza: Pizza): void {
     const event: PizzaUpsertedEvent = {
       pizzaId: pizza.id,

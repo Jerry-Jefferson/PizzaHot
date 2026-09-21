@@ -17,12 +17,6 @@ export class CreateUserDto {
   @ApiPropertyOptional({ enum: Gender, example: Gender.MALE })
   gender?: Gender;
 
-  @ApiPropertyOptional({
-    example: "https://example.com/avatar.jpg",
-    description: "URL of the user's profile image",
-  })
-  image?: string;
-
   @ApiProperty({ example: false, default: false })
   isEmailVerified: boolean;
 

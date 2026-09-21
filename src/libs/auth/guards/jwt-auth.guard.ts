@@ -7,7 +7,7 @@ import {
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
-import { COOKIE_NAME, IS_PUBLIC_KEY } from "../auth.constants.ts";
+import { COOKIE_NAME, IS_PUBLIC_KEY } from "../auth.constant.ts";
 import { jwtPayloadSchema, type JwtPayload } from "../jwt-payload.schema.ts";
 
 interface AppRequest {

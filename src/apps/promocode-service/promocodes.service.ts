@@ -7,7 +7,7 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import type { ClientProxy } from "@nestjs/microservices";
-import { PROMOCODES_REPOSITORY } from "../../libs/common/database/tokens.ts";
+import { PROMOCODES_REPOSITORY } from "../../libs/database/tokens.ts";
 import { EVENTS_CLIENT } from "../../libs/messaging/tokens.constant.ts";
 import { EVENTS, DiscountMode } from "../../libs/contracts/index.ts";
 import type { PromocodeDeletedEvent } from "../../libs/contracts/index.ts";

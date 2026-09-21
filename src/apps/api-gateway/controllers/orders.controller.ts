@@ -25,9 +25,9 @@ import { OrderClient } from "../clients/order.client.ts";
 import { CurrentUser } from "../../../libs/auth/decorators/current-user.decorator.ts";
 import type { JwtPayload } from "../../../libs/auth/jwt-payload.schema.ts";
 import { Roles } from "../../../libs/auth/decorators/roles.decorator.ts";
-import { Role } from "../../../libs/common/constants/role.constant.ts";
+import { Role } from "../../../libs/auth/auth.constant.ts";
 import { EmailVerifiedGuard } from "../../../libs/auth/guards/email-verified.guard.ts";
-import { ZodValidationPipe } from "../../../libs/common/pipes/zod-validation.pipe.ts";
+import { ZodValidationPipe } from "../../../libs/validation/zod-validation.pipe.ts";
 import {
   createOrderSchema,
   updateOrderStatusSchema,
@@ -36,11 +36,11 @@ import {
 import {
   paginationSchema,
   type PaginationQuery,
-} from "../../../libs/common/pagination/pagination.schema.ts";
+} from "../../../libs/pagination/pagination.schema.ts";
 import { CreateOrderDto } from "../../order-service/dto/create-order.dto.ts";
 import { UpdateOrderStatusDto } from "../../order-service/dto/update-order-status.dto.ts";
 import { OrderResponseDto } from "../../order-service/dto/order-response.dto.ts";
-import { PaginatedResponseDto } from "../../../libs/common/pagination/paginated-response.dto.ts";
+import { PaginatedResponseDto } from "../../../libs/pagination/paginated-response.dto.ts";
 import type { ListOrdersQuery } from "../../order-service/order.types.ts";
 
 @ApiTags("Orders")

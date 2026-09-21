@@ -1,4 +1,4 @@
-import { MAX_PIZZA_QUANTITY } from "../../../libs/common/constants/pizza.constant.ts";
+import { MAX_PIZZA_QUANTITY } from "../../../libs/contracts/order-limit.constant.ts";
 import { z } from "zod";
 
 export const addCartItemSchema = z.object({

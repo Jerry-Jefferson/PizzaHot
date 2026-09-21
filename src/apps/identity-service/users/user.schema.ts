@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { Gender } from "./constants/gender.constant.ts";
-import { paginationSchema } from "../../../libs/common/pagination/pagination.schema.ts";
+import { paginationSchema } from "../../../libs/pagination/pagination.schema.ts";
 
 export const createUserSchema = z.object({
   email: z
@@ -31,8 +31,6 @@ export const createUserSchema = z.object({
       error: `Gender must be one of: ${Object.values(Gender).join(", ")}`,
     })
     .optional(),
-
-  image: z.url({ error: "Image must be a valid URL" }).optional(),
 });
 
 export const updateUserSchema = z
@@ -56,8 +54,6 @@ export const updateUserSchema = z
         error: `Gender must be one of: ${Object.values(Gender).join(", ")}`,
       })
       .optional(),
-
-    image: z.url({ error: "Image must be a valid URL" }).optional(),
   })
   .refine((data) => Object.keys(data).length > 0, {
     message: "At least one field must be provided for update",

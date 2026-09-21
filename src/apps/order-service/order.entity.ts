@@ -12,7 +12,7 @@ import type { OrderItem } from "./order-items/order-item.entity.ts";
 import { DeliveryType } from "./constants/delivery-type.constant.ts";
 import { PaymentMethod } from "./constants/payment-method.constant.ts";
 import { OrderStatus } from "./constants/order-status.constant.ts";
-import { checkIn, checkName } from "../../libs/common/database/check-in.util.ts";
+import { checkIn, checkName } from "../../libs/database/check-in.util.ts";
 
 @Entity("orders")
 @Check(checkName("orders", "delivery"), checkIn("delivery", Object.values(DeliveryType)))

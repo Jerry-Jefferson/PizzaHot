@@ -8,7 +8,7 @@ import {
   ApiDeleted,
   ApiNotFound,
   ApiUpdated,
-} from "../../../libs/common/swagger/api-crud.decorator.ts";
+} from "../../../libs/swagger/api-crud.decorator.ts";
 
 export const ApiCreateIngredient = () =>
   applyDecorators(

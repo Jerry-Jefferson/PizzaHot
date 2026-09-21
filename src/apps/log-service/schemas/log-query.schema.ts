@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { paginationSchema } from "../../../libs/common/pagination/pagination.schema.ts";
+import { paginationSchema } from "../../../libs/pagination/pagination.schema.ts";
 import { LogLevel } from "../../../libs/logging/log-level.constant.ts";
 
 export const listLogsQuerySchema = paginationSchema.extend({

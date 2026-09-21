@@ -1,13 +1,10 @@
 import type { Pizza } from "./pizza.entity.ts";
+import type { PaginatedResult } from "../../../libs/pagination/pagination.types.ts";
 
 export interface IPizzasRepository {
   create(data: Partial<Pizza>): Pizza;
   save(pizza: Pizza): Promise<Pizza>;
-  findPaginated(
-    page: number,
-    limit: number,
-    search?: string
-  ): Promise<{ data: Pizza[]; total: number }>;
+  findPaginated(page: number, limit: number, search?: string): Promise<PaginatedResult<Pizza>>;
   findById(id: string): Promise<Pizza | null>;
   findByIds(ids: string[]): Promise<Pizza[]>;
   findByName(name: string): Promise<Pizza | null>;

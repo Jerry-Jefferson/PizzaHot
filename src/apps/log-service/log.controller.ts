@@ -6,7 +6,7 @@ import { LogsService } from "./logs.service.ts";
 import type { ListLogsQuery } from "./schemas/log-query.schema.ts";
 import type { LogLevel } from "../../libs/logging/log-level.constant.ts";
 import { ack } from "../../libs/messaging/ack.ts";
-import type { PaginatedResponseDto } from "../../libs/common/pagination/paginated-response.dto.ts";
+import type { PaginatedResponseDto } from "../../libs/pagination/paginated-response.dto.ts";
 import type { Log } from "./schemas/log.schema.ts";
 
 @Controller()

@@ -2,7 +2,7 @@ import { z } from "zod";
 import { DeliveryType } from "./constants/delivery-type.constant.ts";
 import { PaymentMethod } from "./constants/payment-method.constant.ts";
 import { ORDER_STATUSES } from "./constants/order-status.constant.ts";
-import { paginationSchema } from "../../libs/common/pagination/pagination.schema.ts";
+import { paginationSchema } from "../../libs/pagination/pagination.schema.ts";
 
 export const createOrderSchema = z
   .object({

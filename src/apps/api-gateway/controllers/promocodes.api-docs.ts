@@ -3,12 +3,8 @@ import { ApiBody, ApiOperation, ApiParam, ApiResponse } from "@nestjs/swagger";
 import { CreatePromocodeDto } from "../../promocode-service/dto/create-promocode.dto.ts";
 import { UpdatePromocodeDto } from "../../promocode-service/dto/update-promocode.dto.ts";
 import { PromocodeResponseDto } from "../../promocode-service/dto/promocode-response.dto.ts";
-import { ApiDeleted } from "../../../libs/common/swagger/api-crud.decorator.ts";
-import {
-  ApiCreated,
-  ApiNotFound,
-  ApiUpdated,
-} from "../../../libs/common/swagger/api-crud.decorator.ts";
+import { ApiDeleted } from "../../../libs/swagger/api-crud.decorator.ts";
+import { ApiCreated, ApiNotFound, ApiUpdated } from "../../../libs/swagger/api-crud.decorator.ts";
 
 export const ApiCreatePromocode = () =>
   applyDecorators(

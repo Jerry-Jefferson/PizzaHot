@@ -1,6 +1,6 @@
 import { applyDecorators } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from "@nestjs/swagger";
-import { ApiNotFound } from "../../../libs/common/swagger/api-crud.decorator.ts";
+import { ApiNotFound } from "../../../libs/swagger/api-crud.decorator.ts";
 import { AddCartItemDto } from "../../cart-service/cart-items/dto/add-cart-item.dto.ts";
 import { UpdateCartItemDto } from "../../cart-service/cart-items/dto/update-cart-item.dto.ts";
 import { ApplyPromocodeDto } from "../../cart-service/dto/apply-promocode.dto.ts";

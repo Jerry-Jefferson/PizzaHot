@@ -16,12 +16,17 @@ import {
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { CatalogClient } from "../clients/catalog.client.ts";
-import { UPLOADS_URL_PREFIX } from "../../../libs/common/constants/upload.constant.ts";
+
 import { Roles } from "../../../libs/auth/decorators/roles.decorator.ts";
-import { Role } from "../../../libs/common/constants/role.constant.ts";
-import { ZodValidationPipe } from "../../../libs/common/pipes/zod-validation.pipe.ts";
-import { ImageValidationPipe } from "../../../libs/common/pipes/image-validation.pipe.ts";
-import { PaginatedResponseDto } from "../../../libs/common/pagination/paginated-response.dto.ts";
+import { Role } from "../../../libs/auth/auth.constant.ts";
+import { ZodValidationPipe } from "../../../libs/validation/zod-validation.pipe.ts";
+import {
+  ImageCategory,
+  ImageValidationPipe,
+  UPLOADS_URL_PREFIX,
+  imageMulterOptions,
+} from "../../../libs/upload/index.ts";
+import { PaginatedResponseDto } from "../../../libs/pagination/paginated-response.dto.ts";
 import { CreatePizzaDto } from "../../catalog-service/pizzas/dto/create-pizza.dto.ts";
 import { UpdatePizzaDto } from "../../catalog-service/pizzas/dto/update-pizza.dto.ts";
 import { PizzaResponseDto } from "../../catalog-service/pizzas/dto/pizza-response.dto.ts";
@@ -30,7 +35,7 @@ import {
   listPizzasQuerySchema,
   updatePizzaSchema,
 } from "../../catalog-service/pizzas/pizza.schema.ts";
-import { pizzaImageMulterOptions } from "../../catalog-service/pizzas/pizza-image-multer.config.ts";
+
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import {
   ApiAddPizza,
@@ -90,13 +95,13 @@ export class PizzasController {
 
   @Patch(":id/image")
   @Roles(Role.ADMIN)
-  @UseInterceptors(FileInterceptor("image", pizzaImageMulterOptions))
+  @UseInterceptors(FileInterceptor("image", imageMulterOptions(ImageCategory.PIZZAS)))
   @ApiUploadImagePizza()
   async uploadImage(
     @Param("id", ParseUUIDPipe) id: string,
     @UploadedFile(new ImageValidationPipe()) image: Express.Multer.File
   ): Promise<PizzaResponseDto> {
-    const imagePath = `${UPLOADS_URL_PREFIX}/pizzas/${image.filename}`;
+    const imagePath = `${UPLOADS_URL_PREFIX}/${ImageCategory.PIZZAS}/${image.filename}`;
     return this.pizzasService.setImagePath(id, imagePath);
   }
 

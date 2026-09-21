@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Gender } from "../constants/gender.constant.ts";
-import { Role } from "../../../../libs/common/constants/role.constant.ts";
+import { Role } from "../../../../libs/auth/auth.constant.ts";
 import { User } from "../user.entity.ts";
 
 export class UserResponseDto {

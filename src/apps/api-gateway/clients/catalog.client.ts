@@ -9,13 +9,9 @@ import type { UpdatePizzaDto } from "../../catalog-service/pizzas/dto/update-piz
 import type { IngredientResponseDto } from "../../catalog-service/ingredients/dto/ingredient-response.dto.ts";
 import type { CreateIngredientDto } from "../../catalog-service/ingredients/dto/create-ingredient.dto.ts";
 import type { UpdateIngredientDto } from "../../catalog-service/ingredients/dto/update-ingredient.dto.ts";
-import { PaginatedResponseDto } from "../../../libs/common/pagination/paginated-response.dto.ts";
+import { PaginatedResponseDto } from "../../../libs/pagination/paginated-response.dto.ts";
+import type { PaginatedResult } from "../../../libs/pagination/pagination.types.ts";
 
-/**
- * Thin: catalog-service already answers with the shape the API exposes. The only thing
- * built here is the pagination envelope, because page and limit belong to HTTP, not to
- * the message the service answered.
- */
 @Injectable()
 export class CatalogClient {
   constructor(@Inject(CATALOG_CLIENT) private readonly client: ClientProxy) {}
@@ -25,7 +21,7 @@ export class CatalogClient {
     limit: number,
     search?: string
   ): Promise<PaginatedResponseDto<PizzaResponseDto>> {
-    const { data, total } = await rpc<{ data: PizzaResponseDto[]; total: number }>(
+    const { data, total } = await rpc<PaginatedResult<PizzaResponseDto>>(
       this.client,
       RPC.catalog.pizzaList,
       { page, limit, search }

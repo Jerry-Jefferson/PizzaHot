@@ -1,20 +1,16 @@
 import { applyDecorators } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from "@nestjs/swagger";
-import {
-  ApiCreated,
-  ApiNotFound,
-  ApiUpdated,
-} from "../../../libs/common/swagger/api-crud.decorator.ts";
+import { ApiCreated, ApiNotFound, ApiUpdated } from "../../../libs/swagger/api-crud.decorator.ts";
 import {
   ApiAuth,
   ApiOwnerOnly,
   ApiPaginationQuery,
-} from "../../../libs/common/swagger/api-responses.decorator.ts";
+} from "../../../libs/swagger/api-responses.decorator.ts";
 import { CreateOrderDto } from "../../order-service/dto/create-order.dto.ts";
 import { UpdateOrderStatusDto } from "../../order-service/dto/update-order-status.dto.ts";
 import { ListOrdersQueryDto } from "../../order-service/dto/list-orders-query.dto.ts";
 import { OrderResponseDto } from "../../order-service/dto/order-response.dto.ts";
-import { PaginatedResponseDto } from "../../../libs/common/pagination/paginated-response.dto.ts";
+import { PaginatedResponseDto } from "../../../libs/pagination/paginated-response.dto.ts";
 
 export const ApiCreateOrder = () =>
   applyDecorators(

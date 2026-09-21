@@ -10,7 +10,7 @@ import {
 } from "typeorm";
 import type { CartItem } from "./cart-items/cart-item.entity.ts";
 import { DiscountMode } from "../../libs/contracts/index.ts";
-import { checkIn, checkName } from "../../libs/common/database/check-in.util.ts";
+import { checkIn, checkName } from "../../libs/database/check-in.util.ts";
 
 @Entity("carts")
 @Check(

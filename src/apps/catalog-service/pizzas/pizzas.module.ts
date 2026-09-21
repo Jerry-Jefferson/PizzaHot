@@ -5,10 +5,11 @@ import { PizzasRepository } from "./pizzas.repository.ts";
 import { PizzasService } from "./pizzas.service.ts";
 import { PizzaCleanupService } from "./pizza-cleanup.service.ts";
 import { IngredientsModule } from "../ingredients/ingredients.module.ts";
-import { PIZZAS_REPOSITORY } from "../../../libs/common/database/tokens.ts";
+import { PIZZAS_REPOSITORY } from "../../../libs/database/tokens.ts";
+import { UploadModule } from "../../../libs/upload/index.ts";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Pizza]), IngredientsModule],
+  imports: [TypeOrmModule.forFeature([Pizza]), IngredientsModule, UploadModule],
   providers: [
     PizzasRepository,
     { provide: PIZZAS_REPOSITORY, useExisting: PizzasRepository },

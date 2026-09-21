@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ANALYTICS_REPOSITORY } from "../../libs/common/database/tokens.ts";
+import { ANALYTICS_REPOSITORY } from "../../libs/database/tokens.ts";
 import type {
   IAnalyticsRepository,
   MostOrderedPizzaResult,

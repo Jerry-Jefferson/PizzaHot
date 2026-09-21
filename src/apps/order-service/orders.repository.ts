@@ -4,6 +4,7 @@ import { DeepPartial, FindOptionsWhere, Repository } from "typeorm";
 import { Order } from "./order.entity.ts";
 import { OrderStatus } from "./constants/order-status.constant.ts";
 import type { IOrdersRepository, ListOrdersQuery } from "./order.types.ts";
+import type { PaginatedResult } from "../../libs/pagination/pagination.types.ts";
 
 @Injectable()
 export class OrdersRepository implements IOrdersRepository {
@@ -39,7 +40,7 @@ export class OrdersRepository implements IOrdersRepository {
     });
   }
 
-  async findPaginated(query: ListOrdersQuery): Promise<{ data: Order[]; total: number }> {
+  async findPaginated(query: ListOrdersQuery): Promise<PaginatedResult<Order>> {
     const { page, limit, userId, status, delivery, paymentMethod } = query;
 
     const where: FindOptionsWhere<Order> = {};

@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { typeOrmConfig } from "../../libs/common/database/typeorm.config.ts";
-import { CART_ITEMS_REPOSITORY, CART_REPOSITORY } from "../../libs/common/database/tokens.ts";
+import { typeOrmConfig } from "../../libs/database/typeorm.config.ts";
+import { CART_ITEMS_REPOSITORY, CART_REPOSITORY } from "../../libs/database/tokens.ts";
 import { MessagingModule } from "../../libs/messaging/messaging.module.ts";
 import { PROMOCODE_CLIENT } from "../../libs/messaging/tokens.constant.ts";
 import { RmqLoggerService } from "../../libs/logging/rmq-logger.service.ts";

@@ -7,7 +7,7 @@ import {
   ApiQuery,
   ApiResponse,
 } from "@nestjs/swagger";
-import { PaginatedResponseDto } from "../../../libs/common/pagination/paginated-response.dto.ts";
+import { PaginatedResponseDto } from "../../../libs/pagination/paginated-response.dto.ts";
 import { CreatePizzaDto } from "../../catalog-service/pizzas/dto/create-pizza.dto.ts";
 import { UpdatePizzaDto } from "../../catalog-service/pizzas/dto/update-pizza.dto.ts";
 import { PizzaResponseDto } from "../../catalog-service/pizzas/dto/pizza-response.dto.ts";
@@ -16,11 +16,8 @@ import {
   ApiDeleted,
   ApiNotFound,
   ApiUpdated,
-} from "../../../libs/common/swagger/api-crud.decorator.ts";
-import {
-  ApiAdminOnly,
-  ApiPaginationQuery,
-} from "../../../libs/common/swagger/api-responses.decorator.ts";
+} from "../../../libs/swagger/api-crud.decorator.ts";
+import { ApiAdminOnly, ApiPaginationQuery } from "../../../libs/swagger/api-responses.decorator.ts";
 
 export const ApiFindAllPizza = () =>
   applyDecorators(

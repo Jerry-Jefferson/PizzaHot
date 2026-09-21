@@ -15,8 +15,8 @@ import { CreatePromocodeDto } from "../../promocode-service/dto/create-promocode
 import { UpdatePromocodeDto } from "../../promocode-service/dto/update-promocode.dto.ts";
 import { PromocodeResponseDto } from "../../promocode-service/dto/promocode-response.dto.ts";
 import { Roles } from "../../../libs/auth/decorators/roles.decorator.ts";
-import { Role } from "../../../libs/common/constants/role.constant.ts";
-import { ZodValidationPipe } from "../../../libs/common/pipes/zod-validation.pipe.ts";
+import { Role } from "../../../libs/auth/auth.constant.ts";
+import { ZodValidationPipe } from "../../../libs/validation/zod-validation.pipe.ts";
 import {
   createPromocodeSchema,
   updatePromocodeSchema,
@@ -30,7 +30,7 @@ import {
   ApiRestorePromocode,
   ApiUpdatePromocode,
 } from "./promocodes.api-docs.ts";
-import { ApiAdminOnly } from "../../../libs/common/swagger/api-responses.decorator.ts";
+import { ApiAdminOnly } from "../../../libs/swagger/api-responses.decorator.ts";
 
 @ApiTags("Promocodes")
 @ApiBearerAuth()

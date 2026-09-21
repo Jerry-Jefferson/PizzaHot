@@ -5,7 +5,7 @@ import { RPC } from "../../../libs/contracts/index.ts";
 import { rpc } from "../../../libs/messaging/rpc.util.ts";
 import type { ListLogsQuery } from "../../log-service/schemas/log-query.schema.ts";
 import type { Log } from "../../log-service/schemas/log.schema.ts";
-import type { PaginatedResponseDto } from "../../../libs/common/pagination/paginated-response.dto.ts";
+import type { PaginatedResponseDto } from "../../../libs/pagination/paginated-response.dto.ts";
 import type {
   MostOrderedPizzaResult,
   UserAboveAverageCheckResult,

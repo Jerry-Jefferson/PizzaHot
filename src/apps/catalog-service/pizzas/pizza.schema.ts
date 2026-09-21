@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { paginationSchema } from "../../../libs/common/pagination/pagination.schema.ts";
+import { paginationSchema } from "../../../libs/pagination/pagination.schema.ts";
 
 export const pizzaSchema = z.object({
   name: z.string({ error: "Name must be a string" }).min(1, { message: "Name cannot be empty" }),

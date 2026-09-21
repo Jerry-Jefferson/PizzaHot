@@ -1,6 +1,6 @@
 import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
 import { Gender } from "./users/constants/gender.constant.ts";
-import { Role } from "../../libs/common/constants/role.constant.ts";
+import { Role } from "../../libs/auth/auth.constant.ts";
 import { UsersService } from "./users/users.service.ts";
 
 @Injectable()
@@ -40,7 +40,6 @@ export class SeedService implements OnModuleInit {
         name: "Admin",
         surname: "Admin",
         gender: Gender.FEMALE,
-        image: "",
         isEmailVerified: true,
       },
       Role.ADMIN

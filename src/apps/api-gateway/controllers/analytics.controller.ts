@@ -1,11 +1,11 @@
 import { Controller, Get, Query } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { ApiGetMostOrderedPizza, ApiGetUsersAboveAverageCheck } from "./analytics.api-docs.ts";
-import { ApiOwnerOnly } from "../../../libs/common/swagger/api-responses.decorator.ts";
+import { ApiOwnerOnly } from "../../../libs/swagger/api-responses.decorator.ts";
 import { AnalyticsClient } from "../clients/analytics.client.ts";
 import { Roles } from "../../../libs/auth/decorators/roles.decorator.ts";
-import { Role } from "../../../libs/common/constants/role.constant.ts";
-import { ZodValidationPipe } from "../../../libs/common/pipes/zod-validation.pipe.ts";
+import { Role } from "../../../libs/auth/auth.constant.ts";
+import { ZodValidationPipe } from "../../../libs/validation/zod-validation.pipe.ts";
 import { mostOrderedPizzaQuerySchema } from "../../analytics-service/analytics.schema.ts";
 
 @ApiTags("Analytics")

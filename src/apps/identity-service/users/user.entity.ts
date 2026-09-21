@@ -7,8 +7,8 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { Gender } from "./constants/gender.constant.ts";
-import { Role } from "../../../libs/common/constants/role.constant.ts";
-import { checkIn, checkName } from "../../../libs/common/database/check-in.util.ts";
+import { Role } from "../../../libs/auth/auth.constant.ts";
+import { checkIn, checkName } from "../../../libs/database/check-in.util.ts";
 
 @Entity("users")
 @Check(checkName("users", "role"), checkIn("role", Object.values(Role)))
@@ -44,7 +44,8 @@ export class User {
   @Column({ type: "varchar", length: 32, nullable: true })
   gender: Gender | null;
 
-  @Column({ type: "varchar", nullable: true })
+  // Set only by the avatar upload, never by a request body - same rule as Pizza.image.
+  @Column({ type: "varchar", nullable: true, default: null })
   image: string | null;
 
   @CreateDateColumn()

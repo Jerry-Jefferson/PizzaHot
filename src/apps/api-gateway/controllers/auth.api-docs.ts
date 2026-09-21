@@ -1,6 +1,6 @@
 import { applyDecorators } from "@nestjs/common";
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
-import { ApiAuth } from "../../../libs/common/swagger/api-responses.decorator.ts";
+import { ApiAuth } from "../../../libs/swagger/api-responses.decorator.ts";
 import { UserResponseDto } from "../../identity-service/users/dto/user-response.dto.ts";
 import { AuthResponseDto } from "../../identity-service/auth/dto/auth-response.dto.ts";
 import { LoginDto } from "../../identity-service/auth/dto/login.dto.ts";

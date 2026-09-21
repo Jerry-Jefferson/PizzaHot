@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { typeOrmConfig } from "../../libs/common/database/typeorm.config.ts";
-import { ORDERS_REPOSITORY, ORDER_ITEMS_REPOSITORY } from "../../libs/common/database/tokens.ts";
+import { typeOrmConfig } from "../../libs/database/typeorm.config.ts";
+import { ORDERS_REPOSITORY, ORDER_ITEMS_REPOSITORY } from "../../libs/database/tokens.ts";
 import { MessagingModule } from "../../libs/messaging/messaging.module.ts";
 import {
   CART_CLIENT,

@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { ILike, Repository } from "typeorm";
 import { User } from "./user.entity.ts";
 import type { IUsersRepository } from "./user.types.ts";
+import type { PaginatedResult } from "../../../libs/pagination/pagination.types.ts";
 
 @Injectable()
 export class UsersRepository implements IUsersRepository {
@@ -23,7 +24,7 @@ export class UsersRepository implements IUsersRepository {
     page: number,
     limit: number,
     search?: string
-  ): Promise<{ data: User[]; total: number }> {
+  ): Promise<PaginatedResult<User>> {
     const where = search
       ? [
           { name: ILike(`%${search.replace(/[%_]/g, "\\$&")}%`) },

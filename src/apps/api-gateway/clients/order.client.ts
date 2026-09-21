@@ -7,7 +7,8 @@ import type { CreateOrderDto } from "../../order-service/dto/create-order.dto.ts
 import type { OrderStatus } from "../../order-service/constants/order-status.constant.ts";
 import type { ListOrdersQuery } from "../../order-service/order.types.ts";
 import { OrderResponseDto } from "../../order-service/dto/order-response.dto.ts";
-import { PaginatedResponseDto } from "../../../libs/common/pagination/paginated-response.dto.ts";
+import { PaginatedResponseDto } from "../../../libs/pagination/paginated-response.dto.ts";
+import type { PaginatedResult } from "../../../libs/pagination/pagination.types.ts";
 
 @Injectable()
 export class OrderClient {
@@ -34,7 +35,7 @@ export class OrderClient {
   }
 
   async findAll(query: ListOrdersQuery): Promise<PaginatedResponseDto<OrderResponseDto>> {
-    const { data, total } = await rpc<{ data: OrderResponseDto[]; total: number }>(
+    const { data, total } = await rpc<PaginatedResult<OrderResponseDto>>(
       this.client,
       RPC.order.findAll,
       query
