@@ -1,6 +1,6 @@
 import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
-import { Gender } from "./users/constants/gender.enum.ts";
-import { Role } from "../../libs/common/constants/role.enum.ts";
+import { Gender } from "./users/constants/gender.constant.ts";
+import { Role } from "../../libs/common/constants/role.constant.ts";
 import { UsersService } from "./users/users.service.ts";
 
 @Injectable()

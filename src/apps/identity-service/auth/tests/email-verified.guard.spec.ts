@@ -1,30 +1,26 @@
 import { jest, describe, it, expect, beforeEach } from "@jest/globals";
 import { ExecutionContext, ForbiddenException } from "@nestjs/common";
 import { EmailVerifiedGuard } from "../../../../libs/auth/guards/email-verified.guard.ts";
-import type { ClientProxy } from "@nestjs/microservices";
+import type { RpcSender } from "../../../../libs/messaging/message-client.types.ts";
+import { createHttpExecutionContext } from "../../../../libs/testing/http-context.mock.ts";
 import { of } from "rxjs";
-import type { JwtPayload } from "../../../../libs/auth/jwt-payload.interface.ts";
-import { Role } from "../../../../libs/common/constants/role.enum.ts";
-import { RPC } from "../../../../libs/contracts/patterns.ts";
+import type { JwtPayload } from "../../../../libs/auth/jwt-payload.schema.ts";
+import { Role } from "../../../../libs/common/constants/role.constant.ts";
+import { RPC } from "../../../../libs/contracts/index.ts";
 
 describe("EmailVerifiedGuard", () => {
   let guard: EmailVerifiedGuard;
-  let mockIdentityClient: { send: jest.Mock };
+  let mockIdentityClient: { send: jest.Mock<RpcSender["send"]> };
 
-  const createMockContext = (user?: JwtPayload): ExecutionContext => {
-    return {
-      switchToHttp: () => ({
-        getRequest: () => ({ user }),
-      }),
-    } as unknown as ExecutionContext;
-  };
+  const createMockContext = (user?: JwtPayload): ExecutionContext =>
+    createHttpExecutionContext({ user }, {});
 
   beforeEach(() => {
-    mockIdentityClient = { send: jest.fn() };
-    guard = new EmailVerifiedGuard(mockIdentityClient as unknown as ClientProxy);
+    mockIdentityClient = { send: jest.fn<RpcSender["send"]>() };
+    guard = new EmailVerifiedGuard(mockIdentityClient);
   });
 
-  it("should throw ForbiddenException if user is not authenticated", async () => {
+  it("should throw ForbiddenException if user isn't authenticated", async () => {
     const context = createMockContext(undefined);
     await expect(guard.canActivate(context)).rejects.toThrow(ForbiddenException);
   });

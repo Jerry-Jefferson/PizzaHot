@@ -1,15 +1,15 @@
 import { Inject, Injectable } from "@nestjs/common";
 import type { ClientProxy } from "@nestjs/microservices";
-import { ANALYTICS_CLIENT, LOG_CLIENT } from "../../../libs/messaging/tokens.ts";
-import { RPC } from "../../../libs/contracts/patterns.ts";
+import { ANALYTICS_CLIENT, LOG_CLIENT } from "../../../libs/messaging/tokens.constant.ts";
+import { RPC } from "../../../libs/contracts/index.ts";
 import { rpc } from "../../../libs/messaging/rpc.util.ts";
-import type { ListLogsQuery } from "../../log-service/logs/schemas/log-query.schema.ts";
-import type { Log } from "../../log-service/logs/schemas/log.schema.ts";
-import type { PaginatedResponseDto } from "../../../libs/common/pagination/dto/paginated-response.dto.ts";
+import type { ListLogsQuery } from "../../log-service/schemas/log-query.schema.ts";
+import type { Log } from "../../log-service/schemas/log.schema.ts";
+import type { PaginatedResponseDto } from "../../../libs/common/pagination/paginated-response.dto.ts";
 import type {
   MostOrderedPizzaResult,
   UserAboveAverageCheckResult,
-} from "../../analytics-service/analytics/interfaces/analytics.repository.interface.ts";
+} from "../../analytics-service/analytics.types.ts";
 
 @Injectable()
 export class AnalyticsClient {

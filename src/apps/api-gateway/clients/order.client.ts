@@ -1,15 +1,13 @@
 import { Inject, Injectable } from "@nestjs/common";
 import type { ClientProxy } from "@nestjs/microservices";
-import { ORDER_CLIENT } from "../../../libs/messaging/tokens.ts";
-import { RPC } from "../../../libs/contracts/patterns.ts";
+import { ORDER_CLIENT } from "../../../libs/messaging/tokens.constant.ts";
+import { RPC } from "../../../libs/contracts/index.ts";
 import { rpc } from "../../../libs/messaging/rpc.util.ts";
-import type { CreateOrderDto } from "../../order-service/orders/dto/create-order.dto.ts";
-import type { OrderStatus } from "../../order-service/orders/constants/order-status.constant.ts";
-import type { DeliveryType } from "../../order-service/orders/constants/delivery-type.constant.ts";
-import type { PaymentMethod } from "../../order-service/orders/constants/payment-method.constant.ts";
-import type { OrderResponseDto } from "../../order-service/orders/dto/order-response.dto.ts";
-import type { Order } from "../../order-service/orders/entities/order.entity.ts";
-import type { PaginatedResponseDto } from "../../../libs/common/pagination/dto/paginated-response.dto.ts";
+import type { CreateOrderDto } from "../../order-service/dto/create-order.dto.ts";
+import type { OrderStatus } from "../../order-service/constants/order-status.constant.ts";
+import type { ListOrdersQuery } from "../../order-service/order.types.ts";
+import { OrderResponseDto } from "../../order-service/dto/order-response.dto.ts";
+import { PaginatedResponseDto } from "../../../libs/common/pagination/paginated-response.dto.ts";
 
 @Injectable()
 export class OrderClient {
@@ -35,22 +33,14 @@ export class OrderClient {
     return rpc(this.client, RPC.order.findById, { orderId });
   }
 
-  findAll(
-    page: number,
-    limit: number,
-    userId?: string,
-    status?: OrderStatus,
-    delivery?: DeliveryType,
-    paymentMethod?: PaymentMethod
-  ): Promise<{ data: Order[]; total: number }> {
-    return rpc(this.client, RPC.order.findAll, {
-      page,
-      limit,
-      userId,
-      status,
-      delivery,
-      paymentMethod,
-    });
+  async findAll(query: ListOrdersQuery): Promise<PaginatedResponseDto<OrderResponseDto>> {
+    const { data, total } = await rpc<{ data: OrderResponseDto[]; total: number }>(
+      this.client,
+      RPC.order.findAll,
+      query
+    );
+
+    return new PaginatedResponseDto(data, query.page, query.limit, total);
   }
 
   updateStatus(orderId: string, status: OrderStatus): Promise<OrderResponseDto> {

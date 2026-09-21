@@ -1,7 +1,7 @@
 import { BadRequestException, Inject, Injectable, Logger } from "@nestjs/common";
 import { Cron } from "@nestjs/schedule";
 import { REDEMPTIONS_REPOSITORY } from "../../../libs/common/database/tokens.ts";
-import type { IRedemptionsRepository } from "./interfaces/redemptions.repository.interface.ts";
+import type { IRedemptionsRepository } from "../promocode.types.ts";
 
 const RESERVATION_TTL_MS = 15 * 60 * 1000;
 

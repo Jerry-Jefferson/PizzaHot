@@ -3,16 +3,16 @@ import { BadRequestException, Injectable, Logger, UnauthorizedException } from "
 import { JwtService } from "@nestjs/jwt";
 import bcrypt from "bcrypt";
 import { UserResponseDto } from "../users/dto/user-response.dto.ts";
-import { User } from "../users/entities/user.entity.ts";
+import { User } from "../users/user.entity.ts";
 import { UsersService } from "../users/users.service.ts";
 import { LoginDto } from "./dto/login.dto.ts";
 import type { SignUp } from "./schemas/auth.schema.ts";
-import { JwtPayload } from "../../../libs/auth/jwt-payload.interface.ts";
+import { JwtPayload } from "../../../libs/auth/jwt-payload.schema.ts";
 import { Inject } from "@nestjs/common";
 import type { ClientProxy } from "@nestjs/microservices";
-import { EVENTS } from "../../../libs/contracts/patterns.ts";
-import type { UserRegisteredEvent } from "../../../libs/contracts/events.ts";
-import { EVENTS_CLIENT } from "../../../libs/messaging/tokens.ts";
+import { EVENTS } from "../../../libs/contracts/index.ts";
+import type { UserRegisteredEvent } from "../../../libs/contracts/index.ts";
+import { EVENTS_CLIENT } from "../../../libs/messaging/tokens.constant.ts";
 
 @Injectable()
 export class AuthService {
@@ -125,8 +125,7 @@ export class AuthService {
   }
 
   async getProfile(userId: string): Promise<UserResponseDto> {
-    const user = await this.usersService.findById(userId);
-    return UserResponseDto.fromEntity(user);
+    return this.usersService.findById(userId);
   }
 
   private generateToken(user: User): string {

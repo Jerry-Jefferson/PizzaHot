@@ -14,3 +14,5 @@ export const paginationSchema = z.object({
     .max(100, { message: "Limit must be at most 100" })
     .default(10),
 });
+
+export type PaginationQuery = z.infer<typeof paginationSchema>;

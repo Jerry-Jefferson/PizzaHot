@@ -1,6 +1,6 @@
 import { PipeTransform, Injectable, BadRequestException } from "@nestjs/common";
 import { extname } from "path";
-import { ALLOWED_EXTENSIONS } from "../constants/upload.constants.ts";
+import { ALLOWED_EXTENSIONS } from "../constants/upload.constant.ts";
 
 @Injectable()
 export class ImageValidationPipe implements PipeTransform {

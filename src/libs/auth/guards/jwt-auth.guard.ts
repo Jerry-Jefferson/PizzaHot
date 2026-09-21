@@ -1,8 +1,14 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  Logger,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
-import { IS_PUBLIC_KEY } from "../auth.constants.ts";
-import { JwtPayload } from "../jwt-payload.interface.ts";
+import { COOKIE_NAME, IS_PUBLIC_KEY } from "../auth.constants.ts";
+import { jwtPayloadSchema, type JwtPayload } from "../jwt-payload.schema.ts";
 
 interface AppRequest {
   headers: { authorization?: string };
@@ -12,6 +18,8 @@ interface AppRequest {
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
+  private readonly logger = new Logger(JwtAuthGuard.name);
+
   constructor(
     private readonly jwtService: JwtService,
     private readonly reflector: Reflector
@@ -34,12 +42,25 @@ export class JwtAuthGuard implements CanActivate {
       throw new UnauthorizedException("Missing authentication token");
     }
 
+    let claims: object;
     try {
-      const payload = await this.jwtService.verifyAsync<JwtPayload>(token);
-      request.user = payload;
+      claims = await this.jwtService.verifyAsync<object>(token);
     } catch {
       throw new UnauthorizedException("Invalid or expired token");
     }
+
+    // A valid signature says the token is ours, not that its claims still match the
+    // shape this code expects - tokens issued before a change stay valid until expiry.
+    const parsed = jwtPayloadSchema.safeParse(claims);
+
+    if (!parsed.success) {
+      // Claim values can carry personal data, so only the failing field names are logged.
+      const fields = parsed.error.issues.map((issue) => issue.path.join(".")).join(", ");
+      this.logger.warn(`Rejected a token whose claims do not match the expected shape: ${fields}`);
+      throw new UnauthorizedException("Token claims are not recognised");
+    }
+
+    request.user = parsed.data;
 
     return true;
   }
@@ -49,7 +70,7 @@ export class JwtAuthGuard implements CanActivate {
   }
 
   private extractTokenFromCookie(request: AppRequest): string | undefined {
-    return request.cookies?.access_token;
+    return request.cookies?.[COOKIE_NAME];
   }
 
   private extractTokenFromHeader(request: AppRequest): string | undefined {

@@ -12,18 +12,17 @@ import {
   Res,
 } from "@nestjs/common";
 import type { Response } from "express";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import {
-  ApiBearerAuth,
-  ApiBody,
-  ApiOperation,
-  ApiParam,
-  ApiQuery,
-  ApiResponse,
-  ApiTags,
-} from "@nestjs/swagger";
+  ApiChangePasswordUser,
+  ApiFindAllUser,
+  ApiFindOneUser,
+  ApiRemoveMeUser,
+  ApiUpdateMeUser,
+} from "./users.api-docs.ts";
 import { CurrentUser } from "../../../libs/auth/decorators/current-user.decorator.ts";
-import type { JwtPayload } from "../../../libs/auth/jwt-payload.interface.ts";
-import { PaginatedResponseDto } from "../../../libs/common/pagination/dto/paginated-response.dto.ts";
+import type { JwtPayload } from "../../../libs/auth/jwt-payload.schema.ts";
+import { PaginatedResponseDto } from "../../../libs/common/pagination/paginated-response.dto.ts";
 import { ZodValidationPipe } from "../../../libs/common/pipes/zod-validation.pipe.ts";
 import { ChangePasswordDto } from "../../identity-service/users/dto/change-password.dto.ts";
 import { UpdateUserDto } from "../../identity-service/users/dto/update-user.dto.ts";
@@ -32,11 +31,11 @@ import {
   changePasswordSchema,
   listUsersQuerySchema,
   updateUserSchema,
-} from "../../identity-service/users/schemas/user.schema.ts";
+} from "../../identity-service/users/user.schema.ts";
 import { IdentityClient } from "../clients/identity.client.ts";
-import { Role } from "../../../libs/common/constants/role.enum.ts";
+import { Role } from "../../../libs/common/constants/role.constant.ts";
 import { Roles } from "../../../libs/auth/decorators/roles.decorator.ts";
-import { COOKIE_NAME } from "../../../libs/common/constants/cookie.constants.ts";
+import { COOKIE_NAME } from "../../../libs/auth/auth.constants.ts";
 
 @ApiTags("Users")
 @ApiBearerAuth()
@@ -46,11 +45,7 @@ export class UsersController {
 
   @Get()
   @Roles(Role.ADMIN)
-  @ApiOperation({ summary: "Get all users (paginated)" })
-  @ApiQuery({ name: "page", required: false, type: Number, example: 1 })
-  @ApiQuery({ name: "limit", required: false, type: Number, example: 10 })
-  @ApiQuery({ name: "search", required: false, type: String })
-  @ApiResponse({ status: 200, description: "Paginated list of users", type: PaginatedResponseDto })
+  @ApiFindAllUser()
   async findAll(
     @Query(new ZodValidationPipe(listUsersQuerySchema))
     query: {
@@ -64,19 +59,13 @@ export class UsersController {
 
   @Get(":id")
   @Roles(Role.ADMIN)
-  @ApiOperation({ summary: "Get user by ID" })
-  @ApiParam({ name: "id", type: "string", format: "uuid" })
-  @ApiResponse({ status: 200, description: "User found", type: UserResponseDto })
-  @ApiResponse({ status: 404, description: "User not found" })
+  @ApiFindOneUser()
   async findOne(@Param("id", ParseUUIDPipe) id: string): Promise<UserResponseDto> {
     return this.usersService.findById(id);
   }
 
   @Patch("me")
-  @ApiOperation({ summary: "Update your profile" })
-  @ApiBody({ type: UpdateUserDto })
-  @ApiResponse({ status: 200, description: "Profile updated", type: UserResponseDto })
-  @ApiResponse({ status: 401, description: "Unauthorized" })
+  @ApiUpdateMeUser()
   async updateMe(
     @CurrentUser() currentUser: JwtPayload,
     @Body(new ZodValidationPipe(updateUserSchema)) dto: UpdateUserDto
@@ -86,10 +75,7 @@ export class UsersController {
 
   @Patch("me/password")
   @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ summary: "Change your password" })
-  @ApiBody({ type: ChangePasswordDto })
-  @ApiResponse({ status: 204, description: "Password changed successfully" })
-  @ApiResponse({ status: 401, description: "Current password is incorrect" })
+  @ApiChangePasswordUser()
   async changePassword(
     @CurrentUser() currentUser: JwtPayload,
     @Body(new ZodValidationPipe(changePasswordSchema)) dto: ChangePasswordDto
@@ -99,9 +85,7 @@ export class UsersController {
 
   @Delete("me")
   @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ summary: "Delete your account" })
-  @ApiResponse({ status: 204, description: "Account deleted" })
-  @ApiResponse({ status: 401, description: "Unauthorized" })
+  @ApiRemoveMeUser()
   async removeMe(
     @CurrentUser() currentUser: JwtPayload,
     @Res({ passthrough: true }) res: Response

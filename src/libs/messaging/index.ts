@@ -5,4 +5,4 @@ export { RpcAckInterceptor } from "./rpc-ack.interceptor.ts";
 export { rpc, RPC_TIMEOUT_MS } from "./rpc.util.ts";
 export { buildRpcErrorPayload, toHttpException, isRpcErrorPayload } from "./rpc-error.ts";
 export type { RpcErrorPayload } from "./rpc-error.ts";
-export * from "./tokens.ts";
+export * from "./tokens.constant.ts";

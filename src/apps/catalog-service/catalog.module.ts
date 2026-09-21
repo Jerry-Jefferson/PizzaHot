@@ -5,12 +5,12 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { typeOrmConfig } from "../../libs/common/database/typeorm.config.ts";
 import { MessagingModule } from "../../libs/messaging/messaging.module.ts";
 import { RmqLoggerService } from "../../libs/logging/rmq-logger.service.ts";
-import { Pizza } from "./pizzas/entities/pizza.entity.ts";
-import { PizzaIngredient } from "./pizzas/entities/pizza-ingredient.entity.ts";
-import { Ingredient } from "./ingredients/entities/ingredient.entity.ts";
+import { Pizza } from "./pizzas/pizza.entity.ts";
+import { PizzaIngredient } from "./pizzas/pizza-ingredient.entity.ts";
+import { Ingredient } from "./ingredients/ingredient.entity.ts";
 import { PizzasModule } from "./pizzas/pizzas.module.ts";
 import { IngredientsModule } from "./ingredients/ingredients.module.ts";
-import { CatalogMessagesController } from "./catalog.messages.controller.ts";
+import { CatalogMessagesController } from "./catalog.controller.ts";
 
 @Module({
   imports: [

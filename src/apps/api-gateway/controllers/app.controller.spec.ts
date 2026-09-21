@@ -15,8 +15,10 @@ describe("AppController", () => {
   });
 
   describe("root", () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe("Hello World!");
+    it("should report that the API is running and point at the docs", () => {
+      expect(appController.getApiInfo()).toBe(
+        "PizzaHot API is running. See /api-docs for the interactive documentation."
+      );
     });
   });
 });

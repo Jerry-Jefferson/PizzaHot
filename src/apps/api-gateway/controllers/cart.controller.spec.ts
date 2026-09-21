@@ -3,15 +3,15 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { HttpStatus } from "@nestjs/common";
 import { CartController } from "./carts.controller.ts";
 import { CartClient } from "../clients/cart.client.ts";
-import type { JwtPayload } from "../../../libs/auth/jwt-payload.interface.ts";
-import { Role } from "../../../libs/common/constants/role.enum.ts";
+import type { JwtPayload } from "../../../libs/auth/jwt-payload.schema.ts";
+import { Role } from "../../../libs/common/constants/role.constant.ts";
 import type { Response } from "express";
 import {
   mockUser,
   mockPizzaId,
   mockCartResponse,
   mockCartItem,
-} from "../../cart-service/carts/tests/mocks.ts";
+} from "../../cart-service/tests/mocks.ts";
 
 describe("CartController", () => {
   let controller: CartController;
@@ -77,7 +77,7 @@ describe("CartController", () => {
   describe("updateItemQuantity", () => {
     it("should update quantity and return updated item when quantity > 0", async () => {
       cartService.updateItemQuantity.mockResolvedValue(mockCartItem);
-      const mockRes = { status: jest.fn() } as unknown as Response;
+      const mockRes = { status: jest.fn<Response["status"]>() };
 
       const dto = { quantity: 4 };
       const result = await controller.updateItemQuantity(mockUser, mockPizzaId, dto, mockRes);
@@ -89,7 +89,7 @@ describe("CartController", () => {
 
     it("should set HTTP status 204 and return undefined when item is deleted (service returns null)", async () => {
       cartService.updateItemQuantity.mockResolvedValue(null);
-      const mockRes = { status: jest.fn() } as unknown as Response;
+      const mockRes = { status: jest.fn<Response["status"]>() };
 
       const dto = { quantity: 0 };
       const result = await controller.updateItemQuantity(mockUser, mockPizzaId, dto, mockRes);
