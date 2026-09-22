@@ -158,12 +158,6 @@ export class PizzasService {
     }
   }
 
-  /**
-   * The row and the disk disagreed: the file named in the database was not there. Deleting the
-   * pizza still succeeded, so this is not an error the caller can act on - but somebody renamed
-   * or removed a file behind the application's back, and whatever is on disk now carries a name
-   * nothing refers to. Only an alert makes that visible.
-   */
   private notifyMissingImage(pizza: Pizza, action: "deleted" | "replaced"): void {
     const event: CriticalErrorEvent = {
       message: `Image file of pizza "${pizza.name}" (${pizza.id}) was already missing when the image was ${action}. The database pointed at ${pizza.image}. An unreferenced file may be left in uploads.`,

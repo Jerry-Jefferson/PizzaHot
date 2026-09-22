@@ -36,8 +36,6 @@ export class IngredientsService {
       throw new NotFoundException("Ingredient not found");
     }
 
-    // The entity is structurally assignable to the DTO, so mapping has to be explicit -
-    // otherwise relations would ride along unnoticed.
     return IngredientResponseDto.fromEntity(ingredient);
   }
 

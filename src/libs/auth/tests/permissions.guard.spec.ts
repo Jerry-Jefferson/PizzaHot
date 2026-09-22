@@ -62,8 +62,6 @@ describe("ROLE_PERMISSIONS", () => {
     }
   });
 
-  // The bug a bare role check used to hide: an endpoint opened to customers would have
-  // locked the admin out, because "admin" is not "user".
   it("gives an admin everything a user has", () => {
     for (const permission of ROLE_PERMISSIONS[Role.USER]) {
       expect(ROLE_PERMISSIONS[Role.ADMIN]).toContain(permission);

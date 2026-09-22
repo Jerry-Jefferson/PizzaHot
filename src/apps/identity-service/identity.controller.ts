@@ -1,4 +1,4 @@
-import { Controller, Inject, Logger } from "@nestjs/common";
+import { Controller, Inject } from "@nestjs/common";
 import type { ClientProxy } from "@nestjs/microservices";
 import { MessagePattern, Payload } from "@nestjs/microservices";
 import { EVENTS, RPC } from "../../libs/contracts/index.ts";
@@ -16,8 +16,6 @@ import type { Role } from "../../libs/auth/auth.constant.ts";
 
 @Controller()
 export class IdentityMessagesController {
-  private readonly logger = new Logger(IdentityMessagesController.name);
-
   constructor(
     private readonly auth: AuthService,
     private readonly users: UsersService,
