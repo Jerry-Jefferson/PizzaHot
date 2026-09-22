@@ -6,11 +6,11 @@ import {
   Injectable,
   Logger,
 } from "@nestjs/common";
-import type { ClientProxy } from "@nestjs/microservices";
-import { IDENTITY_CLIENT } from "../../messaging/tokens.ts";
-import { RPC } from "../../contracts/patterns.ts";
+import type { RpcSender } from "../../messaging/message-client.types.ts";
+import { IDENTITY_CLIENT } from "../../messaging/tokens.constant.ts";
+import { RPC } from "../../contracts/patterns.constant.ts";
 import { rpc } from "../../messaging/rpc.util.ts";
-import { JwtPayload } from "../jwt-payload.interface.ts";
+import { JwtPayload } from "../jwt-payload.schema.ts";
 
 @Injectable()
 export class EmailVerifiedGuard implements CanActivate {
@@ -18,7 +18,7 @@ export class EmailVerifiedGuard implements CanActivate {
 
   constructor(
     @Inject(IDENTITY_CLIENT)
-    private readonly identityClient: ClientProxy
+    private readonly identityClient: RpcSender
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

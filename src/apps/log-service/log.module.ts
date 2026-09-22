@@ -2,8 +2,9 @@ import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { MongooseModule } from "@nestjs/mongoose";
 import { MessagingModule } from "../../libs/messaging/messaging.module.ts";
-import { LogsModule } from "./logs/logs.module.ts";
-import { LogMessagesController } from "./log.messages.controller.ts";
+import { Log, LogSchema } from "./schemas/log.schema.ts";
+import { LogsService } from "./logs.service.ts";
+import { LogMessagesController } from "./log.controller.ts";
 
 @Module({
   imports: [
@@ -20,9 +21,10 @@ import { LogMessagesController } from "./log.messages.controller.ts";
         return { uri: `mongodb://${user}:${password}@${host}:${port}/${db}?authSource=admin` };
       },
     }),
+    MongooseModule.forFeature([{ name: Log.name, schema: LogSchema }]),
     MessagingModule.register([]),
-    LogsModule,
   ],
   controllers: [LogMessagesController],
+  providers: [LogsService],
 })
 export class LogServiceModule {}

@@ -34,7 +34,7 @@ jobs:
         run: npm ci
 
       - name: Run eslint
-        run: npx eslint "{src,apps,libs,test}/**/*.ts"
+        run: npx eslint src test --max-warnings=0
 
   typecheck:
     name: typecheck
@@ -100,8 +100,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run unit tests
-        run: npm test
+      - name: Run unit tests with coverage
+        run: npm run test:cov
 
   e2e-tests:
     name: e2e tests
@@ -110,35 +110,6 @@ jobs:
     strategy:
       matrix:
         node: ["22"]
-
-    services:
-      postgres:
-        image: postgres:17
-        env:
-          POSTGRES_USER: ci_user
-          POSTGRES_PASSWORD: ci_password
-          POSTGRES_DB: pizzahot_test
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd="pg_isready"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
-      mongodb:
-        image: mongo:7
-        env:
-          MONGO_INITDB_ROOT_USERNAME: ci_user
-          MONGO_INITDB_ROOT_PASSWORD: ci_password
-          MONGO_INITDB_DATABASE: pizzahot_test
-        ports:
-          - 27017:27017
-        options: >-
-          --health-cmd="mongosh --eval 'db.adminCommand({ping:1})' --quiet"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
 
     steps:
       - name: Checking out the repository
@@ -154,37 +125,13 @@ jobs:
         run: |
           cat <<EOF > .env
           NODE_ENV=test
-          PORT=3000
-          ADMIN_EMAIL=ci-admin@pizzahot.local
-          ADMIN_PASSWORD=ci_password
-          POSTGRES_HOST=localhost
-          POSTGRES_PORT=5432
-          POSTGRES_USER=ci_user
-          POSTGRES_PASSWORD=ci_password
-          POSTGRES_DB=pizzahot_test
-          MONGO_HOST=localhost
-          MONGO_PORT=27017
-          MONGO_INITDB_ROOT_USERNAME=ci_user
-          MONGO_INITDB_ROOT_PASSWORD=ci_password
-          MONGO_INITDB_DATABASE=pizzahot_test
           JWT_SECRET=ci-test-jwt-secret
           JWT_EXPIRATION=1d
-          SMTP_HOST=localhost
-          SMTP_PORT=1025
-          SMTP_USER=
-          SMTP_PASSWORD=
-          SMTP_FROM=no-reply@pizzahot.local
-          FRONTEND_URL=http://localhost:3000
-          BACKEND_URL=http://localhost:3000
-          CRITICAL_ERROR_EMAIL=admin@pizzahot.local
+          RPC_TIMEOUT_MS=2000
           EOF
-
-      - name: Create uploads directory
-        run: mkdir -p uploads/pizzas
 
       - name: Install dependencies
         run: npm ci
 
       - name: Run e2e tests
         run: npm run test:e2e
-

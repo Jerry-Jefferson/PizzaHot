@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Gender } from "../constants/gender.enum.ts";
-import { Role } from "../../../../libs/common/constants/role.enum.ts";
-import { User } from "../entities/user.entity.ts";
+import { Gender } from "../constants/gender.constant.ts";
+import { Role } from "../../../../libs/auth/auth.constant.ts";
+import { User } from "../user.entity.ts";
 
 export class UserResponseDto {
   @ApiProperty({ example: "550e8400-e29b-41d4-a716-446655440000", format: "uuid" })
@@ -47,5 +47,9 @@ export class UserResponseDto {
     dto.createdAt = user.createdAt;
     dto.updatedAt = user.updatedAt;
     return dto;
+  }
+
+  static fromEntities(users: User[]): UserResponseDto[] {
+    return users.map((user) => UserResponseDto.fromEntity(user));
   }
 }

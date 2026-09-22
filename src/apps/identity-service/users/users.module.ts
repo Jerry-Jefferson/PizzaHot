@@ -1,12 +1,13 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { User } from "./entities/user.entity.ts";
+import { User } from "./user.entity.ts";
 import { UsersRepository } from "./users.repository.ts";
 import { UsersService } from "./users.service.ts";
-import { USERS_REPOSITORY } from "../../../libs/common/database/tokens.ts";
+import { USERS_REPOSITORY } from "../../../libs/database/tokens.ts";
+import { UploadModule } from "../../../libs/upload/index.ts";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [TypeOrmModule.forFeature([User]), UploadModule],
   providers: [
     UsersRepository,
     { provide: USERS_REPOSITORY, useExisting: UsersRepository },

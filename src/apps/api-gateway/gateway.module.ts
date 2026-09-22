@@ -12,23 +12,23 @@ import {
   LOG_CLIENT,
   ORDER_CLIENT,
   PROMOCODE_CLIENT,
-} from "../../libs/messaging/tokens.ts";
+} from "../../libs/messaging/tokens.constant.ts";
 import { JwtAuthGuard } from "../../libs/auth/guards/jwt-auth.guard.ts";
-import { RolesGuard } from "../../libs/auth/guards/roles.guard.ts";
+import { PermissionsGuard } from "../../libs/auth/guards/permissions.guard.ts";
 import { RmqLoggerService } from "../../libs/logging/rmq-logger.service.ts";
 import { HttpLoggingInterceptor } from "../../libs/logging/http-logging.interceptor.ts";
 import { CriticalErrorFilter } from "../../libs/logging/critical-error.filter.ts";
 import { AppService } from "./app.service.ts";
-import { AppController } from "./controllers/app.controller.ts";
-import { AuthController } from "./controllers/auth.controller.ts";
-import { UsersController } from "./controllers/users.controller.ts";
-import { PizzasController } from "./controllers/pizzas.controller.ts";
-import { IngredientsController } from "./controllers/ingredients.controller.ts";
-import { CartController } from "./controllers/carts.controller.ts";
-import { OrdersController } from "./controllers/orders.controller.ts";
-import { PromocodesController } from "./controllers/promocodes.controller.ts";
-import { AnalyticsController } from "./controllers/analytics.controller.ts";
-import { LogsController } from "./controllers/logs.controller.ts";
+import { AppController } from "./app.controller.ts";
+import { AuthController } from "./controllers/auth/auth.controller.ts";
+import { UsersController } from "./controllers/users/users.controller.ts";
+import { PizzasController } from "./controllers/pizzas/pizzas.controller.ts";
+import { IngredientsController } from "./controllers/ingredients/ingredients.controller.ts";
+import { CartController } from "./controllers/carts/carts.controller.ts";
+import { OrdersController } from "./controllers/orders/orders.controller.ts";
+import { PromocodesController } from "./controllers/promocodes/promocodes.controller.ts";
+import { AnalyticsController } from "./controllers/analytics/analytics.controller.ts";
+import { LogsController } from "./controllers/logs/logs.controller.ts";
 import { IdentityClient } from "./clients/identity.client.ts";
 import { CatalogClient } from "./clients/catalog.client.ts";
 import { CartClient } from "./clients/cart.client.ts";
@@ -83,7 +83,7 @@ import { AnalyticsClient, LogClient } from "./clients/analytics.client.ts";
     LogClient,
     { provide: APP_GUARD, useClass: ThrottlerGuard },
     { provide: APP_GUARD, useClass: JwtAuthGuard },
-    { provide: APP_GUARD, useClass: RolesGuard },
+    { provide: APP_GUARD, useClass: PermissionsGuard },
     { provide: APP_FILTER, useClass: CriticalErrorFilter },
     { provide: APP_INTERCEPTOR, useClass: HttpLoggingInterceptor },
   ],

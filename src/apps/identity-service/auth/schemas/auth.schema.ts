@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { passwordSchema } from "./password.schema.ts";
-import { Gender } from "../../users/constants/gender.enum.ts";
+import { Gender } from "../../users/constants/gender.constant.ts";
 
 export const signupSchema = z
   .object({
@@ -12,7 +12,6 @@ export const signupSchema = z
         error: `Gender must be one of: ${Object.values(Gender).join(", ")}`,
       })
       .optional(),
-    image: z.string({ error: "Image must be a string" }).optional(),
     password: passwordSchema,
     confirmPassword: z.string({ error: "Password confirmation is required" }),
   })

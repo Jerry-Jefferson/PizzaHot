@@ -1,29 +1,29 @@
 import { Inject, Injectable } from "@nestjs/common";
 import type { ClientProxy } from "@nestjs/microservices";
-import { PROMOCODE_CLIENT } from "../../../libs/messaging/tokens.ts";
-import { RPC } from "../../../libs/contracts/patterns.ts";
+import { PROMOCODE_CLIENT } from "../../../libs/messaging/tokens.constant.ts";
+import { RPC } from "../../../libs/contracts/index.ts";
 import { rpc } from "../../../libs/messaging/rpc.util.ts";
-import type { Promocode } from "../../promocode-service/promocodes/entities/promocode.entity.ts";
-import type { CreatePromocodeDto } from "../../promocode-service/promocodes/dto/create-promocode.dto.ts";
-import type { UpdatePromocodeDto } from "../../promocode-service/promocodes/dto/update-promocode.dto.ts";
+import type { PromocodeResponseDto } from "../../promocode-service/dto/promocode-response.dto.ts";
+import type { CreatePromocodeDto } from "../../promocode-service/dto/create-promocode.dto.ts";
+import type { UpdatePromocodeDto } from "../../promocode-service/dto/update-promocode.dto.ts";
 
 @Injectable()
 export class PromocodeClient {
   constructor(@Inject(PROMOCODE_CLIENT) private readonly client: ClientProxy) {}
 
-  findAll(): Promise<Promocode[]> {
+  findAll(): Promise<PromocodeResponseDto[]> {
     return rpc(this.client, RPC.promocode.list, {});
   }
 
-  findById(id: string): Promise<Promocode> {
+  findById(id: string): Promise<PromocodeResponseDto> {
     return rpc(this.client, RPC.promocode.findById, { id });
   }
 
-  create(dto: CreatePromocodeDto): Promise<Promocode> {
+  create(dto: CreatePromocodeDto): Promise<PromocodeResponseDto> {
     return rpc(this.client, RPC.promocode.create, dto);
   }
 
-  update(id: string, dto: UpdatePromocodeDto): Promise<Promocode> {
+  update(id: string, dto: UpdatePromocodeDto): Promise<PromocodeResponseDto> {
     return rpc(this.client, RPC.promocode.update, { id, dto });
   }
 
@@ -31,7 +31,7 @@ export class PromocodeClient {
     return rpc(this.client, RPC.promocode.remove, { id });
   }
 
-  restore(id: string): Promise<Promocode> {
+  restore(id: string): Promise<PromocodeResponseDto> {
     return rpc(this.client, RPC.promocode.restore, { id });
   }
 }

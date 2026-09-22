@@ -1,14 +1,13 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { typeOrmConfig } from "../../libs/common/database/typeorm.config.ts";
+import { typeOrmConfig } from "../../libs/database/typeorm.config.ts";
 import { MessagingModule } from "../../libs/messaging/messaging.module.ts";
 import { RmqLoggerService } from "../../libs/logging/rmq-logger.service.ts";
-import { User } from "./users/entities/user.entity.ts";
+import { User } from "./users/user.entity.ts";
 import { UsersModule } from "./users/users.module.ts";
 import { AuthModule } from "./auth/auth.module.ts";
-import { IdentityMessagesController } from "./identity.messages.controller.ts";
-import { SeedService } from "./seed.service.ts";
+import { IdentityMessagesController } from "./identity.controller.ts";
 
 @Module({
   imports: [
@@ -19,6 +18,6 @@ import { SeedService } from "./seed.service.ts";
     AuthModule,
   ],
   controllers: [IdentityMessagesController],
-  providers: [RmqLoggerService, SeedService],
+  providers: [RmqLoggerService],
 })
 export class IdentityServiceModule {}

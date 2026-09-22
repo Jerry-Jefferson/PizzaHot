@@ -1,9 +1,9 @@
 import { ConflictException, Inject, Injectable, Logger, NotFoundException } from "@nestjs/common";
-import { INGREDIENTS_REPOSITORY } from "../../../libs/common/database/tokens.ts";
-import type { IIngredientsRepository } from "./interfaces/ingredients.repository.interface.ts";
-import { Ingredient } from "./entities/ingredient.entity.ts";
+import { INGREDIENTS_REPOSITORY } from "../../../libs/database/tokens.ts";
+import type { IIngredientsRepository } from "./ingredient.types.ts";
 import { CreateIngredientDto } from "./dto/create-ingredient.dto.ts";
 import { UpdateIngredientDto } from "./dto/update-ingredient.dto.ts";
+import { IngredientResponseDto } from "./dto/ingredient-response.dto.ts";
 
 @Injectable()
 export class IngredientsService {
@@ -14,7 +14,7 @@ export class IngredientsService {
     private readonly ingredientsRepository: IIngredientsRepository
   ) {}
 
-  async create(dto: CreateIngredientDto): Promise<Ingredient> {
+  async create(dto: CreateIngredientDto): Promise<IngredientResponseDto> {
     const existing = await this.ingredientsRepository.findByName(dto.name);
     if (existing) {
       throw new ConflictException("Ingredient with this name already exists");
@@ -23,19 +23,20 @@ export class IngredientsService {
     const ingredient = this.ingredientsRepository.create(dto);
     const saved = await this.ingredientsRepository.save(ingredient);
     this.logger.log(`Ingredient created: "${saved.name}" (id: ${saved.id})`);
-    return saved;
+    return IngredientResponseDto.fromEntity(saved);
   }
 
-  async findAll(): Promise<Ingredient[]> {
-    return this.ingredientsRepository.findAll();
+  async findAll(): Promise<IngredientResponseDto[]> {
+    return IngredientResponseDto.fromEntities(await this.ingredientsRepository.findAll());
   }
 
-  async findById(id: string): Promise<Ingredient> {
+  async findById(id: string): Promise<IngredientResponseDto> {
     const ingredient = await this.ingredientsRepository.findById(id);
     if (!ingredient) {
       throw new NotFoundException("Ingredient not found");
     }
-    return ingredient;
+
+    return IngredientResponseDto.fromEntity(ingredient);
   }
 
   async validateIds(ids: string[]): Promise<void> {
@@ -48,7 +49,7 @@ export class IngredientsService {
     }
   }
 
-  async update(id: string, dto: UpdateIngredientDto): Promise<Ingredient> {
+  async update(id: string, dto: UpdateIngredientDto): Promise<IngredientResponseDto> {
     await this.findById(id);
 
     if (dto.name) {
@@ -62,7 +63,8 @@ export class IngredientsService {
     if (!ingredient) {
       throw new NotFoundException("Ingredient not found");
     }
-    return ingredient;
+
+    return IngredientResponseDto.fromEntity(ingredient);
   }
 
   async remove(id: string): Promise<void> {

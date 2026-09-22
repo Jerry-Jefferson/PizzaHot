@@ -5,7 +5,7 @@ import express from "express";
 import { existsSync, mkdirSync } from "fs";
 import { GatewayModule } from "./gateway.module.ts";
 import { RmqLoggerService } from "../../libs/logging/rmq-logger.service.ts";
-import { UPLOADS_URL_PREFIX, UPLOADS_DIR } from "../../libs/common/constants/upload.constants.ts";
+import { UPLOADS_URL_PREFIX, UPLOADS_DIR } from "../../libs/upload/index.ts";
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(GatewayModule, { bufferLogs: true });
@@ -25,7 +25,7 @@ async function bootstrap(): Promise<void> {
   const swaggerConfig = new DocumentBuilder()
     .setTitle("PizzaHot API")
     .setDescription("PizzaHot REST API documentation — served by the gateway")
-    .setVersion("1.0.0")
+    .setVersion("2.0.0")
     .addBearerAuth()
     .build();
 
@@ -34,4 +34,4 @@ async function bootstrap(): Promise<void> {
   await app.listen(process.env.PORT ?? 3000);
 }
 
-void bootstrap();
+bootstrap().catch((err) => console.error(err));

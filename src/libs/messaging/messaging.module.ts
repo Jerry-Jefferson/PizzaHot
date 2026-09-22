@@ -11,7 +11,7 @@ import {
   NOTIFICATION_CLIENT,
   ORDER_CLIENT,
   PROMOCODE_CLIENT,
-} from "./tokens.ts";
+} from "./tokens.constant.ts";
 
 const QUEUE_BY_TOKEN: Record<string, QueueName> = {
   [IDENTITY_CLIENT]: QUEUE.identity,

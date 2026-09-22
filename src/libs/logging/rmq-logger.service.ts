@@ -1,9 +1,9 @@
 import { ConsoleLogger, Inject, Injectable, Optional, type LoggerService } from "@nestjs/common";
 import type { ClientProxy } from "@nestjs/microservices";
-import { EVENTS } from "../contracts/patterns.ts";
-import type { LogWrittenEvent } from "../contracts/events.ts";
-import { EVENTS_CLIENT } from "../messaging/tokens.ts";
-import { LogLevel } from "./log-level.enum.ts";
+import { EVENTS } from "../contracts/patterns.constant.ts";
+import type { LogWrittenEvent } from "../contracts/events.types.ts";
+import { EVENTS_CLIENT } from "../messaging/tokens.constant.ts";
+import { LogLevel } from "./log-level.constant.ts";
 
 @Injectable()
 export class RmqLoggerService extends ConsoleLogger implements LoggerService {

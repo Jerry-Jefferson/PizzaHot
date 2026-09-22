@@ -1,9 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DataSource, ILike, In, Repository } from "typeorm";
-import { Pizza } from "./entities/pizza.entity.ts";
-import { PizzaIngredient } from "./entities/pizza-ingredient.entity.ts";
-import type { IPizzasRepository } from "./interfaces/pizzas.repository.interface.ts";
+import { Pizza } from "./pizza.entity.ts";
+import { PizzaIngredient } from "./pizza-ingredient.entity.ts";
+import type { IPizzasRepository } from "./pizza.types.ts";
+import type { PaginatedResult } from "../../../libs/pagination/pagination.types.ts";
 
 @Injectable()
 export class PizzasRepository implements IPizzasRepository {
@@ -25,7 +26,7 @@ export class PizzasRepository implements IPizzasRepository {
     page: number,
     limit: number,
     search?: string
-  ): Promise<{ data: Pizza[]; total: number }> {
+  ): Promise<PaginatedResult<Pizza>> {
     const where = search ? { name: ILike(`%${search.replace(/[%_]/g, "\\$&")}%`) } : {};
 
     const [data, total] = await this.repository.findAndCount({

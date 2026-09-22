@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { In, Repository } from "typeorm";
-import { PizzaSnapshot } from "./entities/pizza-snapshot.entity.ts";
+import { PizzaSnapshot } from "./pizza-snapshot.entity.ts";
 
 @Injectable()
 export class PizzaSnapshotRepository {
