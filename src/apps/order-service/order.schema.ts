@@ -45,10 +45,6 @@ export const updateOrderStatusSchema = z.object({
   }),
 });
 
-/**
- * Body of POST /orders/search. prefault turns a request sent with no body at all into an
- * empty object, so "give me the first page, unfiltered" does not have to send `{}`.
- */
 export const listOrdersQuerySchema = paginationSchema
   .extend({
     status: z.enum(ORDER_STATUSES).optional(),

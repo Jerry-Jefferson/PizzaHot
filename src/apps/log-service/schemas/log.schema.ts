@@ -6,7 +6,7 @@ export type LogDocument = HydratedDocument<Log>;
 
 @Schema({ timestamps: true, collection: "logs" })
 export class Log {
-  @Prop({ required: true, enum: LogLevel, index: true })
+  @Prop({ type: String, required: true, enum: LogLevel, index: true })
   level: LogLevel;
 
   @Prop({ required: true })

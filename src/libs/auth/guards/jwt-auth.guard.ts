@@ -49,12 +49,9 @@ export class JwtAuthGuard implements CanActivate {
       throw new UnauthorizedException("Invalid or expired token");
     }
 
-    // A valid signature says the token is ours, not that its claims still match the
-    // shape this code expects - tokens issued before a change stay valid until expiry.
     const parsed = jwtPayloadSchema.safeParse(claims);
 
     if (!parsed.success) {
-      // Claim values can carry personal data, so only the failing field names are logged.
       const fields = parsed.error.issues.map((issue) => issue.path.join(".")).join(", ");
       this.logger.warn(`Rejected a token whose claims do not match the expected shape: ${fields}`);
       throw new UnauthorizedException("Token claims are not recognised");

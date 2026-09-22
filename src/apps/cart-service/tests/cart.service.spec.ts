@@ -270,8 +270,6 @@ describe("CartService", () => {
       cartRepository.findOrCreate.mockResolvedValue(mockCart);
       const createdItem = createMockCartItem({ id: "item-1", quantity: 2 });
 
-      // Not in the cart on the first read; on the second the service reads the saved row
-      // back so the pizza snapshot comes with it.
       cartItemsRepository.findByCartAndPizza
         .mockResolvedValueOnce(null)
         .mockResolvedValueOnce(createdItem);
@@ -290,7 +288,6 @@ describe("CartService", () => {
         quantity: 2,
       });
       expect(cartItemsRepository.save).toHaveBeenCalledWith(createdItem);
-      // The service answers with the response shape now, not the row it saved.
       expect(result).toEqual(CartItemResponseDto.fromEntity(createdItem));
     });
 

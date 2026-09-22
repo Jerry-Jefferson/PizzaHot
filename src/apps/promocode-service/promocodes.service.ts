@@ -48,10 +48,6 @@ export class PromocodesService {
     return PromocodeResponseDto.fromEntities(await this.promocodesRepository.findAll());
   }
 
-  /**
-   * Entity form, for callers inside this service that need it whole - reserve() builds
-   * the wire shape from it. Callers answering a message want getById instead.
-   */
   async findById(id: string): Promise<Promocode> {
     const promocode = await this.promocodesRepository.findById(id);
     if (!promocode) {

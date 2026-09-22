@@ -44,7 +44,6 @@ export class User {
   @Column({ type: "varchar", length: 32, nullable: true })
   gender: Gender | null;
 
-  // Set only by the avatar upload, never by a request body - same rule as Pizza.image.
   @Column({ type: "varchar", nullable: true, default: null })
   image: string | null;
 

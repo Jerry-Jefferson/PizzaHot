@@ -47,10 +47,6 @@ describe("LocalImageStorage", () => {
       expect(await exists(absolutePath)).toBe(false);
     });
 
-    // The regression this replaces: a pizza whose image file had gone missing could not be
-    // deleted at all, because the failed unlink aborted the whole operation with a 500.
-    // Not an error: the caller wanted the file gone and it is gone. Reporting false is what
-    // lets the service raise an alert about the database and the disk disagreeing.
     it("reports false instead of throwing when the file is already gone", async () => {
       await expect(storage.remove(storage.urlPathFor(category, "never-existed.png"))).resolves.toBe(
         false
