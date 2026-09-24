@@ -148,20 +148,11 @@ describe("IngredientsService", () => {
       await expect(service.update("i1", { name: "Basil" })).resolves.toMatchObject({ id: "i1" });
     });
 
-    it("skips the name check when no name is given", async () => {
-      repository.findById.mockResolvedValue(ingredient("i1", "Basil"));
-      repository.update.mockResolvedValue(ingredient("i1", "Basil"));
-
-      await service.update("i1", {});
-
-      expect(repository.findByName).not.toHaveBeenCalled();
-    });
-
     it("throws when the row disappears between the check and the write", async () => {
       repository.findById.mockResolvedValue(ingredient("i1", "Basil"));
       repository.update.mockResolvedValue(null);
 
-      await expect(service.update("i1", {})).rejects.toThrow(NotFoundException);
+      await expect(service.update("i1", { name: "Basil" })).rejects.toThrow(NotFoundException);
     });
   });
 

@@ -52,11 +52,9 @@ export class IngredientsService {
   async update(id: string, dto: UpdateIngredientDto): Promise<IngredientResponseDto> {
     await this.findById(id);
 
-    if (dto.name) {
-      const existing = await this.ingredientsRepository.findByName(dto.name);
-      if (existing && existing.id !== id) {
-        throw new ConflictException("Ingredient with this name already exists");
-      }
+    const existing = await this.ingredientsRepository.findByName(dto.name);
+    if (existing && existing.id !== id) {
+      throw new ConflictException("Ingredient with this name already exists");
     }
 
     const ingredient = await this.ingredientsRepository.update(id, dto);

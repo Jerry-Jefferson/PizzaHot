@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import type { EventPublisher } from "../../../libs/messaging/message-client.types.ts";
-import { createHttpExecutionContext } from "../../../libs/testing/http-context.mock.ts";
+import { createHttpExecutionContext } from "../../../libs/mocks/http-context.mock.ts";
 import { CriticalErrorFilter } from "../../../libs/logging/critical-error.filter.ts";
 import { EVENTS } from "../../../libs/contracts/index.ts";
 

@@ -4,6 +4,7 @@ import {
   Post,
   Body,
   Patch,
+  Put,
   Param,
   Delete,
   ParseUUIDPipe,
@@ -62,7 +63,7 @@ export class PromocodesController {
     return this.promocodesService.findById(id);
   }
 
-  @Patch(":id")
+  @Put(":id")
   @Can(Permission.PROMOCODE_WRITE)
   @ApiUpdatePromocode()
   async update(

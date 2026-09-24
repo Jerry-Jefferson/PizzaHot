@@ -13,8 +13,6 @@ describe("createHttpExecutionContext", () => {
     expect(context.switchToHttp().getResponse()).toBe(response);
   });
 
-  // Anything this stand-in does not provide throws by name, so a test that needs more finds
-  // out at once rather than reading undefined.
   it.each([
     ["getNext", (context: ExecutionContext): void => void context.switchToHttp().getNext()],
     ["switchToRpc", (context: ExecutionContext): void => void context.switchToRpc()],

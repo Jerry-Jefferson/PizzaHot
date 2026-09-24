@@ -35,7 +35,11 @@ export const ApiGetIngredient = () =>
 
 export const ApiUpdateIngredient = () =>
   applyDecorators(
-    ApiOperation({ summary: "Update an ingredient by ID (Admin only)" }),
+    ApiOperation({
+      summary: "Replace an ingredient by ID (Admin only)",
+      description:
+        "Replaces the whole resource: a field the body leaves out is cleared, not kept. Use this to set the full state, not to amend one field.",
+    }),
     ApiParam({ name: "id", type: "string", format: "uuid" }),
     ApiBody({ type: UpdateIngredientDto }),
     ApiUpdated("Ingredient", IngredientResponseDto),

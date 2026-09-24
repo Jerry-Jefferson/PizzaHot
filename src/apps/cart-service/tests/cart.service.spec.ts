@@ -11,7 +11,7 @@ import { of, throwError } from "rxjs";
 import { MAX_PIZZA_QUANTITY } from "../../../libs/contracts/order-limit.constant.ts";
 import { CartResponseDto } from "../dto/cart-response.dto.ts";
 import { CartItemResponseDto } from "../cart-items/dto/cart-item-response.dto.ts";
-import { priceCart } from "../cart.pricing.ts";
+import { priceCart } from "../../../libs/price-calculation/price-calculation.ts";
 import { CART_REPOSITORY, CART_ITEMS_REPOSITORY } from "../../../libs/database/tokens.ts";
 import type { ICartRepository } from "../cart.types.ts";
 import type { ICartItemsRepository } from "../cart.types.ts";

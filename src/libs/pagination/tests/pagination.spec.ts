@@ -7,7 +7,6 @@ describe("paginationSchema", () => {
     expect(paginationSchema.parse({})).toEqual({ page: 1, limit: 10 });
   });
 
-  // Query strings are always text, so the schema has to coerce before it can validate.
   it("coerces numbers out of strings", () => {
     expect(paginationSchema.parse({ page: "3", limit: "25" })).toEqual({ page: 3, limit: 25 });
   });

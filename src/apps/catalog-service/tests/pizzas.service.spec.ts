@@ -6,6 +6,7 @@ import type { IPizzasRepository } from "../pizzas/pizza.types.ts";
 import type { Pizza } from "../pizzas/pizza.entity.ts";
 import type { IngredientsService } from "../ingredients/ingredients.service.ts";
 import type { IImageStorage } from "../../../libs/upload/index.ts";
+import type { UpdatePizzaDto } from "../pizzas/dto/update-pizza.dto.ts";
 import { EVENTS } from "../../../libs/contracts/index.ts";
 
 function pizza(overrides: Partial<Pizza> = {}): Pizza {
@@ -166,16 +167,24 @@ describe("PizzasService", () => {
   });
 
   describe("update", () => {
-    it("writes the change and announces the new state", async () => {
+    const replacement = (overrides: Partial<UpdatePizzaDto> = {}): UpdatePizzaDto => ({
+      name: "Margherita",
+      description: "Classic",
+      price: 9.5,
+      ingredientIds: [],
+      ...overrides,
+    });
+
+    it("writes every field and announces the new state", async () => {
       repository.findById.mockResolvedValue(pizza({ price: 9.5 }));
       repository.findByName.mockResolvedValue(null);
 
-      await service.update("p1", { price: 9.5 });
+      await service.update("p1", replacement());
 
       expect(repository.updateWithIngredients).toHaveBeenCalledWith(
         "p1",
-        { price: 9.5 },
-        undefined
+        { name: "Margherita", description: "Classic", price: 9.5 },
+        []
       );
       expect(events.emit).toHaveBeenCalledWith(
         EVENTS.pizzaUpdated,
@@ -183,10 +192,29 @@ describe("PizzasService", () => {
       );
     });
 
+    it("clears the ingredients when the list is empty", async () => {
+      repository.findById.mockResolvedValue(pizza());
+      repository.findByName.mockResolvedValue(null);
+
+      await service.update("p1", replacement({ ingredientIds: [] }));
+
+      expect(repository.updateWithIngredients).toHaveBeenCalledWith("p1", expect.anything(), []);
+      expect(ingredients.validateIds).not.toHaveBeenCalled();
+    });
+
+    it("validates the ingredients it is given", async () => {
+      repository.findById.mockResolvedValue(pizza());
+      repository.findByName.mockResolvedValue(null);
+
+      await service.update("p1", replacement({ ingredientIds: ["i1", "i2"] }));
+
+      expect(ingredients.validateIds).toHaveBeenCalledWith(["i1", "i2"]);
+    });
+
     it("throws when the pizza does not exist", async () => {
       repository.findById.mockResolvedValue(null);
 
-      await expect(service.update("nope", { price: 1 })).rejects.toThrow(NotFoundException);
+      await expect(service.update("nope", replacement())).rejects.toThrow(NotFoundException);
       expect(repository.updateWithIngredients).not.toHaveBeenCalled();
     });
 
@@ -194,16 +222,18 @@ describe("PizzasService", () => {
       repository.findById.mockResolvedValue(pizza());
       repository.findByName.mockResolvedValue(pizza({ id: "p2", name: "Diavola" }));
 
-      await expect(service.update("p1", { name: "Diavola" })).rejects.toThrow(ConflictException);
+      await expect(service.update("p1", replacement({ name: "Diavola" }))).rejects.toThrow(
+        ConflictException
+      );
     });
 
     it("allows a pizza to keep its own name", async () => {
       repository.findById.mockResolvedValue(pizza());
       repository.findByName.mockResolvedValue(pizza());
 
-      await expect(service.update("p1", { name: "Margherita" })).resolves.toMatchObject({
-        id: "p1",
-      });
+      await expect(
+        service.update("p1", replacement({ name: "Margherita" }))
+      ).resolves.toMatchObject({ id: "p1" });
     });
   });
 

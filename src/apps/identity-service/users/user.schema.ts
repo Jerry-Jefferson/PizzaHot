@@ -34,31 +34,30 @@ export const createUserSchema = z.object({
     .optional(),
 });
 
-export const updateUserSchema = z
-  .object({
-    name: z
-      .string({ error: "Name must be a string" })
-      .min(1, { message: "Name must not be empty" })
-      .max(100, { message: "Name must be at most 100 characters" })
-      .trim()
-      .optional(),
+export const updateUserSchema = z.object({
+  name: z
+    .string({ error: "Name must be a string" })
+    .min(1, { message: "Name must not be empty" })
+    .max(100, { message: "Name must be at most 100 characters" })
+    .trim()
+    .nullable()
+    .default(null),
 
-    surname: z
-      .string({ error: "Surname must be a string" })
-      .min(1, { message: "Surname must not be empty" })
-      .max(100, { message: "Surname must be at most 100 characters" })
-      .trim()
-      .optional(),
+  surname: z
+    .string({ error: "Surname must be a string" })
+    .min(1, { message: "Surname must not be empty" })
+    .max(100, { message: "Surname must be at most 100 characters" })
+    .trim()
+    .nullable()
+    .default(null),
 
-    gender: z
-      .enum(Gender, {
-        error: `Gender must be one of: ${Object.values(Gender).join(", ")}`,
-      })
-      .optional(),
-  })
-  .refine((data) => Object.keys(data).length > 0, {
-    message: "At least one field must be provided for update",
-  });
+  gender: z
+    .enum(Gender, {
+      error: `Gender must be one of: ${Object.values(Gender).join(", ")}`,
+    })
+    .nullable()
+    .default(null),
+});
 
 export const updateUserRoleSchema = z.object({
   role: z.enum(ROLES, { error: `Role must be one of: ${ROLES.join(", ")}` }),

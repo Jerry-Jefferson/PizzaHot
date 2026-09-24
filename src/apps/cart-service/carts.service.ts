@@ -11,7 +11,7 @@ import { PizzaSnapshotRepository } from "./snapshots/pizza-snapshot.repository.t
 import { CartResponseDto } from "./dto/cart-response.dto.ts";
 import { Cart } from "./cart.entity.ts";
 import { MAX_PIZZA_QUANTITY } from "../../libs/contracts/order-limit.constant.ts";
-import { priceCart } from "./cart.pricing.ts";
+import { priceCart } from "../../libs/price-calculation/price-calculation.ts";
 import { CartItemResponseDto } from "./cart-items/dto/cart-item-response.dto.ts";
 
 @Injectable()

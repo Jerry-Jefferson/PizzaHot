@@ -1,10 +1,6 @@
 import { describe, it, expect } from "@jest/globals";
 import { checkIn, checkName } from "../check-in.util.ts";
 
-/**
- * These build the CHECK constraints that replaced Postgres enums, so the quoting has to be
- * exactly right - a mistake here produces invalid SQL only when the schema is created.
- */
 describe("checkIn", () => {
   it("quotes the column and every value", () => {
     expect(checkIn("status", ["pending", "confirmed"])).toBe(

@@ -2,7 +2,6 @@ import { describe, it, expect, jest } from "@jest/globals";
 import { imageMulterOptions } from "../image-multer.config.ts";
 import { ImageCategory, MAX_FILE_SIZE } from "../index.ts";
 
-/** diskStorage's own type hides getFilename, which is the part worth testing. */
 interface NamingStorage {
   getFilename(
     req: unknown,
@@ -34,8 +33,6 @@ describe("imageMulterOptions", () => {
     expect(cb).toHaveBeenCalledWith(accepted ? null : expect.anything(), accepted);
   });
 
-  // The original name never reaches the filesystem: a generated uuid keeps two uploads from
-  // colliding and keeps a hostile filename out of the path.
   it("renames the file to a uuid and keeps only the extension", () => {
     const cb = jest.fn<(error: Error | null, filename: string) => void>();
 
