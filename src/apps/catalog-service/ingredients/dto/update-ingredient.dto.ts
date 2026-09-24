@@ -1,6 +1,6 @@
-import { ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class UpdateIngredientDto {
-  @ApiPropertyOptional({ example: "Cheese", description: "Name of the ingredient" })
-  name?: string;
+  @ApiProperty({ example: "Cheese", description: "Name of the ingredient" })
+  name: string;
 }

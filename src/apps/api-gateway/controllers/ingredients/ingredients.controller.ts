@@ -3,7 +3,7 @@ import {
   Get,
   Post,
   Body,
-  Patch,
+  Put,
   Param,
   Delete,
   ParseUUIDPipe,
@@ -59,7 +59,7 @@ export class IngredientsController {
     return this.ingredientsService.findIngredientById(id);
   }
 
-  @Patch(":id")
+  @Put(":id")
   @Can(Permission.INGREDIENT_WRITE)
   @ApiUpdateIngredient()
   async update(

@@ -43,7 +43,11 @@ export const ApiFindOneUser = () =>
 
 export const ApiUpdateMeUser = () =>
   applyDecorators(
-    ApiOperation({ summary: "Update your profile" }),
+    ApiOperation({
+      summary: "Replace your profile",
+      description:
+        "Replaces the whole resource: a field the body leaves out is cleared, not kept. Use this to set the full state, not to amend one field.",
+    }),
     ApiBody({ type: UpdateUserDto }),
     ApiResponse({ status: 200, description: "Profile updated", type: UserResponseDto }),
     ApiAuth()

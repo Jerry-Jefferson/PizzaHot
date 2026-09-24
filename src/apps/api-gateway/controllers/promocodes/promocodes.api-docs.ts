@@ -43,7 +43,11 @@ export const ApiFindOnePromocode = () =>
 
 export const ApiUpdatePromocode = () =>
   applyDecorators(
-    ApiOperation({ summary: "Update a promocode by ID (Admin only)" }),
+    ApiOperation({
+      summary: "Replace a promocode by ID (Admin only)",
+      description:
+        "Replaces the whole resource: a field the body leaves out is cleared, not kept. Use this to set the full state, not to amend one field.",
+    }),
     ApiParam({ name: "id", type: "string", format: "uuid" }),
     ApiBody({ type: UpdatePromocodeDto }),
     ApiUpdated("Promocode", PromocodeResponseDto),

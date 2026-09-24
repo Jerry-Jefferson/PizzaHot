@@ -2,7 +2,7 @@ import { jest, describe, it, expect, beforeEach } from "@jest/globals";
 import { ExecutionContext, ForbiddenException } from "@nestjs/common";
 import { EmailVerifiedGuard } from "../guards/email-verified.guard.ts";
 import type { RpcSender } from "../../messaging/message-client.types.ts";
-import { createHttpExecutionContext } from "../../testing/http-context.mock.ts";
+import { createHttpExecutionContext } from "../../mocks/http-context.mock.ts";
 import { of } from "rxjs";
 import type { JwtPayload } from "../jwt-payload.schema.ts";
 import { Role } from "../auth.constant.ts";

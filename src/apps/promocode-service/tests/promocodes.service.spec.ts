@@ -5,6 +5,7 @@ import { PromocodesService } from "../promocodes.service.ts";
 import type { IPromocodesRepository } from "../promocode.types.ts";
 import type { Promocode } from "../promocode.entity.ts";
 import { DiscountMode, EVENTS } from "../../../libs/contracts/index.ts";
+import type { UpdatePromocodeDto } from "../dto/update-promocode.dto.ts";
 
 function promocode(overrides: Partial<Promocode> = {}): Promocode {
   return {
@@ -138,25 +139,35 @@ describe("PromocodesService", () => {
   });
 
   describe("update", () => {
-    it("applies the change", async () => {
+    const replacement = (overrides: Partial<UpdatePromocodeDto> = {}): UpdatePromocodeDto => ({
+      code: "SALE10",
+      discount: 20,
+      validTill: new Date("2099-01-01T00:00:00.000Z"),
+      discountMode: DiscountMode.PERCENTAGE,
+      ...overrides,
+    });
+
+    it("writes every field", async () => {
       repository.findById.mockResolvedValue(promocode());
 
-      await service.update("c1", { discount: 20 });
+      await service.update("c1", replacement());
 
-      expect(repository.update).toHaveBeenCalledWith("c1", { discount: 20 });
+      expect(repository.update).toHaveBeenCalledWith("c1", replacement());
     });
 
     it("throws when the promocode does not exist", async () => {
       repository.findById.mockResolvedValue(null);
 
-      await expect(service.update("nope", { discount: 5 })).rejects.toThrow(NotFoundException);
+      await expect(service.update("nope", replacement())).rejects.toThrow(NotFoundException);
     });
 
     it("refuses a code another promocode holds", async () => {
       repository.findById.mockResolvedValue(promocode());
       repository.findByCode.mockResolvedValue(promocode({ id: "c2", code: "OTHER" }));
 
-      await expect(service.update("c1", { code: "OTHER" })).rejects.toThrow(ConflictException);
+      await expect(service.update("c1", replacement({ code: "OTHER" }))).rejects.toThrow(
+        ConflictException
+      );
     });
 
     it("lets a promocode keep its own code", async () => {
@@ -164,30 +175,35 @@ describe("PromocodesService", () => {
       repository.findById.mockResolvedValue(current);
       repository.findByCode.mockResolvedValue(current);
 
-      await expect(service.update("c1", { code: "SALE10" })).resolves.toMatchObject({ id: "c1" });
+      await expect(service.update("c1", replacement({ code: "SALE10" }))).resolves.toMatchObject({
+        id: "c1",
+      });
     });
 
-    it("refuses a discount above 100 when the stored mode is percentage", async () => {
-      repository.findById.mockResolvedValue(promocode({ discountMode: DiscountMode.PERCENTAGE }));
+    it("refuses a percentage above 100", async () => {
+      repository.findById.mockResolvedValue(promocode());
 
-      await expect(service.update("c1", { discount: 120 })).rejects.toThrow(BadRequestException);
-    });
-
-    it("refuses switching to percentage when the stored discount is above 100", async () => {
-      repository.findById.mockResolvedValue(
-        promocode({ discount: 150, discountMode: DiscountMode.FIXED_AMOUNT })
-      );
-
-      await expect(service.update("c1", { discountMode: DiscountMode.PERCENTAGE })).rejects.toThrow(
+      await expect(service.update("c1", replacement({ discount: 120 }))).rejects.toThrow(
         BadRequestException
       );
+    });
+
+    it("allows the same amount when the mode is fixed", async () => {
+      repository.findById.mockResolvedValue(promocode());
+
+      await expect(
+        service.update(
+          "c1",
+          replacement({ discount: 120, discountMode: DiscountMode.FIXED_AMOUNT })
+        )
+      ).resolves.toMatchObject({ id: "c1" });
     });
 
     it("throws when the write affected no rows", async () => {
       repository.findById.mockResolvedValue(promocode());
       repository.update.mockResolvedValue(false);
 
-      await expect(service.update("c1", { discount: 5 })).rejects.toThrow(NotFoundException);
+      await expect(service.update("c1", replacement())).rejects.toThrow(NotFoundException);
     });
   });
 

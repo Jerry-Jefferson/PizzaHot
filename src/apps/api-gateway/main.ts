@@ -7,11 +7,13 @@ import { GatewayModule } from "./gateway.module.ts";
 import { RmqLoggerService } from "../../libs/logging/rmq-logger.service.ts";
 import { UPLOADS_URL_PREFIX, UPLOADS_DIR } from "../../libs/upload/index.ts";
 
+const API_PREFIX = "api";
+
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(GatewayModule, { bufferLogs: true });
 
   app.useLogger(app.get(RmqLoggerService));
-  app.setGlobalPrefix("api");
+  app.setGlobalPrefix(API_PREFIX);
   app.use(cookieParser());
   app.enableCors();
   app.enableShutdownHooks();
@@ -25,11 +27,16 @@ async function bootstrap(): Promise<void> {
   const swaggerConfig = new DocumentBuilder()
     .setTitle("PizzaHot API")
     .setDescription("PizzaHot REST API documentation — served by the gateway")
-    .setVersion("2.0.0")
+    .setVersion("3.0.0")
+    .addServer(`/${API_PREFIX}`)
     .addBearerAuth()
     .build();
 
-  SwaggerModule.setup("api-docs", app, SwaggerModule.createDocument(app, swaggerConfig));
+  SwaggerModule.setup(
+    "api-docs",
+    app,
+    SwaggerModule.createDocument(app, swaggerConfig, { ignoreGlobalPrefix: true })
+  );
 
   await app.listen(process.env.PORT ?? 3000);
 }

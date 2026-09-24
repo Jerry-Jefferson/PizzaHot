@@ -56,13 +56,21 @@ describe("CatalogMessagesController", () => {
     await controller.list({ page: 2, limit: 5, search: "marg" });
     await controller.findById({ id: "p1" });
     await controller.create({ name: "X", description: "d", price: 1 });
-    await controller.update({ id: "p1", dto: { price: 9 } });
+    await controller.update({
+      id: "p1",
+      dto: { name: "Margherita", description: "Classic", price: 9, ingredientIds: [] },
+    });
     await controller.setImage({ id: "p1", imagePath: "/uploads/pizzas/a.png" });
 
     expect(pizzas.findAll).toHaveBeenCalledWith(2, 5, "marg");
     expect(pizzas.getById).toHaveBeenCalledWith("p1");
     expect(pizzas.create).toHaveBeenCalledWith({ name: "X", description: "d", price: 1 });
-    expect(pizzas.update).toHaveBeenCalledWith("p1", { price: 9 });
+    expect(pizzas.update).toHaveBeenCalledWith("p1", {
+      name: "Margherita",
+      description: "Classic",
+      price: 9,
+      ingredientIds: [],
+    });
     expect(pizzas.setImagePath).toHaveBeenCalledWith("p1", "/uploads/pizzas/a.png");
   });
 

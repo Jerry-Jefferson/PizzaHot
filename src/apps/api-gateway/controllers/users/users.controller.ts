@@ -8,6 +8,7 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
+  Put,
   Query,
   Res,
   UploadedFile,
@@ -88,7 +89,7 @@ export class UsersController {
     return this.usersService.setRole(id, dto.role, currentUser.sub);
   }
 
-  @Patch("me")
+  @Put("me")
   @Can(Permission.USER_MANAGE_OWN)
   @ApiUpdateMeUser()
   async updateMe(

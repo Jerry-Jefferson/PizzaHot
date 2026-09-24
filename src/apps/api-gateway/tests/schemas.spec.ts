@@ -64,12 +64,27 @@ describe("pizzaSchema", () => {
     expect(pizzaSchema.safeParse({ ...valid, ingredientIds: [UUID, other] }).success).toBe(true);
   });
 
-  it("refuses an update with nothing in it", () => {
-    expect(updatePizzaSchema.safeParse({}).success).toBe(false);
+  it.each([
+    ["an empty body", {}],
+    ["a body with only a price", { price: 9 }],
+    ["a body missing the description", { name: "X", price: 9 }],
+  ])("refuses %s as a replacement", (_label, input) => {
+    expect(updatePizzaSchema.safeParse(input).success).toBe(false);
   });
 
-  it("accepts an update that changes one field", () => {
-    expect(updatePizzaSchema.parse({ price: 9 })).toEqual({ price: 9 });
+  it("accepts a complete replacement", () => {
+    expect(updatePizzaSchema.parse({ name: "X", description: "d", price: 9 })).toEqual({
+      name: "X",
+      description: "d",
+      price: 9,
+      ingredientIds: [],
+    });
+  });
+
+  it("defaults the ingredient list to empty rather than absent", () => {
+    expect(
+      updatePizzaSchema.parse({ name: "X", description: "d", price: 9 }).ingredientIds
+    ).toEqual([]);
   });
 });
 
@@ -79,7 +94,7 @@ describe("ingredientSchema", () => {
     expect(ingredientSchema.safeParse({ name: "" }).success).toBe(false);
   });
 
-  it("refuses an update with nothing in it", () => {
+  it("refuses a replacement with no name", () => {
     expect(updateIngredientSchema.safeParse({}).success).toBe(false);
   });
 });
@@ -130,20 +145,26 @@ describe("promocode schemas", () => {
     expect(createPromocodeSchema.safeParse(fixed).success).toBe(true);
   });
 
-  it("refuses an update with nothing in it", () => {
-    expect(updatePromocodeSchema.safeParse({}).success).toBe(false);
-  });
-
-  it("refuses an update that makes a percentage exceed 100", () => {
-    const input = { discountMode: DiscountMode.PERCENTAGE, discount: 120 };
-
+  it.each([
+    ["an empty body", {}],
+    ["a body with only a discount", { discount: 20 }],
+    ["a body missing the mode", { code: "X", discount: 20, validTill: FUTURE }],
+  ])("refuses %s as a replacement", (_label, input) => {
     expect(updatePromocodeSchema.safeParse(input).success).toBe(false);
   });
 
-  it("allows an update to set a past date", () => {
+  it("accepts a complete replacement", () => {
+    expect(updatePromocodeSchema.safeParse(valid).success).toBe(true);
+  });
+
+  it("refuses a replacement whose percentage exceeds 100", () => {
+    expect(updatePromocodeSchema.safeParse({ ...valid, discount: 120 }).success).toBe(false);
+  });
+
+  it("allows a replacement to set a past date", () => {
     const past = new Date(Date.now() - 86_400_000);
 
-    expect(updatePromocodeSchema.safeParse({ validTill: past }).success).toBe(true);
+    expect(updatePromocodeSchema.safeParse({ ...valid, validTill: past }).success).toBe(true);
   });
 });
 
@@ -279,16 +300,34 @@ describe("auth schemas", () => {
 });
 
 describe("updateUserSchema", () => {
-  it("accepts a single field", () => {
-    expect(updateUserSchema.parse({ name: "Anna" })).toEqual({ name: "Anna" });
+  it("clears every field an empty body leaves out", () => {
+    expect(updateUserSchema.parse({})).toEqual({ name: null, surname: null, gender: null });
   });
 
-  it("refuses an update with nothing in it", () => {
-    expect(updateUserSchema.safeParse({}).success).toBe(false);
+  it("keeps what the body says and clears the rest", () => {
+    expect(updateUserSchema.parse({ name: "Anna" })).toEqual({
+      name: "Anna",
+      surname: null,
+      gender: null,
+    });
   });
 
-  it("drops image and then has nothing to update", () => {
-    expect(updateUserSchema.safeParse({ image: "https://example.com/a.png" }).success).toBe(false);
+  it("accepts an explicit null", () => {
+    expect(updateUserSchema.parse({ name: null, surname: "Ivanova" })).toMatchObject({
+      name: null,
+      surname: "Ivanova",
+    });
+  });
+
+  it("still refuses a value that breaks the rules", () => {
+    expect(updateUserSchema.safeParse({ name: "" }).success).toBe(false);
+    expect(updateUserSchema.safeParse({ gender: "unknown" }).success).toBe(false);
+  });
+
+  it("drops image", () => {
+    expect(updateUserSchema.parse({ image: "https://example.com/a.png" })).not.toHaveProperty(
+      "image"
+    );
   });
 });
 

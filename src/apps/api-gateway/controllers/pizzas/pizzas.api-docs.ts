@@ -54,7 +54,11 @@ export const ApiAddPizza = () =>
 
 export const ApiUpdatePizza = () =>
   applyDecorators(
-    ApiOperation({ summary: "Update a pizza by ID (Admin only)" }),
+    ApiOperation({
+      summary: "Replace a pizza by ID (Admin only)",
+      description:
+        "Replaces the whole resource: a field the body leaves out is cleared, not kept. Use this to set the full state, not to amend one field.",
+    }),
     ApiParam({ name: "id", type: "string", format: "uuid" }),
     ApiBody({ description: "Pizza update payload", type: UpdatePizzaDto }),
     ApiUpdated("Pizza", PizzaResponseDto),

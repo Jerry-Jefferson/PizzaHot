@@ -101,12 +101,12 @@ describe("IdentityMessagesController", () => {
 
   it("unwraps the payloads of the remaining handlers", async () => {
     await controller.findById({ id: "u1" });
-    await controller.update({ userId: "u1", dto: { name: "Anna" } });
+    await controller.update({ userId: "u1", dto: { name: "Anna", surname: null, gender: null } });
     await controller.setImage({ userId: "u1", imagePath: "/uploads/users/a.png" });
     await controller.setRole({ id: "u2", role: Role.ADMIN, actingUserId: "u1" });
 
     expect(users.findById).toHaveBeenCalledWith("u1");
-    expect(users.update).toHaveBeenCalledWith("u1", { name: "Anna" });
+    expect(users.update).toHaveBeenCalledWith("u1", { name: "Anna", surname: null, gender: null });
     expect(users.setImagePath).toHaveBeenCalledWith("u1", "/uploads/users/a.png");
     expect(users.setRole).toHaveBeenCalledWith("u2", Role.ADMIN, "u1");
   });

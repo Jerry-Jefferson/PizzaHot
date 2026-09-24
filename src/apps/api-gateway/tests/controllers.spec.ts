@@ -1,5 +1,5 @@
 import { describe, it, expect, jest, beforeEach } from "@jest/globals";
-import { BadRequestException, HttpStatus } from "@nestjs/common";
+import { HttpStatus } from "@nestjs/common";
 import type { Response } from "express";
 import { PizzasController } from "../controllers/pizzas/pizzas.controller.ts";
 import { IngredientsController } from "../controllers/ingredients/ingredients.controller.ts";
@@ -21,6 +21,7 @@ import { COOKIE_NAME, Role } from "../../../libs/auth/auth.constant.ts";
 import { OrderStatus } from "../../order-service/constants/order-status.constant.ts";
 import { DeliveryType } from "../../order-service/constants/delivery-type.constant.ts";
 import { PaymentMethod } from "../../order-service/constants/payment-method.constant.ts";
+import { DiscountMode } from "../../../libs/contracts/index.ts";
 
 const USER: JwtPayload = {
   sub: "u1",
@@ -30,6 +31,13 @@ const USER: JwtPayload = {
 };
 
 const FILE = { filename: "abc.png" } as Express.Multer.File;
+
+const PROMO_REPLACEMENT = {
+  code: "SALE10",
+  discount: 20,
+  validTill: new Date("2099-01-01T00:00:00.000Z"),
+  discountMode: DiscountMode.PERCENTAGE,
+};
 
 type ClientMock = jest.Mock<(...args: unknown[]) => Promise<unknown>>;
 
@@ -68,15 +76,12 @@ describe("PizzasController", () => {
     expect(client.remove).toHaveBeenCalledWith("p1");
   });
 
-  it("refuses an update with no fields", async () => {
-    await expect(controller.update("p1", {})).rejects.toThrow(BadRequestException);
-    expect(client.update).not.toHaveBeenCalled();
-  });
+  it("passes the whole replacement through", async () => {
+    const replacement = { name: "Margherita", description: "Classic", price: 9, ingredientIds: [] };
 
-  it("accepts an update that changes something", async () => {
-    await controller.update("p1", { price: 9 });
+    await controller.update("p1", replacement);
 
-    expect(client.update).toHaveBeenCalledWith("p1", { price: 9 });
+    expect(client.update).toHaveBeenCalledWith("p1", replacement);
   });
 
   it("builds the stored path from the category and the generated filename", async () => {
@@ -269,10 +274,10 @@ describe("UsersController", () => {
   });
 
   it("edits only the caller's own account", async () => {
-    await controller.updateMe(USER, { name: "Anna" });
+    await controller.updateMe(USER, { name: "Anna", surname: null, gender: null });
     await controller.changePassword(USER, { currentPassword: "a", newPassword: "b" });
 
-    expect(client.update).toHaveBeenCalledWith("u1", { name: "Anna" });
+    expect(client.update).toHaveBeenCalledWith("u1", { name: "Anna", surname: null, gender: null });
     expect(client.changePassword).toHaveBeenCalledWith("u1", {
       currentPassword: "a",
       newPassword: "b",
@@ -307,13 +312,13 @@ describe("PromocodesController", () => {
   it("delegates every call", async () => {
     await controller.findAll();
     await controller.findOne("c1");
-    await controller.update("c1", { discount: 5 });
+    await controller.update("c1", PROMO_REPLACEMENT);
     await controller.remove("c1");
     await controller.restore("c1");
 
     expect(client.findAll).toHaveBeenCalled();
     expect(client.findById).toHaveBeenCalledWith("c1");
-    expect(client.update).toHaveBeenCalledWith("c1", { discount: 5 });
+    expect(client.update).toHaveBeenCalledWith("c1", PROMO_REPLACEMENT);
     expect(client.remove).toHaveBeenCalledWith("c1");
     expect(client.restore).toHaveBeenCalledWith("c1");
   });

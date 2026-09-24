@@ -8,9 +8,9 @@ import {
   Delete,
   Query,
   Patch,
+  Put,
   UseInterceptors,
   UploadedFile,
-  BadRequestException,
   HttpCode,
   HttpStatus,
 } from "@nestjs/common";
@@ -82,16 +82,13 @@ export class PizzasController {
     return this.pizzasService.create(dto);
   }
 
-  @Patch(":id")
+  @Put(":id")
   @Can(Permission.PIZZA_WRITE)
   @ApiUpdatePizza()
   async update(
     @Param("id", ParseUUIDPipe) id: string,
     @Body(new ZodValidationPipe(updatePizzaSchema)) dto: UpdatePizzaDto
   ): Promise<PizzaResponseDto> {
-    if (Object.keys(dto).length === 0) {
-      throw new BadRequestException("At least one field must be provided for update");
-    }
     return this.pizzasService.update(id, dto);
   }
 

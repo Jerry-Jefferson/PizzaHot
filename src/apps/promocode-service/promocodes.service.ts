@@ -75,18 +75,14 @@ export class PromocodesService {
   }
 
   async update(id: string, dto: UpdatePromocodeDto): Promise<PromocodeResponseDto> {
-    const current = await this.findById(id);
+    await this.findById(id);
 
-    if (dto.code) {
-      const existing = await this.promocodesRepository.findByCode(dto.code);
-      if (existing && existing.id !== id) {
-        throw new ConflictException("Promocode with this code already exists");
-      }
+    const existing = await this.promocodesRepository.findByCode(dto.code);
+    if (existing && existing.id !== id) {
+      throw new ConflictException("Promocode with this code already exists");
     }
 
-    const effectiveMode = dto.discountMode ?? current.discountMode;
-    const effectiveDiscount = dto.discount ?? current.discount;
-    if (effectiveMode === DiscountMode.PERCENTAGE && effectiveDiscount > 100) {
+    if (dto.discountMode === DiscountMode.PERCENTAGE && dto.discount > 100) {
       throw new BadRequestException("Percentage discount cannot exceed 100");
     }
 

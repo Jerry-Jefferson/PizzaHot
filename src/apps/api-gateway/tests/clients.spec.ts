@@ -50,9 +50,18 @@ describe("gateway clients", () => {
       ],
       [
         "update",
-        () => client.update("p1", { price: 9 }),
+        () =>
+          client.update("p1", {
+            name: "Margherita",
+            description: "Classic",
+            price: 9,
+            ingredientIds: [],
+          }),
         RPC.catalog.pizzaUpdate,
-        { id: "p1", dto: { price: 9 } },
+        {
+          id: "p1",
+          dto: { name: "Margherita", description: "Classic", price: 9, ingredientIds: [] },
+        },
       ],
       ["findAllIngredients", () => client.findAllIngredients(), RPC.catalog.ingredientList, {}],
       [

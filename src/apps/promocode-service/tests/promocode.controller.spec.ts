@@ -99,9 +99,22 @@ describe("PromocodeMessagesController", () => {
   });
 
   it("unwraps the id and dto of an update", async () => {
-    await controller.update({ id: "c1", dto: { discount: 20 } });
+    await controller.update({
+      id: "c1",
+      dto: {
+        code: "SALE10",
+        discount: 20,
+        validTill: new Date("2099-01-01T00:00:00.000Z"),
+        discountMode: DiscountMode.PERCENTAGE,
+      },
+    });
 
-    expect(promocodes.update).toHaveBeenCalledWith("c1", { discount: 20 });
+    expect(promocodes.update).toHaveBeenCalledWith("c1", {
+      code: "SALE10",
+      discount: 20,
+      validTill: new Date("2099-01-01T00:00:00.000Z"),
+      discountMode: DiscountMode.PERCENTAGE,
+    });
   });
 
   it("answers a removal with an acknowledgement object", async () => {

@@ -78,14 +78,12 @@ export class PizzasService {
   async update(id: string, dto: UpdatePizzaDto): Promise<PizzaResponseDto> {
     await this.findById(id);
 
-    if (dto.name) {
-      const nameConflict = await this.pizzasRepository.findByName(dto.name);
-      if (nameConflict && nameConflict.id !== id) {
-        throw new ConflictException("Pizza with this name already exists");
-      }
+    const nameConflict = await this.pizzasRepository.findByName(dto.name);
+    if (nameConflict && nameConflict.id !== id) {
+      throw new ConflictException("Pizza with this name already exists");
     }
 
-    if (dto.ingredientIds?.length) {
+    if (dto.ingredientIds.length > 0) {
       await this.ingredientsService.validateIds(dto.ingredientIds);
     }
 
