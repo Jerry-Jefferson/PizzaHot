@@ -18,7 +18,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "npm run lint 2>&1 | tail -20",
+            "command": "npm --prefix backend run lint 2>&1 | tail -20",
             "timeout": 30
           }
         ]
@@ -28,7 +28,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "npm test -- --passWithNoTests 2>&1 | tail -30",
+            "command": "cd backend && npm test -- --passWithNoTests 2>&1 | tail -30",
             "timeout": 120
           }
         ]

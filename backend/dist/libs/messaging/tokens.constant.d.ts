@@ -1,0 +1,9 @@
+export declare const IDENTITY_CLIENT = "IDENTITY_CLIENT";
+export declare const CATALOG_CLIENT = "CATALOG_CLIENT";
+export declare const CART_CLIENT = "CART_CLIENT";
+export declare const ORDER_CLIENT = "ORDER_CLIENT";
+export declare const PROMOCODE_CLIENT = "PROMOCODE_CLIENT";
+export declare const NOTIFICATION_CLIENT = "NOTIFICATION_CLIENT";
+export declare const ANALYTICS_CLIENT = "ANALYTICS_CLIENT";
+export declare const LOG_CLIENT = "LOG_CLIENT";
+export declare const EVENTS_CLIENT = "EVENTS_CLIENT";

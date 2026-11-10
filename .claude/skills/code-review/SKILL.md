@@ -17,7 +17,7 @@ Perform a thorough code review of a file or a set of changes in the PizzaHot Nes
 - [ ] Event names are referenced from `EVENTS` constant — **no hardcoded strings**
 - [ ] New event payload shapes are added to `libs/contracts/events.types.ts`, not defined inline
 
-### 3. Service Layer (microservices under `src/apps/`)
+### 3. Service Layer (microservices under `backend/src/apps/`)
 - [ ] Domain logic lives in the service, **not** in the controller or repository
 - [ ] The service throws the appropriate NestJS HTTP exception (`NotFoundException`, `ConflictException`, `BadRequestException`, `UnauthorizedException`, `InternalServerErrorException`) — never raw `Error`
 - [ ] `Logger` is instantiated as `private readonly logger = new Logger(ServiceName.name)` — never uses `console.log`
@@ -25,7 +25,7 @@ Perform a thorough code review of a file or a set of changes in the PizzaHot Nes
 - [ ] `CriticalErrorEvent` is emitted via `EVENTS.criticalError` for unrecoverable anomalies (e.g. missing files, broken invariants)
 - [ ] Image/file cleanup happens **before** the DB change when entity is not found (to avoid orphaned uploads)
 
-### 4. Gateway Layer (`src/apps/api-gateway/`)
+### 4. Gateway Layer (`backend/src/apps/api-gateway/`)
 - [ ] Controllers are thin proxies — they only validate input and delegate to `*.client.ts`
 - [ ] Client files (`clients/*.client.ts`) contain all RabbitMQ `send()` / `emit()` logic
 - [ ] No domain logic lives in the gateway

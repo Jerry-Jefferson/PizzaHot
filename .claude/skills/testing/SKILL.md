@@ -10,10 +10,10 @@ Write and maintain unit tests for the PizzaHot NestJS microservices monorepo, fo
 ### File Location
 - Unit tests live in a `tests/` subfolder inside the app directory, e.g.:
   ```
-  src/apps/catalog-service/tests/pizzas.service.spec.ts
-  src/apps/identity-service/tests/users.service.spec.ts
+  backend/src/apps/catalog-service/tests/pizzas.service.spec.ts
+  backend/src/apps/identity-service/tests/users.service.spec.ts
   ```
-- E2E tests live in `test/` at the project root with a separate `jest-e2e.json` config
+- E2E tests live in `backend/test/` with a separate `jest-e2e.json` config
 
 ### Imports — Always explicit
 ```ts
@@ -194,7 +194,7 @@ it("nacks to DLQ on failure", async () => {
 
 ## Coverage Thresholds
 
-Configured in `package.json` — failing these blocks CI:
+Configured in `backend/package.json` — failing these blocks CI:
 
 | Metric | Threshold |
 |---|---|
@@ -205,8 +205,9 @@ Configured in `package.json` — failing these blocks CI:
 
 Files excluded from coverage: `*.spec.ts`, `main.ts`, `*.module.ts`, `*.entity.ts`, `*.types.ts`, `*.constant.ts`, `data-source.ts`, `migrate.ts`, `typeorm.config.ts`, `*.repository.ts`, `dto/**` (except `*-response.dto.ts`).
 
-Run coverage with:
+Run coverage (from `backend/`) with:
 ```bash
+cd backend
 npm run test:cov
 ```
 
@@ -214,7 +215,11 @@ npm run test:cov
 
 ## Running Tests
 
+All commands run from the `backend/` directory.
+
 ```bash
+cd backend
+
 # All unit tests
 npm test
 

@@ -1,0 +1,24 @@
+import { Role } from "./auth.constant.ts";
+export declare const Permission: {
+    readonly PIZZA_READ: "pizza:read";
+    readonly PIZZA_WRITE: "pizza:write";
+    readonly PIZZA_DELETE: "pizza:delete";
+    readonly INGREDIENT_READ: "ingredient:read";
+    readonly INGREDIENT_WRITE: "ingredient:write";
+    readonly INGREDIENT_DELETE: "ingredient:delete";
+    readonly PROMOCODE_READ: "promocode:read";
+    readonly PROMOCODE_WRITE: "promocode:write";
+    readonly PROMOCODE_DELETE: "promocode:delete";
+    readonly CART_MANAGE: "cart:manage";
+    readonly ORDER_CREATE: "order:create";
+    readonly ORDER_READ_OWN: "order:read:own";
+    readonly ORDER_READ_ANY: "order:read:any";
+    readonly ORDER_STATUS_WRITE: "order:status:write";
+    readonly USER_MANAGE_OWN: "user:manage:own";
+    readonly USER_READ_ANY: "user:read:any";
+    readonly USER_ROLE_WRITE: "user:role:write";
+    readonly ANALYTICS_READ: "analytics:read";
+    readonly LOG_READ: "log:read";
+};
+export type Permission = (typeof Permission)[keyof typeof Permission];
+export declare const ROLE_PERMISSIONS: Record<Role, readonly Permission[]>;

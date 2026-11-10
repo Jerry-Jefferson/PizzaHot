@@ -1,0 +1,2019 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1790079645177" clover="3.2.0">
+  <project timestamp="1790079645177" name="All files">
+    <metrics statements="1569" coveredstatements="1428" conditionals="1417" coveredconditionals="1065" methods="459" coveredmethods="403" elements="3445" coveredelements="2896" complexity="0" loc="1569" ncloc="1569" packages="52" files="96" classes="96"/>
+    <package name="apps.analytics-service">
+      <metrics statements="28" coveredstatements="25" conditionals="48" coveredconditionals="36" methods="15" coveredmethods="12"/>
+      <file name="analytics.controller.ts" path="D:\PizzaHot\pizza-hot\src\apps\analytics-service\analytics.controller.ts">
+        <metrics statements="23" coveredstatements="23" conditionals="48" coveredconditionals="36" methods="12" coveredmethods="12"/>
+        <line num="16" count="1" type="stmt"/>
+        <line num="17" count="7" type="stmt"/>
+        <line num="20" count="7" type="cond" truecount="6" falsecount="2"/>
+        <line num="21" count="7" type="stmt"/>
+        <line num="25" count="1" type="stmt"/>
+        <line num="28" count="1" type="stmt"/>
+        <line num="32" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="33" count="1" type="stmt"/>
+        <line num="37" count="1" type="stmt"/>
+        <line num="41" count="3" type="stmt"/>
+        <line num="42" count="3" type="stmt"/>
+        <line num="44" count="3" type="stmt"/>
+        <line num="54" count="2" type="stmt"/>
+        <line num="55" count="2" type="stmt"/>
+        <line num="67" count="1" type="stmt"/>
+        <line num="71" count="1" type="stmt"/>
+        <line num="72" count="1" type="stmt"/>
+        <line num="77" count="1" type="stmt"/>
+        <line num="81" count="1" type="stmt"/>
+        <line num="82" count="1" type="stmt"/>
+        <line num="92" count="1" type="stmt"/>
+        <line num="96" count="1" type="stmt"/>
+        <line num="97" count="1" type="stmt"/>
+      </file>
+      <file name="analytics.schema.ts" path="D:\PizzaHot\pizza-hot\src\apps\analytics-service\analytics.schema.ts">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="3" count="1" type="stmt"/>
+      </file>
+      <file name="analytics.service.ts" path="D:\PizzaHot\pizza-hot\src\apps\analytics-service\analytics.service.ts">
+        <metrics statements="4" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="0"/>
+        <line num="10" count="1" type="stmt"/>
+        <line num="13" count="0" type="stmt"/>
+        <line num="20" count="0" type="stmt"/>
+        <line num="24" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.api-gateway">
+      <metrics statements="6" coveredstatements="6" conditionals="4" coveredconditionals="3" methods="3" coveredmethods="3"/>
+      <file name="app.controller.ts" path="D:\PizzaHot\pizza-hot\src\apps\api-gateway\app.controller.ts">
+        <metrics statements="4" coveredstatements="4" conditionals="4" coveredconditionals="3" methods="2" coveredmethods="2"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="7" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="11" count="1" type="stmt"/>
+        <line num="12" count="1" type="stmt"/>
+      </file>
+      <file name="app.service.ts" path="D:\PizzaHot\pizza-hot\src\apps\api-gateway\app.service.ts">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.api-gateway.clients">
+      <metrics statements="61" coveredstatements="51" conditionals="2" coveredconditionals="0" methods="52" coveredmethods="42"/>
+      <file name="analytics.client.ts" path="D:\PizzaHot\pizza-hot\src\apps\api-gateway\clients\analytics.client.ts">
+        <metrics statements="7" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="5" coveredmethods="3"/>
+        <line num="15" count="2" type="stmt"/>
+        <line num="16" count="2" type="stmt"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
+        <line num="28" count="2" type="stmt"/>
+        <line num="29" count="0" type="stmt"/>
+        <line num="32" count="0" type="stmt"/>
+      </file>
+      <file name="cart.client.ts" path="D:\PizzaHot\pizza-hot\src\apps\api-gateway\clients\cart.client.ts">
+        <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="8" coveredmethods="8"/>
+        <line num="10" count="3" type="stmt"/>
+        <line num="11" count="7" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="18" count="1" type="stmt"/>
+        <line num="26" count="1" type="stmt"/>
+        <line num="30" count="1" type="stmt"/>
+        <line num="34" count="1" type="stmt"/>
+        <line num="38" count="1" type="stmt"/>
+        <line num="42" count="1" type="stmt"/>
+      </file>
+      <file name="catalog.client.ts" path="D:\PizzaHot\pizza-hot\src\apps\api-gateway\clients\catalog.client.ts">
+        <metrics statements="14" coveredstatements="14" conditionals="0" coveredconditionals="0" methods="12" coveredmethods="12"/>
+        <line num="16" count="2" type="stmt"/>
+        <line num="17" count="11" type="stmt"/>
+        <line num="24" count="1" type="stmt"/>
+        <line num="30" count="1" type="stmt"/>
+        <line num="34" count="1" type="stmt"/>
+        <line num="38" count="1" type="stmt"/>
+        <line num="42" count="1" type="stmt"/>
+        <line num="46" count="1" type="stmt"/>
+        <line num="50" count="1" type="stmt"/>
+        <line num="54" count="1" type="stmt"/>
+        <line num="58" count="1" type="stmt"/>
+        <line num="62" count="1" type="stmt"/>
+        <line num="66" count="1" type="stmt"/>
+        <line num="70" count="1" type="stmt"/>
+      </file>
+      <file name="identity.client.ts" path="D:\PizzaHot\pizza-hot\src\apps\api-gateway\clients\identity.client.ts">
+        <metrics statements="14" coveredstatements="10" conditionals="0" coveredconditionals="0" methods="13" coveredmethods="9"/>
+        <line num="15" count="2" type="stmt"/>
+        <line num="16" count="8" type="stmt"/>
+        <line num="19" count="0" type="stmt"/>
+        <line num="23" count="0" type="stmt"/>
+        <line num="27" count="1" type="stmt"/>
+        <line num="31" count="1" type="stmt"/>
+        <line num="35" count="1" type="stmt"/>
+        <line num="39" count="1" type="stmt"/>
+        <line num="47" count="1" type="stmt"/>
+        <line num="51" count="0" type="stmt"/>
+        <line num="55" count="1" type="stmt"/>
+        <line num="59" count="1" type="stmt"/>
+        <line num="63" count="0" type="stmt"/>
+        <line num="67" count="1" type="stmt"/>
+      </file>
+      <file name="order.client.ts" path="D:\PizzaHot\pizza-hot\src\apps\api-gateway\clients\order.client.ts">
+        <metrics statements="9" coveredstatements="7" conditionals="2" coveredconditionals="0" methods="7" coveredmethods="5"/>
+        <line num="14" count="2" type="stmt"/>
+        <line num="15" count="4" type="stmt"/>
+        <line num="18" count="1" type="stmt"/>
+        <line num="26" count="0" type="stmt"/>
+        <line num="30" count="0" type="stmt"/>
+        <line num="34" count="1" type="stmt"/>
+        <line num="38" count="1" type="stmt"/>
+        <line num="44" count="1" type="stmt"/>
+        <line num="48" count="1" type="stmt"/>
+      </file>
+      <file name="promocode.client.ts" path="D:\PizzaHot\pizza-hot\src\apps\api-gateway\clients\promocode.client.ts">
+        <metrics statements="8" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="7" coveredmethods="5"/>
+        <line num="11" count="2" type="stmt"/>
+        <line num="12" count="4" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="23" count="0" type="stmt"/>
+        <line num="27" count="0" type="stmt"/>
+        <line num="31" count="1" type="stmt"/>
+        <line num="35" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.api-gateway.controllers.analytics">
+      <metrics statements="6" coveredstatements="6" conditionals="4" coveredconditionals="3" methods="3" coveredmethods="3"/>
+      <file name="analytics.controller.ts" path="D:\PizzaHot\pizza-hot\src\apps\api-gateway\controllers\analytics\analytics.controller.ts">
+        <metrics statements="6" coveredstatements="6" conditionals="4" coveredconditionals="3" methods="3" coveredmethods="3"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="16" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="21" count="1" type="stmt"/>
+        <line num="28" count="1" type="stmt"/>
+        <line num="34" count="1" type="stmt"/>
+        <line num="35" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.api-gateway.controllers.auth">
+      <metrics statements="19" coveredstatements="19" conditionals="32" coveredconditionals="24" methods="8" coveredmethods="8"/>
+      <file name="auth.controller.ts" path="D:\PizzaHot\pizza-hot\src\apps\api-gateway\controllers\auth\auth.controller.ts">
+        <metrics statements="19" coveredstatements="19" conditionals="32" coveredconditionals="24" methods="8" coveredmethods="8"/>
+        <line num="28" count="1" type="stmt"/>
+        <line num="29" count="5" type="cond" truecount="3" falsecount="1"/>
+        <line num="35" count="1" type="stmt"/>
+        <line num="39" count="1" type="stmt"/>
+        <line num="40" count="1" type="stmt"/>
+        <line num="41" count="1" type="stmt"/>
+        <line num="47" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="48" count="1" type="stmt"/>
+        <line num="54" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="55" count="1" type="stmt"/>
+        <line num="63" count="1" type="stmt"/>
+        <line num="67" count="1" type="stmt"/>
+        <line num="68" count="1" type="stmt"/>
+        <line num="69" count="1" type="stmt"/>
+        <line num="74" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="75" count="1" type="stmt"/>
+        <line num="81" count="1" type="stmt"/>
+        <line num="82" count="1" type="stmt"/>
+        <line num="86" count="2" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.api-gateway.controllers.carts">
+      <metrics statements="20" coveredstatements="20" conditionals="44" coveredconditionals="33" methods="8" coveredmethods="8"/>
+      <file name="carts.controller.ts" path="D:\PizzaHot\pizza-hot\src\apps\api-gateway\controllers\carts\carts.controller.ts">
+        <metrics statements="20" coveredstatements="20" conditionals="44" coveredconditionals="33" methods="8" coveredmethods="8"/>
+        <line num="46" count="2" type="stmt"/>
+        <line num="47" count="14" type="cond" truecount="3" falsecount="1"/>
+        <line num="52" count="2" type="cond" truecount="3" falsecount="1"/>
+        <line num="53" count="3" type="stmt"/>
+        <line num="60" count="2" type="stmt"/>
+        <line num="64" count="2" type="stmt"/>
+        <line num="71" count="2" type="cond" truecount="3" falsecount="1"/>
+        <line num="72" count="2" type="stmt"/>
+        <line num="78" count="2" type="stmt"/>
+        <line num="82" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="88" count="2" type="stmt"/>
+        <line num="94" count="4" type="stmt"/>
+        <line num="95" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="96" count="2" type="stmt"/>
+        <line num="97" count="2" type="stmt"/>
+        <line num="99" count="2" type="stmt"/>
+        <line num="106" count="2" type="stmt"/>
+        <line num="110" count="2" type="stmt"/>
+        <line num="117" count="2" type="cond" truecount="3" falsecount="1"/>
+        <line num="118" count="2" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.api-gateway.controllers.ingredients">
+      <metrics statements="12" coveredstatements="12" conditionals="32" coveredconditionals="24" methods="6" coveredmethods="6"/>
+      <file name="ingredients.controller.ts" path="D:\PizzaHot\pizza-hot\src\apps\api-gateway\controllers\ingredients\ingredients.controller.ts">
+        <metrics statements="12" coveredstatements="12" conditionals="32" coveredconditionals="24" methods="6" coveredmethods="6"/>
+        <line num="36" count="1" type="stmt"/>
+        <line num="37" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="42" count="1" type="stmt"/>
+        <line num="45" count="1" type="stmt"/>
+        <line num="51" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="52" count="1" type="stmt"/>
+        <line num="58" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="59" count="1" type="stmt"/>
+        <line num="65" count="1" type="stmt"/>
+        <line num="69" count="1" type="stmt"/>
+        <line num="76" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="77" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.api-gateway.controllers.logs">
+      <metrics statements="4" coveredstatements="4" conditionals="4" coveredconditionals="3" methods="2" coveredmethods="2"/>
+      <file name="logs.controller.ts" path="D:\PizzaHot\pizza-hot\src\apps\api-gateway\controllers\logs\logs.controller.ts">
+        <metrics statements="4" coveredstatements="4" conditionals="4" coveredconditionals="3" methods="2" coveredmethods="2"/>
+        <line num="18" count="1" type="stmt"/>
+        <line num="19" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="24" count="1" type="stmt"/>
+        <line num="25" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.api-gateway.controllers.orders">
+      <metrics statements="16" coveredstatements="16" conditionals="40" coveredconditionals="30" methods="8" coveredmethods="8"/>
+      <file name="orders.controller.ts" path="D:\PizzaHot\pizza-hot\src\apps\api-gateway\controllers\orders\orders.controller.ts">
+        <metrics statements="16" coveredstatements="16" conditionals="40" coveredconditionals="30" methods="8" coveredmethods="8"/>
+        <line num="49" count="1" type="stmt"/>
+        <line num="50" count="4" type="cond" truecount="3" falsecount="1"/>
+        <line num="57" count="1" type="stmt"/>
+        <line num="61" count="1" type="stmt"/>
+        <line num="67" count="1" type="stmt"/>
+        <line num="72" count="1" type="stmt"/>
+        <line num="78" count="1" type="stmt"/>
+        <line num="82" count="1" type="stmt"/>
+        <line num="89" count="1" type="stmt"/>
+        <line num="93" count="1" type="stmt"/>
+        <line num="99" count="1" type="stmt"/>
+        <line num="104" count="1" type="stmt"/>
+        <line num="110" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="111" count="1" type="stmt"/>
+        <line num="117" count="1" type="stmt"/>
+        <line num="121" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.api-gateway.controllers.pizzas">
+      <metrics statements="15" coveredstatements="15" conditionals="41" coveredconditionals="29" methods="7" coveredmethods="7"/>
+      <file name="pizzas.controller.ts" path="D:\PizzaHot\pizza-hot\src\apps\api-gateway\controllers\pizzas\pizzas.controller.ts">
+        <metrics statements="15" coveredstatements="15" conditionals="41" coveredconditionals="29" methods="7" coveredmethods="7"/>
+        <line num="52" count="1" type="stmt"/>
+        <line num="53" count="4" type="cond" truecount="3" falsecount="1"/>
+        <line num="58" count="1" type="stmt"/>
+        <line num="66" count="1" type="stmt"/>
+        <line num="72" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="73" count="1" type="stmt"/>
+        <line num="79" count="1" type="stmt"/>
+        <line num="82" count="1" type="stmt"/>
+        <line num="89" count="1" type="stmt"/>
+        <line num="93" count="1" type="stmt"/>
+        <line num="100" count="1" type="stmt"/>
+        <line num="104" count="1" type="stmt"/>
+        <line num="105" count="1" type="stmt"/>
+        <line num="112" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="113" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.api-gateway.controllers.promocodes">
+      <metrics statements="14" coveredstatements="13" conditionals="36" coveredconditionals="27" methods="7" coveredmethods="6"/>
+      <file name="promocodes.controller.ts" path="D:\PizzaHot\pizza-hot\src\apps\api-gateway\controllers\promocodes\promocodes.controller.ts">
+        <metrics statements="14" coveredstatements="13" conditionals="36" coveredconditionals="27" methods="7" coveredmethods="6"/>
+        <line num="40" count="1" type="stmt"/>
+        <line num="41" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="46" count="1" type="stmt"/>
+        <line num="49" count="0" type="stmt"/>
+        <line num="55" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="56" count="1" type="stmt"/>
+        <line num="62" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="63" count="1" type="stmt"/>
+        <line num="69" count="1" type="stmt"/>
+        <line num="73" count="1" type="stmt"/>
+        <line num="80" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="81" count="1" type="stmt"/>
+        <line num="87" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="88" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.api-gateway.controllers.users">
+      <metrics statements="18" coveredstatements="18" conditionals="49" coveredconditionals="35" methods="8" coveredmethods="8"/>
+      <file name="users.controller.ts" path="D:\PizzaHot\pizza-hot\src\apps\api-gateway\controllers\users\users.controller.ts">
+        <metrics statements="18" coveredstatements="18" conditionals="49" coveredconditionals="35" methods="8" coveredmethods="8"/>
+        <line num="57" count="1" type="stmt"/>
+        <line num="58" count="5" type="cond" truecount="3" falsecount="1"/>
+        <line num="63" count="1" type="stmt"/>
+        <line num="71" count="1" type="stmt"/>
+        <line num="77" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="78" count="1" type="stmt"/>
+        <line num="84" count="1" type="stmt"/>
+        <line num="89" count="1" type="stmt"/>
+        <line num="95" count="1" type="stmt"/>
+        <line num="99" count="1" type="stmt"/>
+        <line num="106" count="1" type="stmt"/>
+        <line num="110" count="1" type="stmt"/>
+        <line num="111" count="1" type="stmt"/>
+        <line num="118" count="1" type="stmt"/>
+        <line num="122" count="1" type="stmt"/>
+        <line num="129" count="1" type="stmt"/>
+        <line num="133" count="1" type="stmt"/>
+        <line num="134" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.cart-service">
+      <metrics statements="132" coveredstatements="116" conditionals="134" coveredconditionals="104" methods="37" coveredmethods="28"/>
+      <file name="apply-promocode.schema.ts" path="D:\PizzaHot\pizza-hot\src\apps\cart-service\apply-promocode.schema.ts">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="3" count="2" type="stmt"/>
+      </file>
+      <file name="cart.controller.ts" path="D:\PizzaHot\pizza-hot\src\apps\cart-service\cart.controller.ts">
+        <metrics statements="43" coveredstatements="37" conditionals="92" coveredconditionals="70" methods="23" coveredmethods="17"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="20" count="9" type="stmt"/>
+        <line num="23" count="9" type="cond" truecount="6" falsecount="2"/>
+        <line num="24" count="9" type="stmt"/>
+        <line num="28" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="29" count="1" type="stmt"/>
+        <line num="33" count="1" type="stmt"/>
+        <line num="36" count="1" type="stmt"/>
+        <line num="40" count="1" type="stmt"/>
+        <line num="43" count="1" type="stmt"/>
+        <line num="47" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="48" count="1" type="stmt"/>
+        <line num="49" count="1" type="stmt"/>
+        <line num="53" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="54" count="1" type="stmt"/>
+        <line num="55" count="1" type="stmt"/>
+        <line num="59" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="60" count="1" type="stmt"/>
+        <line num="64" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="65" count="1" type="stmt"/>
+        <line num="69" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="70" count="3" type="stmt"/>
+        <line num="72" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="73" count="1" type="stmt"/>
+        <line num="76" count="2" type="stmt"/>
+        <line num="79" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="87" count="1" type="stmt"/>
+        <line num="91" count="2" type="stmt"/>
+        <line num="95" count="1" type="stmt"/>
+        <line num="99" count="1" type="stmt"/>
+        <line num="103" count="1" type="stmt"/>
+        <line num="107" count="1" type="stmt"/>
+        <line num="108" count="1" type="stmt"/>
+        <line num="113" count="1" type="stmt"/>
+        <line num="117" count="0" type="stmt"/>
+        <line num="118" count="0" type="stmt"/>
+        <line num="123" count="1" type="stmt"/>
+        <line num="127" count="0" type="stmt"/>
+        <line num="128" count="0" type="stmt"/>
+        <line num="133" count="1" type="stmt"/>
+        <line num="137" count="0" type="stmt"/>
+        <line num="138" count="0" type="stmt"/>
+        <line num="143" count="3" type="stmt"/>
+      </file>
+      <file name="carts.service.ts" path="D:\PizzaHot\pizza-hot\src\apps\cart-service\carts.service.ts">
+        <metrics statements="88" coveredstatements="78" conditionals="42" coveredconditionals="34" methods="14" coveredmethods="11"/>
+        <line num="18" count="2" type="stmt"/>
+        <line num="21" count="32" type="stmt"/>
+        <line num="23" count="32" type="stmt"/>
+        <line num="24" count="32" type="cond" truecount="3" falsecount="1"/>
+        <line num="26" count="32" type="stmt"/>
+        <line num="30" count="1" type="stmt"/>
+        <line num="32" count="1" type="stmt"/>
+        <line num="36" count="2" type="stmt"/>
+        <line num="40" count="4" type="stmt"/>
+        <line num="46" count="3" type="stmt"/>
+        <line num="48" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="49" count="1" type="stmt"/>
+        <line num="52" count="2" type="stmt"/>
+        <line num="53" count="2" type="stmt"/>
+        <line num="54" count="2" type="stmt"/>
+        <line num="55" count="2" type="stmt"/>
+        <line num="56" count="2" type="stmt"/>
+        <line num="58" count="2" type="stmt"/>
+        <line num="60" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="62" count="2" type="stmt"/>
+        <line num="66" count="3" type="stmt"/>
+        <line num="68" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="69" count="1" type="stmt"/>
+        <line num="72" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="73" count="1" type="stmt"/>
+        <line num="76" count="1" type="stmt"/>
+        <line num="78" count="1" type="stmt"/>
+        <line num="80" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="82" count="1" type="stmt"/>
+        <line num="86" count="4" type="stmt"/>
+        <line num="88" count="3" type="cond" truecount="3" falsecount="1"/>
+        <line num="89" count="0" type="stmt"/>
+        <line num="92" count="3" type="stmt"/>
+        <line num="94" count="3" type="stmt"/>
+        <line num="96" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="97" count="2" type="stmt"/>
+        <line num="99" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="100" count="1" type="stmt"/>
+        <line num="105" count="1" type="stmt"/>
+        <line num="106" count="1" type="stmt"/>
+        <line num="108" count="1" type="stmt"/>
+        <line num="111" count="1" type="stmt"/>
+        <line num="116" count="1" type="stmt"/>
+        <line num="118" count="1" type="stmt"/>
+        <line num="122" count="3" type="stmt"/>
+        <line num="124" count="3" type="cond" truecount="1" falsecount="1"/>
+        <line num="125" count="0" type="stmt"/>
+        <line num="128" count="3" type="stmt"/>
+        <line num="136" count="5" type="stmt"/>
+        <line num="138" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="139" count="1" type="stmt"/>
+        <line num="142" count="4" type="stmt"/>
+        <line num="144" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="145" count="1" type="stmt"/>
+        <line num="148" count="3" type="stmt"/>
+        <line num="150" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="151" count="2" type="stmt"/>
+        <line num="153" count="2" type="stmt"/>
+        <line num="156" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="157" count="0" type="stmt"/>
+        <line num="160" count="1" type="stmt"/>
+        <line num="161" count="1" type="stmt"/>
+        <line num="163" count="1" type="stmt"/>
+        <line num="167" count="3" type="stmt"/>
+        <line num="169" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="170" count="1" type="stmt"/>
+        <line num="173" count="2" type="stmt"/>
+        <line num="175" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="176" count="1" type="stmt"/>
+        <line num="181" count="4" type="stmt"/>
+        <line num="183" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="184" count="1" type="stmt"/>
+        <line num="187" count="3" type="stmt"/>
+        <line num="189" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="190" count="1" type="stmt"/>
+        <line num="191" count="1" type="stmt"/>
+        <line num="196" count="2" type="stmt"/>
+        <line num="197" count="2" type="stmt"/>
+        <line num="198" count="2" type="stmt"/>
+        <line num="199" count="2" type="stmt"/>
+        <line num="200" count="2" type="stmt"/>
+        <line num="204" count="0" type="stmt"/>
+        <line num="208" count="0" type="stmt"/>
+        <line num="210" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="211" count="0" type="stmt"/>
+        <line num="214" count="0" type="stmt"/>
+        <line num="215" count="0" type="stmt"/>
+        <line num="219" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.cart-service.cart-items">
+      <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="cart-item.schema.ts" path="D:\PizzaHot\pizza-hot\src\apps\cart-service\cart-items\cart-item.schema.ts">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="4" count="3" type="stmt"/>
+        <line num="14" count="3" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.cart-service.cart-items.dto">
+      <metrics statements="8" coveredstatements="8" conditionals="6" coveredconditionals="4" methods="1" coveredmethods="1"/>
+      <file name="cart-item-response.dto.ts" path="D:\PizzaHot\pizza-hot\src\apps\cart-service\cart-items\dto\cart-item-response.dto.ts">
+        <metrics statements="8" coveredstatements="8" conditionals="6" coveredconditionals="4" methods="1" coveredmethods="1"/>
+        <line num="10" count="4" type="stmt"/>
+        <line num="16" count="4" type="cond" truecount="3" falsecount="1"/>
+        <line num="22" count="4" type="stmt"/>
+        <line num="25" count="7" type="stmt"/>
+        <line num="26" count="7" type="stmt"/>
+        <line num="27" count="7" type="cond" truecount="1" falsecount="1"/>
+        <line num="28" count="7" type="stmt"/>
+        <line num="29" count="7" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.cart-service.dto">
+      <metrics statements="18" coveredstatements="18" conditionals="14" coveredconditionals="10" methods="2" coveredmethods="2"/>
+      <file name="cart-response.dto.ts" path="D:\PizzaHot\pizza-hot\src\apps\cart-service\dto\cart-response.dto.ts">
+        <metrics statements="18" coveredstatements="18" conditionals="14" coveredconditionals="10" methods="2" coveredmethods="2"/>
+        <line num="11" count="4" type="stmt"/>
+        <line num="17" count="4" type="stmt"/>
+        <line num="24" count="4" type="cond" truecount="3" falsecount="1"/>
+        <line num="30" count="4" type="stmt"/>
+        <line num="36" count="4" type="stmt"/>
+        <line num="42" count="4" type="stmt"/>
+        <line num="48" count="4" type="cond" truecount="3" falsecount="1"/>
+        <line num="54" count="4" type="cond" truecount="3" falsecount="1"/>
+        <line num="64" count="5" type="stmt"/>
+        <line num="66" count="5" type="stmt"/>
+        <line num="68" count="5" type="cond" truecount="1" falsecount="1"/>
+        <line num="70" count="5" type="stmt"/>
+        <line num="72" count="5" type="stmt"/>
+        <line num="73" count="5" type="stmt"/>
+        <line num="74" count="5" type="stmt"/>
+        <line num="76" count="5" type="stmt"/>
+        <line num="77" count="5" type="stmt"/>
+        <line num="79" count="5" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.catalog-service">
+      <metrics statements="45" coveredstatements="45" conditionals="66" coveredconditionals="50" methods="19" coveredmethods="19"/>
+      <file name="catalog.controller.ts" path="D:\PizzaHot\pizza-hot\src\apps\catalog-service\catalog.controller.ts">
+        <metrics statements="45" coveredstatements="45" conditionals="66" coveredconditionals="50" methods="19" coveredmethods="19"/>
+        <line num="21" count="1" type="stmt"/>
+        <line num="22" count="10" type="stmt"/>
+        <line num="25" count="10" type="cond" truecount="6" falsecount="2"/>
+        <line num="26" count="10" type="stmt"/>
+        <line num="28" count="10" type="stmt"/>
+        <line num="30" count="10" type="stmt"/>
+        <line num="34" count="1" type="stmt"/>
+        <line num="37" count="1" type="stmt"/>
+        <line num="41" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="42" count="1" type="stmt"/>
+        <line num="46" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="47" count="1" type="stmt"/>
+        <line num="51" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="52" count="1" type="stmt"/>
+        <line num="56" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="57" count="1" type="stmt"/>
+        <line num="61" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="62" count="1" type="stmt"/>
+        <line num="63" count="1" type="stmt"/>
+        <line num="64" count="1" type="stmt"/>
+        <line num="68" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="69" count="3" type="stmt"/>
+        <line num="70" count="4" type="stmt"/>
+        <line num="72" count="3" type="stmt"/>
+        <line num="73" count="5" type="stmt"/>
+        <line num="74" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="75" count="1" type="stmt"/>
+        <line num="77" count="4" type="stmt"/>
+        <line num="87" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="88" count="1" type="stmt"/>
+        <line num="92" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="93" count="1" type="stmt"/>
+        <line num="97" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="98" count="1" type="stmt"/>
+        <line num="102" count="1" type="stmt"/>
+        <line num="105" count="1" type="stmt"/>
+        <line num="109" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="110" count="1" type="stmt"/>
+        <line num="111" count="1" type="stmt"/>
+        <line num="115" count="1" type="stmt"/>
+        <line num="119" count="3" type="stmt"/>
+        <line num="120" count="3" type="stmt"/>
+        <line num="121" count="5" type="stmt"/>
+        <line num="122" count="5" type="stmt"/>
+        <line num="124" count="3" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.catalog-service.ingredients">
+      <metrics statements="36" coveredstatements="36" conditionals="16" coveredconditionals="16" methods="9" coveredmethods="9"/>
+      <file name="ingredient.schema.ts" path="D:\PizzaHot\pizza-hot\src\apps\catalog-service\ingredients\ingredient.schema.ts">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="3" count="2" type="stmt"/>
+        <line num="8" count="2" type="stmt"/>
+      </file>
+      <file name="ingredients.service.ts" path="D:\PizzaHot\pizza-hot\src\apps\catalog-service\ingredients\ingredients.service.ts">
+        <metrics statements="34" coveredstatements="34" conditionals="16" coveredconditionals="16" methods="9" coveredmethods="9"/>
+        <line num="9" count="4" type="stmt"/>
+        <line num="10" count="17" type="stmt"/>
+        <line num="14" count="17" type="stmt"/>
+        <line num="18" count="2" type="stmt"/>
+        <line num="19" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="20" count="1" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
+        <line num="24" count="1" type="stmt"/>
+        <line num="25" count="1" type="stmt"/>
+        <line num="26" count="1" type="stmt"/>
+        <line num="30" count="2" type="stmt"/>
+        <line num="34" count="10" type="stmt"/>
+        <line num="35" count="10" type="cond" truecount="2" falsecount="0"/>
+        <line num="36" count="3" type="stmt"/>
+        <line num="39" count="7" type="stmt"/>
+        <line num="43" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="44" count="2" type="stmt"/>
+        <line num="45" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="46" count="1" type="stmt"/>
+        <line num="47" count="3" type="stmt"/>
+        <line num="48" count="1" type="stmt"/>
+        <line num="53" count="5" type="stmt"/>
+        <line num="55" count="4" type="stmt"/>
+        <line num="56" count="4" type="cond" truecount="4" falsecount="0"/>
+        <line num="57" count="1" type="stmt"/>
+        <line num="60" count="3" type="stmt"/>
+        <line num="61" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="62" count="1" type="stmt"/>
+        <line num="65" count="2" type="stmt"/>
+        <line num="69" count="3" type="stmt"/>
+        <line num="70" count="2" type="stmt"/>
+        <line num="71" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="72" count="1" type="stmt"/>
+        <line num="74" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.catalog-service.ingredients.dto">
+      <metrics statements="11" coveredstatements="11" conditionals="8" coveredconditionals="6" methods="3" coveredmethods="3"/>
+      <file name="ingredient-response.dto.ts" path="D:\PizzaHot\pizza-hot\src\apps\catalog-service\ingredients\dto\ingredient-response.dto.ts">
+        <metrics statements="11" coveredstatements="11" conditionals="8" coveredconditionals="6" methods="3" coveredmethods="3"/>
+        <line num="9" count="5" type="stmt"/>
+        <line num="12" count="5" type="stmt"/>
+        <line num="18" count="5" type="cond" truecount="3" falsecount="1"/>
+        <line num="24" count="5" type="cond" truecount="3" falsecount="1"/>
+        <line num="27" count="12" type="stmt"/>
+        <line num="28" count="12" type="stmt"/>
+        <line num="29" count="12" type="stmt"/>
+        <line num="30" count="12" type="stmt"/>
+        <line num="31" count="12" type="stmt"/>
+        <line num="32" count="12" type="stmt"/>
+        <line num="36" count="2" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.catalog-service.pizzas">
+      <metrics statements="95" coveredstatements="92" conditionals="44" coveredconditionals="40" methods="15" coveredmethods="14"/>
+      <file name="pizza-cleanup.service.ts" path="D:\PizzaHot\pizza-hot\src\apps\catalog-service\pizzas\pizza-cleanup.service.ts">
+        <metrics statements="13" coveredstatements="13" conditionals="6" coveredconditionals="5" methods="2" coveredmethods="2"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="10" count="4" type="stmt"/>
+        <line num="14" count="4" type="stmt"/>
+        <line num="18" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="19" count="4" type="stmt"/>
+        <line num="21" count="4" type="stmt"/>
+        <line num="22" count="4" type="stmt"/>
+        <line num="23" count="4" type="stmt"/>
+        <line num="24" count="2" type="stmt"/>
+        <line num="25" count="2" type="stmt"/>
+        <line num="27" count="2" type="stmt"/>
+        <line num="31" count="2" type="stmt"/>
+      </file>
+      <file name="pizza.schema.ts" path="D:\PizzaHot\pizza-hot\src\apps\catalog-service\pizzas\pizza.schema.ts">
+        <metrics statements="5" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
+        <line num="4" count="2" type="stmt"/>
+        <line num="14" count="3" type="stmt"/>
+        <line num="25" count="2" type="stmt"/>
+        <line num="35" count="0" type="stmt"/>
+        <line num="41" count="2" type="stmt"/>
+      </file>
+      <file name="pizzas.service.ts" path="D:\PizzaHot\pizza-hot\src\apps\catalog-service\pizzas\pizzas.service.ts">
+        <metrics statements="77" coveredstatements="75" conditionals="38" coveredconditionals="35" methods="11" coveredmethods="11"/>
+        <line num="26" count="3" type="stmt"/>
+        <line num="27" count="27" type="stmt"/>
+        <line num="31" count="27" type="stmt"/>
+        <line num="32" count="27" type="cond" truecount="3" falsecount="1"/>
+        <line num="34" count="27" type="stmt"/>
+        <line num="36" count="27" type="stmt"/>
+        <line num="40" count="5" type="stmt"/>
+        <line num="41" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="42" count="1" type="stmt"/>
+        <line num="45" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="46" count="2" type="stmt"/>
+        <line num="49" count="3" type="stmt"/>
+        <line num="51" count="3" type="stmt"/>
+        <line num="53" count="3" type="stmt"/>
+        <line num="54" count="3" type="stmt"/>
+        <line num="55" count="3" type="stmt"/>
+        <line num="57" count="3" type="stmt"/>
+        <line num="65" count="1" type="stmt"/>
+        <line num="67" count="1" type="stmt"/>
+        <line num="71" count="20" type="stmt"/>
+        <line num="72" count="20" type="cond" truecount="2" falsecount="0"/>
+        <line num="73" count="2" type="stmt"/>
+        <line num="75" count="18" type="stmt"/>
+        <line num="80" count="6" type="stmt"/>
+        <line num="82" count="5" type="stmt"/>
+        <line num="83" count="5" type="cond" truecount="4" falsecount="0"/>
+        <line num="84" count="1" type="stmt"/>
+        <line num="89" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="90" count="1" type="stmt"/>
+        <line num="93" count="4" type="stmt"/>
+        <line num="95" count="4" type="stmt"/>
+        <line num="97" count="4" type="stmt"/>
+        <line num="98" count="4" type="stmt"/>
+        <line num="99" count="4" type="stmt"/>
+        <line num="101" count="4" type="stmt"/>
+        <line num="105" count="5" type="stmt"/>
+        <line num="106" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="107" count="1" type="stmt"/>
+        <line num="108" count="1" type="stmt"/>
+        <line num="111" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="112" count="3" type="stmt"/>
+        <line num="113" count="3" type="cond" truecount="4" falsecount="0"/>
+        <line num="114" count="1" type="stmt"/>
+        <line num="118" count="4" type="stmt"/>
+        <line num="120" count="4" type="stmt"/>
+        <line num="121" count="4" type="stmt"/>
+        <line num="123" count="4" type="stmt"/>
+        <line num="127" count="7" type="stmt"/>
+        <line num="128" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="129" count="1" type="stmt"/>
+        <line num="132" count="6" type="stmt"/>
+        <line num="133" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="134" count="3" type="stmt"/>
+        <line num="135" count="3" type="stmt"/>
+        <line num="137" count="1" type="stmt"/>
+        <line num="138" count="1" type="stmt"/>
+        <line num="139" count="1" type="stmt"/>
+        <line num="144" count="5" type="stmt"/>
+        <line num="145" count="5" type="stmt"/>
+        <line num="147" count="1" type="stmt"/>
+        <line num="148" count="1" type="stmt"/>
+        <line num="151" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="152" count="1" type="stmt"/>
+        <line num="155" count="3" type="stmt"/>
+        <line num="157" count="3" type="cond" truecount="4" falsecount="0"/>
+        <line num="158" count="1" type="stmt"/>
+        <line num="163" count="2" type="stmt"/>
+        <line num="170" count="2" type="stmt"/>
+        <line num="171" count="2" type="stmt"/>
+        <line num="173" count="0" type="stmt"/>
+        <line num="178" count="1" type="stmt"/>
+        <line num="185" count="1" type="stmt"/>
+        <line num="186" count="1" type="stmt"/>
+        <line num="188" count="0" type="stmt"/>
+        <line num="193" count="11" type="stmt"/>
+        <line num="201" count="11" type="stmt"/>
+        <line num="205" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.catalog-service.pizzas.dto">
+      <metrics statements="21" coveredstatements="20" conditionals="12" coveredconditionals="7" methods="4" coveredmethods="3"/>
+      <file name="pizza-response.dto.ts" path="D:\PizzaHot\pizza-hot\src\apps\catalog-service\pizzas\dto\pizza-response.dto.ts">
+        <metrics statements="21" coveredstatements="20" conditionals="12" coveredconditionals="7" methods="4" coveredmethods="3"/>
+        <line num="10" count="4" type="stmt"/>
+        <line num="13" count="4" type="stmt"/>
+        <line num="19" count="4" type="stmt"/>
+        <line num="25" count="4" type="stmt"/>
+        <line num="28" count="4" type="stmt"/>
+        <line num="34" count="4" type="stmt"/>
+        <line num="40" count="4" type="cond" truecount="3" falsecount="1"/>
+        <line num="46" count="4" type="cond" truecount="3" falsecount="1"/>
+        <line num="49" count="13" type="stmt"/>
+        <line num="50" count="13" type="stmt"/>
+        <line num="51" count="13" type="stmt"/>
+        <line num="52" count="13" type="stmt"/>
+        <line num="53" count="13" type="stmt"/>
+        <line num="54" count="13" type="stmt"/>
+        <line num="55" count="13" type="cond" truecount="1" falsecount="1"/>
+        <line num="56" count="13" type="stmt"/>
+        <line num="57" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="60" count="13" type="stmt"/>
+        <line num="61" count="13" type="stmt"/>
+        <line num="62" count="13" type="stmt"/>
+        <line num="66" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.catalog-service.seed">
+      <metrics statements="33" coveredstatements="33" conditionals="16" coveredconditionals="14" methods="9" coveredmethods="9"/>
+      <file name="seed.data.ts" path="D:\PizzaHot\pizza-hot\src\apps\catalog-service\seed\seed.data.ts">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="21" count="1" type="stmt"/>
+      </file>
+      <file name="seed.service.ts" path="D:\PizzaHot\pizza-hot\src\apps\catalog-service\seed\seed.service.ts">
+        <metrics statements="31" coveredstatements="31" conditionals="16" coveredconditionals="14" methods="9" coveredmethods="9"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="8" count="7" type="stmt"/>
+        <line num="11" count="7" type="cond" truecount="6" falsecount="2"/>
+        <line num="12" count="7" type="stmt"/>
+        <line num="16" count="7" type="stmt"/>
+        <line num="17" count="7" type="stmt"/>
+        <line num="21" count="7" type="stmt"/>
+        <line num="22" count="11" type="stmt"/>
+        <line num="24" count="7" type="stmt"/>
+        <line num="25" count="7" type="stmt"/>
+        <line num="26" count="70" type="cond" truecount="2" falsecount="0"/>
+        <line num="28" count="59" type="stmt"/>
+        <line num="29" count="59" type="stmt"/>
+        <line num="30" count="59" type="stmt"/>
+        <line num="33" count="7" type="stmt"/>
+        <line num="39" count="7" type="stmt"/>
+        <line num="43" count="7" type="stmt"/>
+        <line num="45" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="46" count="1" type="stmt"/>
+        <line num="47" count="1" type="stmt"/>
+        <line num="50" count="6" type="stmt"/>
+        <line num="51" count="6" type="stmt"/>
+        <line num="52" count="486" type="stmt"/>
+        <line num="54" count="442" type="cond" truecount="2" falsecount="0"/>
+        <line num="55" count="81" type="stmt"/>
+        <line num="56" count="20" type="stmt"/>
+        <line num="57" count="20" type="stmt"/>
+        <line num="60" count="100" type="stmt"/>
+        <line num="64" count="405" type="stmt"/>
+        <line num="66" count="100" type="stmt"/>
+        <line num="69" count="6" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.identity-service">
+      <metrics statements="35" coveredstatements="35" conditionals="56" coveredconditionals="43" methods="12" coveredmethods="12"/>
+      <file name="identity.controller.ts" path="D:\PizzaHot\pizza-hot\src\apps\identity-service\identity.controller.ts">
+        <metrics statements="35" coveredstatements="35" conditionals="56" coveredconditionals="43" methods="12" coveredmethods="12"/>
+        <line num="18" count="1" type="stmt"/>
+        <line num="20" count="9" type="cond" truecount="6" falsecount="2"/>
+        <line num="21" count="9" type="stmt"/>
+        <line num="23" count="9" type="stmt"/>
+        <line num="27" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="28" count="1" type="stmt"/>
+        <line num="32" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="33" count="1" type="stmt"/>
+        <line num="37" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="38" count="3" type="stmt"/>
+        <line num="39" count="3" type="stmt"/>
+        <line num="41" count="3" type="stmt"/>
+        <line num="42" count="3" type="stmt"/>
+        <line num="44" count="3" type="stmt"/>
+        <line num="48" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="49" count="1" type="stmt"/>
+        <line num="53" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="54" count="1" type="stmt"/>
+        <line num="58" count="1" type="stmt"/>
+        <line num="61" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="62" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="63" count="2" type="stmt"/>
+        <line num="65" count="2" type="stmt"/>
+        <line num="69" count="1" type="stmt"/>
+        <line num="72" count="1" type="stmt"/>
+        <line num="76" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="77" count="1" type="stmt"/>
+        <line num="81" count="1" type="stmt"/>
+        <line num="84" count="1" type="stmt"/>
+        <line num="88" count="1" type="stmt"/>
+        <line num="91" count="1" type="stmt"/>
+        <line num="92" count="1" type="stmt"/>
+        <line num="96" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="97" count="1" type="stmt"/>
+        <line num="98" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.identity-service.auth">
+      <metrics statements="43" coveredstatements="43" conditionals="23" coveredconditionals="21" methods="8" coveredmethods="8"/>
+      <file name="auth.service.ts" path="D:\PizzaHot\pizza-hot\src\apps\identity-service\auth\auth.service.ts">
+        <metrics statements="43" coveredstatements="43" conditionals="23" coveredconditionals="21" methods="8" coveredmethods="8"/>
+        <line num="18" count="2" type="stmt"/>
+        <line num="19" count="16" type="stmt"/>
+        <line num="22" count="16" type="cond" truecount="6" falsecount="2"/>
+        <line num="23" count="16" type="stmt"/>
+        <line num="25" count="16" type="stmt"/>
+        <line num="29" count="5" type="stmt"/>
+        <line num="30" count="5" type="stmt"/>
+        <line num="32" count="5" type="stmt"/>
+        <line num="43" count="5" type="stmt"/>
+        <line num="45" count="5" type="stmt"/>
+        <line num="52" count="5" type="stmt"/>
+        <line num="53" count="5" type="stmt"/>
+        <line num="55" count="1" type="stmt"/>
+        <line num="58" count="5" type="stmt"/>
+        <line num="60" count="5" type="stmt"/>
+        <line num="64" count="7" type="cond" truecount="5" falsecount="0"/>
+        <line num="65" count="2" type="stmt"/>
+        <line num="68" count="5" type="stmt"/>
+        <line num="69" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="70" count="1" type="stmt"/>
+        <line num="73" count="4" type="cond" truecount="4" falsecount="0"/>
+        <line num="74" count="1" type="stmt"/>
+        <line num="78" count="1" type="stmt"/>
+        <line num="81" count="3" type="stmt"/>
+        <line num="85" count="1" type="stmt"/>
+        <line num="87" count="1" type="stmt"/>
+        <line num="93" count="1" type="stmt"/>
+        <line num="95" count="1" type="stmt"/>
+        <line num="99" count="1" type="stmt"/>
+        <line num="101" count="1" type="stmt"/>
+        <line num="107" count="1" type="stmt"/>
+        <line num="111" count="4" type="stmt"/>
+        <line num="112" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="113" count="2" type="stmt"/>
+        <line num="116" count="2" type="stmt"/>
+        <line num="117" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="118" count="1" type="stmt"/>
+        <line num="121" count="1" type="stmt"/>
+        <line num="122" count="1" type="stmt"/>
+        <line num="123" count="1" type="stmt"/>
+        <line num="127" count="1" type="stmt"/>
+        <line num="131" count="6" type="stmt"/>
+        <line num="137" count="6" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.identity-service.auth.dto">
+      <metrics statements="4" coveredstatements="4" conditionals="4" coveredconditionals="3" methods="1" coveredmethods="1"/>
+      <file name="auth-response.dto.ts" path="D:\PizzaHot\pizza-hot\src\apps\identity-service\auth\dto\auth-response.dto.ts">
+        <metrics statements="4" coveredstatements="4" conditionals="4" coveredconditionals="3" methods="1" coveredmethods="1"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="9" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="12" count="2" type="stmt"/>
+        <line num="13" count="2" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.identity-service.auth.schemas">
+      <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="6"/>
+      <file name="auth.schema.ts" path="D:\PizzaHot\pizza-hot\src\apps\identity-service\auth\schemas\auth.schema.ts">
+        <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <line num="5" count="2" type="stmt"/>
+        <line num="18" count="3" type="stmt"/>
+        <line num="22" count="1" type="stmt"/>
+        <line num="26" count="2" type="stmt"/>
+      </file>
+      <file name="password.schema.ts" path="D:\PizzaHot\pizza-hot\src\apps\identity-service\auth\schemas\password.schema.ts">
+        <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="4"/>
+        <line num="3" count="2" type="stmt"/>
+        <line num="6" count="9" type="stmt"/>
+        <line num="9" count="9" type="stmt"/>
+        <line num="12" count="9" type="stmt"/>
+        <line num="15" count="9" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.identity-service.migrations">
+      <metrics statements="14" coveredstatements="0" conditionals="10" coveredconditionals="0" methods="2" coveredmethods="0"/>
+      <file name="1790000000000-SeedAdminUser.ts" path="D:\PizzaHot\pizza-hot\src\apps\identity-service\migrations\1790000000000-SeedAdminUser.ts">
+        <metrics statements="14" coveredstatements="0" conditionals="10" coveredconditionals="0" methods="2" coveredmethods="0"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="11" count="0" type="stmt"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="14" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="21" count="0" type="stmt"/>
+        <line num="25" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="26" count="0" type="stmt"/>
+        <line num="29" count="0" type="stmt"/>
+        <line num="31" count="0" type="stmt"/>
+        <line num="39" count="0" type="stmt"/>
+        <line num="41" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="42" count="0" type="stmt"/>
+        <line num="45" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.identity-service.users">
+      <metrics statements="83" coveredstatements="70" conditionals="36" coveredconditionals="31" methods="17" coveredmethods="11"/>
+      <file name="user.schema.ts" path="D:\PizzaHot\pizza-hot\src\apps\identity-service\users\user.schema.ts">
+        <metrics statements="6" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="6" count="2" type="stmt"/>
+        <line num="45" count="2" type="stmt"/>
+        <line num="70" count="2" type="stmt"/>
+        <line num="74" count="2" type="stmt"/>
+        <line num="78" count="2" type="stmt"/>
+        <line num="90" count="0" type="stmt"/>
+      </file>
+      <file name="users.service.ts" path="D:\PizzaHot\pizza-hot\src\apps\identity-service\users\users.service.ts">
+        <metrics statements="77" coveredstatements="65" conditionals="36" coveredconditionals="31" methods="16" coveredmethods="11"/>
+        <line num="29" count="3" type="stmt"/>
+        <line num="30" count="24" type="stmt"/>
+        <line num="34" count="24" type="stmt"/>
+        <line num="36" count="24" type="stmt"/>
+        <line num="38" count="24" type="stmt"/>
+        <line num="42" count="4" type="stmt"/>
+        <line num="46" count="4" type="stmt"/>
+        <line num="47" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="48" count="1" type="stmt"/>
+        <line num="51" count="3" type="stmt"/>
+        <line num="53" count="3" type="stmt"/>
+        <line num="65" count="3" type="stmt"/>
+        <line num="69" count="0" type="stmt"/>
+        <line num="73" count="0" type="stmt"/>
+        <line num="77" count="0" type="stmt"/>
+        <line num="85" count="1" type="stmt"/>
+        <line num="86" count="1" type="stmt"/>
+        <line num="90" count="20" type="stmt"/>
+        <line num="91" count="20" type="cond" truecount="2" falsecount="0"/>
+        <line num="92" count="2" type="stmt"/>
+        <line num="95" count="18" type="stmt"/>
+        <line num="99" count="6" type="stmt"/>
+        <line num="103" count="0" type="stmt"/>
+        <line num="111" count="0" type="stmt"/>
+        <line num="113" count="0" type="stmt"/>
+        <line num="115" count="0" type="stmt"/>
+        <line num="116" count="0" type="stmt"/>
+        <line num="117" count="0" type="stmt"/>
+        <line num="121" count="3" type="stmt"/>
+        <line num="122" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="123" count="1" type="stmt"/>
+        <line num="124" count="1" type="stmt"/>
+        <line num="127" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="128" count="2" type="stmt"/>
+        <line num="129" count="2" type="cond" truecount="3" falsecount="1"/>
+        <line num="130" count="0" type="stmt"/>
+        <line num="134" count="2" type="stmt"/>
+        <line num="136" count="2" type="stmt"/>
+        <line num="137" count="2" type="stmt"/>
+        <line num="141" count="5" type="stmt"/>
+        <line num="143" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="144" count="1" type="stmt"/>
+        <line num="147" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="148" count="1" type="stmt"/>
+        <line num="151" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="152" count="2" type="stmt"/>
+        <line num="153" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="154" count="1" type="stmt"/>
+        <line num="158" count="2" type="stmt"/>
+        <line num="159" count="2" type="stmt"/>
+        <line num="161" count="2" type="stmt"/>
+        <line num="165" count="6" type="stmt"/>
+        <line num="166" count="5" type="stmt"/>
+        <line num="168" count="5" type="stmt"/>
+        <line num="169" count="5" type="stmt"/>
+        <line num="170" count="4" type="cond" truecount="4" falsecount="0"/>
+        <line num="171" count="1" type="stmt"/>
+        <line num="174" count="1" type="stmt"/>
+        <line num="177" count="5" type="stmt"/>
+        <line num="178" count="5" type="cond" truecount="1" falsecount="1"/>
+        <line num="179" count="0" type="stmt"/>
+        <line num="182" count="5" type="stmt"/>
+        <line num="184" count="5" type="stmt"/>
+        <line num="185" count="5" type="stmt"/>
+        <line num="187" count="1" type="stmt"/>
+        <line num="190" count="5" type="stmt"/>
+        <line num="194" count="1" type="stmt"/>
+        <line num="201" count="1" type="stmt"/>
+        <line num="202" count="1" type="stmt"/>
+        <line num="204" count="0" type="stmt"/>
+        <line num="209" count="2" type="stmt"/>
+        <line num="211" count="2" type="stmt"/>
+        <line num="212" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="213" count="1" type="stmt"/>
+        <line num="216" count="1" type="stmt"/>
+        <line num="218" count="1" type="stmt"/>
+        <line num="219" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.identity-service.users.dto">
+      <metrics statements="23" coveredstatements="23" conditionals="16" coveredconditionals="12" methods="3" coveredmethods="3"/>
+      <file name="user-response.dto.ts" path="D:\PizzaHot\pizza-hot\src\apps\identity-service\users\dto\user-response.dto.ts">
+        <metrics statements="23" coveredstatements="23" conditionals="16" coveredconditionals="12" methods="3" coveredmethods="3"/>
+        <line num="8" count="4" type="stmt"/>
+        <line num="11" count="4" type="cond" truecount="3" falsecount="1"/>
+        <line num="14" count="4" type="stmt"/>
+        <line num="17" count="4" type="stmt"/>
+        <line num="20" count="4" type="stmt"/>
+        <line num="23" count="4" type="cond" truecount="3" falsecount="1"/>
+        <line num="26" count="4" type="stmt"/>
+        <line num="29" count="4" type="stmt"/>
+        <line num="32" count="4" type="cond" truecount="3" falsecount="1"/>
+        <line num="35" count="4" type="cond" truecount="3" falsecount="1"/>
+        <line num="38" count="14" type="stmt"/>
+        <line num="39" count="14" type="stmt"/>
+        <line num="40" count="14" type="stmt"/>
+        <line num="41" count="14" type="stmt"/>
+        <line num="42" count="14" type="stmt"/>
+        <line num="43" count="14" type="stmt"/>
+        <line num="44" count="14" type="stmt"/>
+        <line num="45" count="14" type="stmt"/>
+        <line num="46" count="14" type="stmt"/>
+        <line num="47" count="14" type="stmt"/>
+        <line num="48" count="14" type="stmt"/>
+        <line num="49" count="14" type="stmt"/>
+        <line num="53" count="2" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.log-service">
+      <metrics statements="24" coveredstatements="24" conditionals="34" coveredconditionals="29" methods="7" coveredmethods="7"/>
+      <file name="log.controller.ts" path="D:\PizzaHot\pizza-hot\src\apps\log-service\log.controller.ts">
+        <metrics statements="8" coveredstatements="8" conditionals="20" coveredconditionals="16" methods="4" coveredmethods="4"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="14" count="4" type="stmt"/>
+        <line num="16" count="4" type="cond" truecount="3" falsecount="1"/>
+        <line num="19" count="1" type="cond" truecount="6" falsecount="2"/>
+        <line num="20" count="3" type="stmt"/>
+        <line num="21" count="3" type="stmt"/>
+        <line num="33" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="34" count="1" type="stmt"/>
+      </file>
+      <file name="logs.service.ts" path="D:\PizzaHot\pizza-hot\src\apps\log-service\logs.service.ts">
+        <metrics statements="16" coveredstatements="16" conditionals="14" coveredconditionals="13" methods="3" coveredmethods="3"/>
+        <line num="10" count="1" type="stmt"/>
+        <line num="11" count="8" type="cond" truecount="3" falsecount="1"/>
+        <line num="14" count="3" type="stmt"/>
+        <line num="15" count="3" type="stmt"/>
+        <line num="24" count="1" type="stmt"/>
+        <line num="25" count="1" type="stmt"/>
+        <line num="30" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="31" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="32" count="6" type="stmt"/>
+        <line num="34" count="6" type="stmt"/>
+        <line num="35" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="36" count="2" type="stmt"/>
+        <line num="38" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="39" count="1" type="stmt"/>
+        <line num="42" count="6" type="stmt"/>
+        <line num="47" count="6" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.log-service.schemas">
+      <metrics statements="12" coveredstatements="12" conditionals="14" coveredconditionals="10" methods="1" coveredmethods="1"/>
+      <file name="log-query.schema.ts" path="D:\PizzaHot\pizza-hot\src\apps\log-service\schemas\log-query.schema.ts">
+        <metrics statements="2" coveredstatements="2" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
+        <line num="5" count="2" type="stmt"/>
+        <line num="8" count="3" type="cond" truecount="2" falsecount="0"/>
+      </file>
+      <file name="log.schema.ts" path="D:\PizzaHot\pizza-hot\src\apps\log-service\schemas\log.schema.ts">
+        <metrics statements="10" coveredstatements="10" conditionals="12" coveredconditionals="8" methods="0" coveredmethods="0"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="10" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="16" count="1" type="stmt"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="22" count="1" type="cond" truecount="2" falsecount="2"/>
+        <line num="25" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="28" count="1" type="stmt"/>
+        <line num="30" count="1" type="stmt"/>
+        <line num="31" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.notification-service">
+      <metrics statements="28" coveredstatements="11" conditionals="40" coveredconditionals="2" methods="13" coveredmethods="4"/>
+      <file name="notifications.controller.ts" path="D:\PizzaHot\pizza-hot\src\apps\notification-service\notifications.controller.ts">
+        <metrics statements="17" coveredstatements="0" conditionals="38" coveredconditionals="0" methods="9" coveredmethods="0"/>
+        <line num="14" count="0" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="17" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="20" count="0" type="stmt"/>
+        <line num="24" count="0" type="stmt"/>
+        <line num="25" count="0" type="stmt"/>
+        <line num="31" count="0" type="stmt"/>
+        <line num="40" count="0" type="stmt"/>
+        <line num="44" count="0" type="stmt"/>
+        <line num="45" count="0" type="stmt"/>
+        <line num="54" count="0" type="stmt"/>
+        <line num="58" count="0" type="stmt"/>
+        <line num="59" count="0" type="stmt"/>
+        <line num="60" count="0" type="stmt"/>
+        <line num="65" count="0" type="stmt"/>
+        <line num="69" count="0" type="stmt"/>
+        <line num="70" count="0" type="stmt"/>
+      </file>
+      <file name="notifications.service.ts" path="D:\PizzaHot\pizza-hot\src\apps\notification-service\notifications.service.ts">
+        <metrics statements="11" coveredstatements="11" conditionals="2" coveredconditionals="2" methods="4" coveredmethods="4"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="8" count="6" type="stmt"/>
+        <line num="12" count="6" type="stmt"/>
+        <line num="16" count="6" type="stmt"/>
+        <line num="18" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="20" count="1" type="stmt"/>
+        <line num="23" count="4" type="stmt"/>
+        <line num="25" count="5" type="stmt"/>
+        <line num="26" count="5" type="stmt"/>
+        <line num="28" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.notification-service.email">
+      <metrics statements="36" coveredstatements="19" conditionals="35" coveredconditionals="15" methods="7" coveredmethods="4"/>
+      <file name="email.channel.ts" path="D:\PizzaHot\pizza-hot\src\apps\notification-service\email\email.channel.ts">
+        <metrics statements="21" coveredstatements="18" conditionals="21" coveredconditionals="12" methods="4" coveredmethods="4"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="16" count="5" type="stmt"/>
+        <line num="17" count="5" type="stmt"/>
+        <line num="21" count="1" type="stmt"/>
+        <line num="30" count="5" type="cond" truecount="4" falsecount="4"/>
+        <line num="32" count="5" type="stmt"/>
+        <line num="34" count="5" type="cond" truecount="1" falsecount="1"/>
+        <line num="35" count="5" type="cond" truecount="1" falsecount="1"/>
+        <line num="39" count="6" type="stmt"/>
+        <line num="43" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="44" count="2" type="stmt"/>
+        <line num="46" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="47" count="1" type="stmt"/>
+        <line num="48" count="1" type="stmt"/>
+        <line num="51" count="1" type="stmt"/>
+        <line num="58" count="2" type="cond" truecount="2" falsecount="3"/>
+        <line num="60" count="1" type="stmt"/>
+        <line num="62" count="0" type="stmt"/>
+        <line num="64" count="0" type="stmt"/>
+        <line num="66" count="0" type="stmt"/>
+        <line num="68" count="1" type="stmt"/>
+      </file>
+      <file name="email.service.ts" path="D:\PizzaHot\pizza-hot\src\apps\notification-service\email\email.service.ts">
+        <metrics statements="15" coveredstatements="1" conditionals="14" coveredconditionals="3" methods="3" coveredmethods="0"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="7" count="0" type="stmt"/>
+        <line num="11" count="0" type="cond" truecount="3" falsecount="1"/>
+        <line num="12" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="14" count="0" type="stmt"/>
+        <line num="22" count="0" type="stmt"/>
+        <line num="23" count="0" type="stmt"/>
+        <line num="29" count="0" type="stmt"/>
+        <line num="31" count="0" type="stmt"/>
+        <line num="32" count="0" type="stmt"/>
+        <line num="37" count="0" type="stmt"/>
+        <line num="38" count="0" type="stmt"/>
+        <line num="40" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="41" count="0" type="stmt"/>
+        <line num="44" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.notification-service.templates">
+      <metrics statements="16" coveredstatements="9" conditionals="20" coveredconditionals="5" methods="4" coveredmethods="2"/>
+      <file name="account-deleted.template.ts" path="D:\PizzaHot\pizza-hot\src\apps\notification-service\templates\account-deleted.template.ts">
+        <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="4" count="0" type="stmt"/>
+      </file>
+      <file name="account-registered.template.ts" path="D:\PizzaHot\pizza-hot\src\apps\notification-service\templates\account-registered.template.ts">
+        <metrics statements="2" coveredstatements="2" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
+        <line num="7" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="9" count="1" type="stmt"/>
+      </file>
+      <file name="critical-error.template.ts" path="D:\PizzaHot\pizza-hot\src\apps\notification-service\templates\critical-error.template.ts">
+        <metrics statements="6" coveredstatements="0" conditionals="12" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="4" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="6" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="8" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="10" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="13" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="17" count="0" type="stmt"/>
+      </file>
+      <file name="email-verification.template.ts" path="D:\PizzaHot\pizza-hot\src\apps\notification-service\templates\email-verification.template.ts">
+        <metrics statements="7" coveredstatements="7" conditionals="6" coveredconditionals="4" methods="1" coveredmethods="1"/>
+        <line num="7" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="8" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="9" count="2" type="stmt"/>
+        <line num="10" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="11" count="2" type="stmt"/>
+        <line num="12" count="2" type="stmt"/>
+        <line num="14" count="2" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.order-service">
+      <metrics statements="103" coveredstatements="99" conditionals="102" coveredconditionals="87" methods="26" coveredmethods="25"/>
+      <file name="order.controller.ts" path="D:\PizzaHot\pizza-hot\src\apps\order-service\order.controller.ts">
+        <metrics statements="27" coveredstatements="27" conditionals="58" coveredconditionals="46" methods="10" coveredmethods="10"/>
+        <line num="18" count="1" type="stmt"/>
+        <line num="19" count="10" type="stmt"/>
+        <line num="22" count="10" type="cond" truecount="3" falsecount="1"/>
+        <line num="24" count="10" type="stmt"/>
+        <line num="26" count="10" type="stmt"/>
+        <line num="30" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="31" count="1" type="stmt"/>
+        <line num="35" count="1" type="stmt"/>
+        <line num="38" count="2" type="cond" truecount="4" falsecount="0"/>
+        <line num="42" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="43" count="1" type="stmt"/>
+        <line num="47" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="48" count="1" type="stmt"/>
+        <line num="52" count="1" type="stmt"/>
+        <line num="55" count="1" type="stmt"/>
+        <line num="63" count="1" type="stmt"/>
+        <line num="66" count="1" type="cond" truecount="4" falsecount="0"/>
+        <line num="70" count="1" type="stmt"/>
+        <line num="73" count="3" type="stmt"/>
+        <line num="74" count="3" type="stmt"/>
+        <line num="76" count="3" type="stmt"/>
+        <line num="82" count="3" type="stmt"/>
+        <line num="84" count="3" type="stmt"/>
+        <line num="88" count="1" type="stmt"/>
+        <line num="92" count="2" type="stmt"/>
+        <line num="93" count="2" type="stmt"/>
+        <line num="94" count="1" type="stmt"/>
+      </file>
+      <file name="order.schema.ts" path="D:\PizzaHot\pizza-hot\src\apps\order-service\order.schema.ts">
+        <metrics statements="7" coveredstatements="7" conditionals="4" coveredconditionals="4" methods="2" coveredmethods="2"/>
+        <line num="7" count="2" type="stmt"/>
+        <line num="31" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="32" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="34" count="1" type="stmt"/>
+        <line num="42" count="2" type="stmt"/>
+        <line num="44" count="14" type="stmt"/>
+        <line num="48" count="2" type="stmt"/>
+      </file>
+      <file name="orders.service.ts" path="D:\PizzaHot\pizza-hot\src\apps\order-service\orders.service.ts">
+        <metrics statements="69" coveredstatements="65" conditionals="40" coveredconditionals="37" methods="14" coveredmethods="13"/>
+        <line num="30" count="2" type="stmt"/>
+        <line num="31" count="23" type="stmt"/>
+        <line num="35" count="23" type="stmt"/>
+        <line num="37" count="23" type="stmt"/>
+        <line num="39" count="23" type="stmt"/>
+        <line num="41" count="23" type="stmt"/>
+        <line num="43" count="23" type="stmt"/>
+        <line num="45" count="23" type="stmt"/>
+        <line num="49" count="13" type="stmt"/>
+        <line num="53" count="13" type="cond" truecount="2" falsecount="0"/>
+        <line num="54" count="1" type="stmt"/>
+        <line num="57" count="12" type="cond" truecount="2" falsecount="0"/>
+        <line num="58" count="1" type="stmt"/>
+        <line num="61" count="11" type="stmt"/>
+        <line num="62" count="11" type="cond" truecount="2" falsecount="0"/>
+        <line num="63" count="1" type="stmt"/>
+        <line num="67" count="10" type="stmt"/>
+        <line num="68" count="10" type="stmt"/>
+        <line num="71" count="10" type="stmt"/>
+        <line num="73" count="10" type="stmt"/>
+        <line num="74" count="10" type="stmt"/>
+        <line num="76" count="10" type="cond" truecount="4" falsecount="0"/>
+        <line num="77" count="2" type="stmt"/>
+        <line num="80" count="8" type="stmt"/>
+        <line num="88" count="8" type="stmt"/>
+        <line num="90" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="91" count="3" type="stmt"/>
+        <line num="97" count="7" type="stmt"/>
+        <line num="98" count="7" type="stmt"/>
+        <line num="113" count="7" type="stmt"/>
+        <line num="114" count="7" type="stmt"/>
+        <line num="128" count="7" type="stmt"/>
+        <line num="130" count="6" type="stmt"/>
+        <line num="131" count="6" type="stmt"/>
+        <line num="134" count="6" type="stmt"/>
+        <line num="136" count="1" type="stmt"/>
+        <line num="142" count="1" type="stmt"/>
+        <line num="144" count="1" type="stmt"/>
+        <line num="148" count="1" type="stmt"/>
+        <line num="151" count="6" type="stmt"/>
+        <line num="159" count="6" type="stmt"/>
+        <line num="168" count="6" type="stmt"/>
+        <line num="170" count="6" type="stmt"/>
+        <line num="172" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="173" count="1" type="stmt"/>
+        <line num="176" count="5" type="stmt"/>
+        <line num="180" count="5" type="stmt"/>
+        <line num="188" count="2" type="stmt"/>
+        <line num="194" count="2" type="stmt"/>
+        <line num="195" count="1" type="stmt"/>
+        <line num="203" count="3" type="stmt"/>
+        <line num="205" count="3" type="cond" truecount="4" falsecount="0"/>
+        <line num="206" count="2" type="stmt"/>
+        <line num="209" count="1" type="stmt"/>
+        <line num="213" count="0" type="stmt"/>
+        <line num="215" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="216" count="0" type="stmt"/>
+        <line num="219" count="0" type="stmt"/>
+        <line num="223" count="1" type="stmt"/>
+        <line num="225" count="1" type="stmt"/>
+        <line num="229" count="3" type="stmt"/>
+        <line num="231" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="232" count="1" type="stmt"/>
+        <line num="235" count="2" type="stmt"/>
+        <line num="237" count="2" type="stmt"/>
+        <line num="239" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="240" count="1" type="stmt"/>
+        <line num="243" count="1" type="stmt"/>
+        <line num="245" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.order-service.dto">
+      <metrics statements="33" coveredstatements="33" conditionals="30" coveredconditionals="23" methods="4" coveredmethods="3"/>
+      <file name="order-response.dto.ts" path="D:\PizzaHot\pizza-hot\src\apps\order-service\dto\order-response.dto.ts">
+        <metrics statements="33" coveredstatements="33" conditionals="30" coveredconditionals="23" methods="4" coveredmethods="3"/>
+        <line num="13" count="3" type="stmt"/>
+        <line num="20" count="3" type="stmt"/>
+        <line num="27" count="3" type="stmt"/>
+        <line num="34" count="3" type="stmt"/>
+        <line num="40" count="3" type="stmt"/>
+        <line num="47" count="3" type="cond" truecount="3" falsecount="1"/>
+        <line num="54" count="3" type="cond" truecount="3" falsecount="1"/>
+        <line num="60" count="3" type="stmt"/>
+        <line num="67" count="3" type="stmt"/>
+        <line num="73" count="3" type="stmt"/>
+        <line num="81" count="3" type="cond" truecount="3" falsecount="1"/>
+        <line num="88" count="3" type="stmt"/>
+        <line num="94" count="3" type="stmt"/>
+        <line num="100" count="3" type="cond" truecount="3" falsecount="1"/>
+        <line num="106" count="3" type="cond" truecount="3" falsecount="1"/>
+        <line num="109" count="9" type="stmt"/>
+        <line num="110" count="9" type="stmt"/>
+        <line num="111" count="9" type="stmt"/>
+        <line num="112" count="9" type="stmt"/>
+        <line num="113" count="9" type="cond" truecount="2" falsecount="0"/>
+        <line num="114" count="9" type="stmt"/>
+        <line num="115" count="9" type="stmt"/>
+        <line num="116" count="9" type="stmt"/>
+        <line num="117" count="9" type="stmt"/>
+        <line num="118" count="9" type="stmt"/>
+        <line num="122" count="9" type="stmt"/>
+        <line num="123" count="9" type="stmt"/>
+        <line num="124" count="9" type="cond" truecount="2" falsecount="0"/>
+        <line num="125" count="9" type="cond" truecount="1" falsecount="1"/>
+        <line num="126" count="9" type="stmt"/>
+        <line num="127" count="9" type="stmt"/>
+        <line num="128" count="9" type="stmt"/>
+        <line num="132" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.order-service.order-items">
+      <metrics statements="14" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+      <file name="order-item-response.dto.ts" path="D:\PizzaHot\pizza-hot\src\apps\order-service\order-items\order-item-response.dto.ts">
+        <metrics statements="14" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="9" count="3" type="stmt"/>
+        <line num="15" count="3" type="stmt"/>
+        <line num="21" count="3" type="stmt"/>
+        <line num="27" count="3" type="stmt"/>
+        <line num="33" count="3" type="stmt"/>
+        <line num="40" count="3" type="stmt"/>
+        <line num="43" count="0" type="stmt"/>
+        <line num="44" count="0" type="stmt"/>
+        <line num="45" count="0" type="stmt"/>
+        <line num="46" count="0" type="stmt"/>
+        <line num="47" count="0" type="stmt"/>
+        <line num="48" count="0" type="stmt"/>
+        <line num="49" count="0" type="stmt"/>
+        <line num="50" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.promocode-service">
+      <metrics statements="94" coveredstatements="93" conditionals="96" coveredconditionals="81" methods="29" coveredmethods="28"/>
+      <file name="promocode.controller.ts" path="D:\PizzaHot\pizza-hot\src\apps\promocode-service\promocode.controller.ts">
+        <metrics statements="39" coveredstatements="39" conditionals="64" coveredconditionals="49" methods="15" coveredmethods="15"/>
+        <line num="19" count="3" type="stmt"/>
+        <line num="29" count="1" type="stmt"/>
+        <line num="30" count="13" type="stmt"/>
+        <line num="33" count="13" type="cond" truecount="6" falsecount="2"/>
+        <line num="34" count="13" type="stmt"/>
+        <line num="38" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="39" count="1" type="stmt"/>
+        <line num="43" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="44" count="1" type="stmt"/>
+        <line num="48" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="49" count="1" type="stmt"/>
+        <line num="53" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="54" count="1" type="stmt"/>
+        <line num="58" count="1" type="stmt"/>
+        <line num="61" count="1" type="stmt"/>
+        <line num="65" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="66" count="1" type="stmt"/>
+        <line num="67" count="1" type="stmt"/>
+        <line num="71" count="1" type="cond" truecount="3" falsecount="1"/>
+        <line num="72" count="1" type="stmt"/>
+        <line num="76" count="1" type="stmt"/>
+        <line num="79" count="2" type="stmt"/>
+        <line num="80" count="2" type="stmt"/>
+        <line num="81" count="2" type="stmt"/>
+        <line num="82" count="2" type="stmt"/>
+        <line num="86" count="1" type="stmt"/>
+        <line num="89" count="2" type="stmt"/>
+        <line num="90" count="2" type="stmt"/>
+        <line num="91" count="1" type="stmt"/>
+        <line num="92" count="1" type="stmt"/>
+        <line num="96" count="1" type="stmt"/>
+        <line num="100" count="3" type="stmt"/>
+        <line num="101" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="102" count="2" type="stmt"/>
+        <line num="108" count="1" type="stmt"/>
+        <line num="112" count="2" type="stmt"/>
+        <line num="113" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="114" count="1" type="stmt"/>
+        <line num="115" count="1" type="stmt"/>
+      </file>
+      <file name="promocode.schema.ts" path="D:\PizzaHot\pizza-hot\src\apps\promocode-service\promocode.schema.ts">
+        <metrics statements="7" coveredstatements="7" conditionals="6" coveredconditionals="6" methods="3" coveredmethods="3"/>
+        <line num="4" count="2" type="stmt"/>
+        <line num="17" count="9" type="stmt"/>
+        <line num="26" count="7" type="cond" truecount="4" falsecount="0"/>
+        <line num="27" count="1" type="stmt"/>
+        <line num="29" count="6" type="stmt"/>
+        <line num="44" count="2" type="stmt"/>
+        <line num="60" count="3" type="cond" truecount="2" falsecount="0"/>
+      </file>
+      <file name="promocodes.service.ts" path="D:\PizzaHot\pizza-hot\src\apps\promocode-service\promocodes.service.ts">
+        <metrics statements="48" coveredstatements="47" conditionals="26" coveredconditionals="26" methods="11" coveredmethods="10"/>
+        <line num="21" count="2" type="stmt"/>
+        <line num="22" count="22" type="stmt"/>
+        <line num="26" count="22" type="stmt"/>
+        <line num="28" count="22" type="stmt"/>
+        <line num="32" count="4" type="stmt"/>
+        <line num="33" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="34" count="1" type="stmt"/>
+        <line num="37" count="3" type="cond" truecount="4" falsecount="0"/>
+        <line num="38" count="1" type="stmt"/>
+        <line num="41" count="2" type="stmt"/>
+        <line num="42" count="2" type="stmt"/>
+        <line num="43" count="2" type="stmt"/>
+        <line num="44" count="2" type="stmt"/>
+        <line num="48" count="1" type="stmt"/>
+        <line num="52" count="12" type="stmt"/>
+        <line num="53" count="12" type="cond" truecount="2" falsecount="0"/>
+        <line num="54" count="1" type="stmt"/>
+        <line num="56" count="11" type="stmt"/>
+        <line num="60" count="0" type="stmt"/>
+        <line num="64" count="2" type="stmt"/>
+        <line num="65" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="66" count="1" type="stmt"/>
+        <line num="68" count="1" type="stmt"/>
+        <line num="72" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="73" count="1" type="stmt"/>
+        <line num="82" count="7" type="stmt"/>
+        <line num="84" count="6" type="stmt"/>
+        <line num="85" count="6" type="cond" truecount="4" falsecount="0"/>
+        <line num="86" count="1" type="stmt"/>
+        <line num="89" count="5" type="cond" truecount="4" falsecount="0"/>
+        <line num="90" count="1" type="stmt"/>
+        <line num="93" count="4" type="stmt"/>
+        <line num="94" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="95" count="1" type="stmt"/>
+        <line num="97" count="3" type="stmt"/>
+        <line num="101" count="3" type="stmt"/>
+        <line num="102" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="103" count="1" type="stmt"/>
+        <line num="106" count="2" type="stmt"/>
+        <line num="108" count="2" type="stmt"/>
+        <line num="109" count="2" type="stmt"/>
+        <line num="111" count="1" type="stmt"/>
+        <line num="114" count="2" type="stmt"/>
+        <line num="118" count="2" type="stmt"/>
+        <line num="119" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="120" count="1" type="stmt"/>
+        <line num="122" count="1" type="stmt"/>
+        <line num="126" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.promocode-service.dto">
+      <metrics statements="19" coveredstatements="19" conditionals="22" coveredconditionals="17" methods="3" coveredmethods="3"/>
+      <file name="promocode-response.dto.ts" path="D:\PizzaHot\pizza-hot\src\apps\promocode-service\dto\promocode-response.dto.ts">
+        <metrics statements="19" coveredstatements="19" conditionals="22" coveredconditionals="17" methods="3" coveredmethods="3"/>
+        <line num="10" count="3" type="stmt"/>
+        <line num="16" count="3" type="stmt"/>
+        <line num="22" count="3" type="stmt"/>
+        <line num="28" count="3" type="cond" truecount="3" falsecount="1"/>
+        <line num="35" count="3" type="cond" truecount="3" falsecount="1"/>
+        <line num="41" count="3" type="cond" truecount="3" falsecount="1"/>
+        <line num="47" count="3" type="cond" truecount="3" falsecount="1"/>
+        <line num="53" count="3" type="cond" truecount="3" falsecount="1"/>
+        <line num="56" count="5" type="stmt"/>
+        <line num="57" count="5" type="stmt"/>
+        <line num="58" count="5" type="stmt"/>
+        <line num="59" count="5" type="stmt"/>
+        <line num="60" count="5" type="stmt"/>
+        <line num="61" count="5" type="stmt"/>
+        <line num="62" count="5" type="stmt"/>
+        <line num="63" count="5" type="stmt"/>
+        <line num="64" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="65" count="5" type="stmt"/>
+        <line num="69" count="2" type="stmt"/>
+      </file>
+    </package>
+    <package name="apps.promocode-service.redemptions">
+      <metrics statements="21" coveredstatements="21" conditionals="12" coveredconditionals="11" methods="7" coveredmethods="7"/>
+      <file name="redemptions.service.ts" path="D:\PizzaHot\pizza-hot\src\apps\promocode-service\redemptions\redemptions.service.ts">
+        <metrics statements="21" coveredstatements="21" conditionals="12" coveredconditionals="11" methods="7" coveredmethods="7"/>
+        <line num="6" count="2" type="stmt"/>
+        <line num="9" count="2" type="stmt"/>
+        <line num="10" count="9" type="stmt"/>
+        <line num="14" count="9" type="stmt"/>
+        <line num="18" count="4" type="stmt"/>
+        <line num="19" count="4" type="stmt"/>
+        <line num="23" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="24" count="1" type="stmt"/>
+        <line num="29" count="2" type="stmt"/>
+        <line num="31" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="32" count="1" type="stmt"/>
+        <line num="37" count="1" type="stmt"/>
+        <line num="41" count="1" type="stmt"/>
+        <line num="45" count="2" type="cond" truecount="3" falsecount="1"/>
+        <line num="46" count="4" type="stmt"/>
+        <line num="47" count="4" type="stmt"/>
+        <line num="51" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="52" count="1" type="stmt"/>
+        <line num="55" count="2" type="stmt"/>
+        <line num="57" count="2" type="stmt"/>
+        <line num="61" count="2" type="stmt"/>
+      </file>
+    </package>
+    <package name="libs.auth">
+      <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="jwt-payload.schema.ts" path="D:\PizzaHot\pizza-hot\src\libs\auth\jwt-payload.schema.ts">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="4" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="libs.auth.decorators">
+      <metrics statements="6" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="2"/>
+      <file name="can.decorator.ts" path="D:\PizzaHot\pizza-hot\src\libs\auth\decorators\can.decorator.ts">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="4" count="3" type="stmt"/>
+        <line num="6" count="48" type="stmt"/>
+      </file>
+      <file name="current-user.decorator.ts" path="D:\PizzaHot\pizza-hot\src\libs\auth\decorators\current-user.decorator.ts">
+        <metrics statements="3" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="4" count="2" type="stmt"/>
+        <line num="6" count="0" type="stmt"/>
+        <line num="7" count="0" type="stmt"/>
+      </file>
+      <file name="public.decorator.ts" path="D:\PizzaHot\pizza-hot\src\libs\auth\decorators\public.decorator.ts">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="4" count="5" type="stmt"/>
+      </file>
+    </package>
+    <package name="libs.auth.guards">
+      <metrics statements="55" coveredstatements="54" conditionals="44" coveredconditionals="37" methods="11" coveredmethods="11"/>
+      <file name="email-verified.guard.ts" path="D:\PizzaHot\pizza-hot\src\libs\auth\guards\email-verified.guard.ts">
+        <metrics statements="17" coveredstatements="16" conditionals="10" coveredconditionals="7" methods="2" coveredmethods="2"/>
+        <line num="16" count="2" type="stmt"/>
+        <line num="17" count="4" type="stmt"/>
+        <line num="21" count="4" type="stmt"/>
+        <line num="25" count="4" type="stmt"/>
+        <line num="27" count="4" type="stmt"/>
+        <line num="29" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="30" count="1" type="stmt"/>
+        <line num="33" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="34" count="1" type="stmt"/>
+        <line num="37" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="38" count="2" type="stmt"/>
+        <line num="39" count="2" type="stmt"/>
+        <line num="45" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="46" count="1" type="stmt"/>
+        <line num="47" count="1" type="stmt"/>
+        <line num="50" count="0" type="stmt"/>
+        <line num="57" count="1" type="stmt"/>
+      </file>
+      <file name="jwt-auth.guard.ts" path="D:\PizzaHot\pizza-hot\src\libs\auth\guards\jwt-auth.guard.ts">
+        <metrics statements="25" coveredstatements="25" conditionals="20" coveredconditionals="18" methods="6" coveredmethods="6"/>
+        <line num="20" count="1" type="stmt"/>
+        <line num="21" count="12" type="stmt"/>
+        <line num="24" count="12" type="cond" truecount="6" falsecount="2"/>
+        <line num="25" count="12" type="stmt"/>
+        <line num="29" count="12" type="stmt"/>
+        <line num="34" count="12" type="cond" truecount="2" falsecount="0"/>
+        <line num="35" count="1" type="stmt"/>
+        <line num="38" count="11" type="stmt"/>
+        <line num="39" count="11" type="stmt"/>
+        <line num="41" count="11" type="cond" truecount="2" falsecount="0"/>
+        <line num="42" count="2" type="stmt"/>
+        <line num="46" count="9" type="stmt"/>
+        <line num="47" count="9" type="stmt"/>
+        <line num="49" count="1" type="stmt"/>
+        <line num="52" count="8" type="stmt"/>
+        <line num="54" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="55" count="4" type="stmt"/>
+        <line num="56" count="4" type="stmt"/>
+        <line num="57" count="4" type="stmt"/>
+        <line num="60" count="4" type="stmt"/>
+        <line num="62" count="4" type="stmt"/>
+        <line num="66" count="11" type="cond" truecount="2" falsecount="0"/>
+        <line num="70" count="11" type="stmt"/>
+        <line num="74" count="9" type="cond" truecount="2" falsecount="0"/>
+        <line num="75" count="9" type="cond" truecount="2" falsecount="0"/>
+      </file>
+      <file name="permissions.guard.ts" path="D:\PizzaHot\pizza-hot\src\libs\auth\guards\permissions.guard.ts">
+        <metrics statements="13" coveredstatements="13" conditionals="14" coveredconditionals="12" methods="3" coveredmethods="3"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="9" count="6" type="cond" truecount="3" falsecount="1"/>
+        <line num="12" count="6" type="stmt"/>
+        <line num="17" count="6" type="cond" truecount="4" falsecount="0"/>
+        <line num="18" count="2" type="stmt"/>
+        <line num="21" count="4" type="stmt"/>
+        <line num="22" count="4" type="stmt"/>
+        <line num="24" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="25" count="1" type="stmt"/>
+        <line num="28" count="3" type="cond" truecount="1" falsecount="1"/>
+        <line num="30" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="31" count="1" type="stmt"/>
+        <line num="34" count="2" type="stmt"/>
+      </file>
+    </package>
+    <package name="libs.database">
+      <metrics statements="14" coveredstatements="14" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
+      <file name="check-in.util.ts" path="D:\PizzaHot\pizza-hot\src\libs\database\check-in.util.ts">
+        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
+        <line num="2" count="8" type="stmt"/>
+        <line num="3" count="3" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
+      </file>
+      <file name="tokens.ts" path="D:\PizzaHot\pizza-hot\src\libs\database\tokens.ts">
+        <metrics statements="11" coveredstatements="11" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="16" type="stmt"/>
+        <line num="2" count="16" type="stmt"/>
+        <line num="3" count="16" type="stmt"/>
+        <line num="4" count="16" type="stmt"/>
+        <line num="5" count="16" type="stmt"/>
+        <line num="6" count="16" type="stmt"/>
+        <line num="7" count="16" type="stmt"/>
+        <line num="8" count="16" type="stmt"/>
+        <line num="9" count="16" type="stmt"/>
+        <line num="10" count="16" type="stmt"/>
+        <line num="11" count="16" type="stmt"/>
+      </file>
+    </package>
+    <package name="libs.logging">
+      <metrics statements="108" coveredstatements="100" conditionals="85" coveredconditionals="66" methods="14" coveredmethods="14"/>
+      <file name="critical-error.filter.ts" path="D:\PizzaHot\pizza-hot\src\libs\logging\critical-error.filter.ts">
+        <metrics statements="44" coveredstatements="38" conditionals="38" coveredconditionals="27" methods="2" coveredmethods="2"/>
+        <line num="20" count="1" type="stmt"/>
+        <line num="21" count="4" type="stmt"/>
+        <line num="25" count="4" type="stmt"/>
+        <line num="29" count="4" type="stmt"/>
+        <line num="30" count="4" type="stmt"/>
+        <line num="31" count="4" type="stmt"/>
+        <line num="34" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="36" count="4" type="stmt"/>
+        <line num="37" count="4" type="stmt"/>
+        <line num="39" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="40" count="3" type="stmt"/>
+        <line num="41" count="3" type="stmt"/>
+        <line num="42" count="3" type="cond" truecount="1" falsecount="1"/>
+        <line num="43" count="0" type="stmt"/>
+        <line num="44" count="3" type="cond" truecount="3" falsecount="1"/>
+        <line num="45" count="3" type="stmt"/>
+        <line num="46" count="3" type="cond" truecount="1" falsecount="1"/>
+        <line num="47" count="0" type="stmt"/>
+        <line num="48" count="3" type="cond" truecount="1" falsecount="1"/>
+        <line num="49" count="3" type="stmt"/>
+        <line num="51" count="0" type="stmt"/>
+        <line num="54" count="0" type="stmt"/>
+        <line num="56" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="57" count="1" type="stmt"/>
+        <line num="58" count="1" type="stmt"/>
+        <line num="61" count="4" type="stmt"/>
+        <line num="63" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="64" count="2" type="stmt"/>
+        <line num="73" count="2" type="stmt"/>
+        <line num="74" count="2" type="stmt"/>
+        <line num="76" count="0" type="stmt"/>
+        <line num="80" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="81" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="82" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="84" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="85" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="86" count="4" type="stmt"/>
+        <line num="88" count="4" type="stmt"/>
+        <line num="101" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="102" count="3" type="stmt"/>
+        <line num="104" count="3" type="cond" truecount="3" falsecount="1"/>
+        <line num="105" count="3" type="stmt"/>
+        <line num="107" count="0" type="stmt"/>
+        <line num="115" count="1" type="stmt"/>
+      </file>
+      <file name="http-logging.interceptor.ts" path="D:\PizzaHot\pizza-hot\src\libs\logging\http-logging.interceptor.ts">
+        <metrics statements="23" coveredstatements="23" conditionals="10" coveredconditionals="8" methods="4" coveredmethods="4"/>
+        <line num="16" count="1" type="stmt"/>
+        <line num="17" count="7" type="stmt"/>
+        <line num="20" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="21" count="1" type="stmt"/>
+        <line num="24" count="6" type="stmt"/>
+        <line num="25" count="6" type="stmt"/>
+        <line num="26" count="6" type="stmt"/>
+        <line num="28" count="6" type="stmt"/>
+        <line num="29" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="30" count="6" type="stmt"/>
+        <line num="31" count="6" type="stmt"/>
+        <line num="33" count="6" type="stmt"/>
+        <line num="35" count="3" type="stmt"/>
+        <line num="36" count="3" type="stmt"/>
+        <line num="38" count="3" type="stmt"/>
+        <line num="52" count="3" type="stmt"/>
+        <line num="54" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="56" count="3" type="cond" truecount="1" falsecount="1"/>
+        <line num="57" count="3" type="cond" truecount="1" falsecount="1"/>
+        <line num="59" count="3" type="stmt"/>
+        <line num="70" count="3" type="stmt"/>
+        <line num="71" count="3" type="stmt"/>
+        <line num="73" count="3" type="stmt"/>
+      </file>
+      <file name="rmq-logger.service.ts" path="D:\PizzaHot\pizza-hot\src\libs\logging\rmq-logger.service.ts">
+        <metrics statements="41" coveredstatements="39" conditionals="37" coveredconditionals="31" methods="8" coveredmethods="8"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="10" count="13" type="cond" truecount="2" falsecount="0"/>
+        <line num="12" count="13" type="stmt"/>
+        <line num="13" count="13" type="stmt"/>
+        <line num="17" count="9" type="stmt"/>
+        <line num="18" count="9" type="stmt"/>
+        <line num="22" count="3" type="stmt"/>
+        <line num="23" count="3" type="stmt"/>
+        <line num="27" count="12" type="cond" truecount="2" falsecount="0"/>
+        <line num="28" count="1" type="stmt"/>
+        <line num="31" count="11" type="stmt"/>
+        <line num="32" count="11" type="stmt"/>
+        <line num="33" count="11" type="stmt"/>
+        <line num="34" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="36" count="11" type="stmt"/>
+        <line num="38" count="11" type="stmt"/>
+        <line num="48" count="11" type="stmt"/>
+        <line num="50" count="1" type="stmt"/>
+        <line num="59" count="11" type="stmt"/>
+        <line num="63" count="11" type="cond" truecount="2" falsecount="0"/>
+        <line num="64" count="1" type="stmt"/>
+        <line num="65" count="1" type="stmt"/>
+        <line num="66" count="10" type="cond" truecount="4" falsecount="0"/>
+        <line num="67" count="3" type="stmt"/>
+        <line num="68" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="69" count="2" type="stmt"/>
+        <line num="70" count="2" type="stmt"/>
+        <line num="71" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="73" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="76" count="7" type="stmt"/>
+        <line num="79" count="11" type="cond" truecount="4" falsecount="0"/>
+        <line num="80" count="2" type="stmt"/>
+        <line num="81" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="85" count="11" type="stmt"/>
+        <line num="89" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="90" count="5" type="stmt"/>
+        <line num="92" count="2" type="cond" truecount="3" falsecount="1"/>
+        <line num="93" count="0" type="stmt"/>
+        <line num="95" count="2" type="cond" truecount="3" falsecount="2"/>
+        <line num="96" count="2" type="stmt"/>
+        <line num="98" count="0" type="cond" truecount="0" falsecount="2"/>
+      </file>
+    </package>
+    <package name="libs.messaging">
+      <metrics statements="54" coveredstatements="43" conditionals="40" coveredconditionals="35" methods="12" coveredmethods="9"/>
+      <file name="ack.ts" path="D:\PizzaHot\pizza-hot\src\libs\messaging\ack.ts">
+        <metrics statements="7" coveredstatements="7" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
+        <line num="10" count="28" type="stmt"/>
+        <line num="14" count="28" type="stmt"/>
+        <line num="16" count="28" type="stmt"/>
+        <line num="17" count="28" type="stmt"/>
+        <line num="18" count="19" type="stmt"/>
+        <line num="20" count="9" type="stmt"/>
+        <line num="24" count="9" type="stmt"/>
+      </file>
+      <file name="bootstrap.ts" path="D:\PizzaHot\pizza-hot\src\libs\messaging\bootstrap.ts">
+        <metrics statements="7" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="13" count="0" type="stmt"/>
+        <line num="18" count="0" type="stmt"/>
+        <line num="19" count="0" type="stmt"/>
+        <line num="20" count="0" type="stmt"/>
+        <line num="21" count="0" type="stmt"/>
+        <line num="23" count="0" type="stmt"/>
+        <line num="24" count="0" type="stmt"/>
+      </file>
+      <file name="rmq.config.ts" path="D:\PizzaHot\pizza-hot\src\libs\messaging\rmq.config.ts">
+        <metrics statements="4" coveredstatements="0" conditionals="3" coveredconditionals="0" methods="2" coveredmethods="0"/>
+        <line num="3" count="0" type="stmt"/>
+        <line num="5" count="0" type="stmt"/>
+        <line num="19" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="23" count="0" type="stmt"/>
+      </file>
+      <file name="rpc-ack.interceptor.ts" path="D:\PizzaHot\pizza-hot\src\libs\messaging\rpc-ack.interceptor.ts">
+        <metrics statements="13" coveredstatements="13" conditionals="4" coveredconditionals="4" methods="2" coveredmethods="2"/>
+        <line num="20" count="1" type="stmt"/>
+        <line num="21" count="5" type="stmt"/>
+        <line num="24" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="25" count="1" type="stmt"/>
+        <line num="28" count="4" type="stmt"/>
+        <line num="29" count="4" type="stmt"/>
+        <line num="31" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="32" count="1" type="stmt"/>
+        <line num="35" count="3" type="stmt"/>
+        <line num="37" count="3" type="stmt"/>
+        <line num="39" count="3" type="stmt"/>
+        <line num="40" count="3" type="stmt"/>
+        <line num="42" count="1" type="stmt"/>
+      </file>
+      <file name="rpc-error.ts" path="D:\PizzaHot\pizza-hot\src\libs\messaging\rpc-error.ts">
+        <metrics statements="12" coveredstatements="12" conditionals="22" coveredconditionals="20" methods="3" coveredmethods="3"/>
+        <line num="11" count="15" type="stmt"/>
+        <line num="20" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="21" count="4" type="stmt"/>
+        <line num="23" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="27" count="4" type="stmt"/>
+        <line num="35" count="4" type="stmt"/>
+        <line num="44" count="9" type="cond" truecount="2" falsecount="0"/>
+        <line num="45" count="4" type="stmt"/>
+        <line num="48" count="5" type="cond" truecount="1" falsecount="1"/>
+        <line num="49" count="5" type="cond" truecount="4" falsecount="0"/>
+        <line num="50" count="3" type="stmt"/>
+        <line num="56" count="2" type="stmt"/>
+      </file>
+      <file name="rpc-exception.filter.ts" path="D:\PizzaHot\pizza-hot\src\libs\messaging\rpc-exception.filter.ts">
+        <metrics statements="6" coveredstatements="6" conditionals="6" coveredconditionals="6" methods="2" coveredmethods="2"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="7" count="3" type="stmt"/>
+        <line num="10" count="3" type="stmt"/>
+        <line num="12" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="13" count="2" type="stmt"/>
+        <line num="19" count="3" type="stmt"/>
+      </file>
+      <file name="rpc.util.ts" path="D:\PizzaHot\pizza-hot\src\libs\messaging\rpc.util.ts">
+        <metrics statements="5" coveredstatements="5" conditionals="3" coveredconditionals="3" methods="1" coveredmethods="1"/>
+        <line num="5" count="9" type="cond" truecount="2" falsecount="0"/>
+        <line num="8" count="74" type="stmt"/>
+        <line num="9" count="74" type="stmt"/>
+        <line num="11" count="69" type="stmt"/>
+        <line num="13" count="5" type="stmt"/>
+      </file>
+    </package>
+    <package name="libs.mocks">
+      <metrics statements="16" coveredstatements="16" conditionals="0" coveredconditionals="0" methods="13" coveredmethods="13"/>
+      <file name="http-context.mock.ts" path="D:\PizzaHot\pizza-hot\src\libs\mocks\http-context.mock.ts">
+        <metrics statements="16" coveredstatements="16" conditionals="0" coveredconditionals="0" methods="13" coveredmethods="13"/>
+        <line num="6" count="8" type="stmt"/>
+        <line num="13" count="17" type="stmt"/>
+        <line num="14" count="17" type="stmt"/>
+        <line num="16" count="17" type="stmt"/>
+        <line num="17" count="9" type="stmt"/>
+        <line num="18" count="5" type="stmt"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="22" count="17" type="stmt"/>
+        <line num="23" count="11" type="stmt"/>
+        <line num="24" count="1" type="stmt"/>
+        <line num="25" count="1" type="stmt"/>
+        <line num="26" count="1" type="stmt"/>
+        <line num="27" count="1" type="stmt"/>
+        <line num="28" count="1" type="stmt"/>
+        <line num="29" count="1" type="stmt"/>
+        <line num="30" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="libs.pagination">
+      <metrics statements="11" coveredstatements="11" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <file name="paginated-response.dto.ts" path="D:\PizzaHot\pizza-hot\src\libs\pagination\paginated-response.dto.ts">
+        <metrics statements="10" coveredstatements="10" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="5" count="7" type="stmt"/>
+        <line num="8" count="7" type="stmt"/>
+        <line num="11" count="7" type="stmt"/>
+        <line num="14" count="7" type="stmt"/>
+        <line num="17" count="7" type="stmt"/>
+        <line num="20" count="16" type="stmt"/>
+        <line num="21" count="16" type="stmt"/>
+        <line num="22" count="16" type="stmt"/>
+        <line num="23" count="16" type="stmt"/>
+        <line num="24" count="16" type="stmt"/>
+      </file>
+      <file name="pagination.schema.ts" path="D:\PizzaHot\pizza-hot\src\libs\pagination\pagination.schema.ts">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="3" count="3" type="stmt"/>
+      </file>
+    </package>
+    <package name="libs.price-calculation">
+      <metrics statements="21" coveredstatements="20" conditionals="20" coveredconditionals="15" methods="6" coveredmethods="6"/>
+      <file name="price-calculation.ts" path="D:\PizzaHot\pizza-hot\src\libs\price-calculation\price-calculation.ts">
+        <metrics statements="21" coveredstatements="20" conditionals="20" coveredconditionals="15" methods="6" coveredmethods="6"/>
+        <line num="9" count="18" type="stmt"/>
+        <line num="10" count="15" type="cond" truecount="1" falsecount="1"/>
+        <line num="11" count="15" type="cond" truecount="1" falsecount="1"/>
+        <line num="13" count="15" type="stmt"/>
+        <line num="16" count="18" type="stmt"/>
+        <line num="23" count="18" type="cond" truecount="4" falsecount="0"/>
+        <line num="24" count="10" type="stmt"/>
+        <line num="27" count="8" type="cond" truecount="4" falsecount="0"/>
+        <line num="28" count="1" type="stmt"/>
+        <line num="31" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="32" count="5" type="stmt"/>
+        <line num="34" count="5" type="stmt"/>
+        <line num="37" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="38" count="2" type="stmt"/>
+        <line num="41" count="0" type="stmt"/>
+        <line num="48" count="18" type="stmt"/>
+        <line num="49" count="18" type="stmt"/>
+        <line num="50" count="18" type="stmt"/>
+        <line num="52" count="18" type="stmt"/>
+        <line num="61" count="11" type="cond" truecount="1" falsecount="1"/>
+        <line num="66" count="11" type="stmt"/>
+      </file>
+    </package>
+    <package name="libs.swagger">
+      <metrics statements="10" coveredstatements="10" conditionals="8" coveredconditionals="8" methods="8" coveredmethods="8"/>
+      <file name="api-crud.decorator.ts" path="D:\PizzaHot\pizza-hot\src\libs\swagger\api-crud.decorator.ts">
+        <metrics statements="6" coveredstatements="6" conditionals="8" coveredconditionals="8" methods="4" coveredmethods="4"/>
+        <line num="5" count="4" type="stmt"/>
+        <line num="15" count="4" type="stmt"/>
+        <line num="25" count="3" type="cond" truecount="1" falsecount="0"/>
+        <line num="26" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="30" count="3" type="stmt"/>
+        <line num="34" count="21" type="stmt"/>
+      </file>
+      <file name="api-responses.decorator.ts" path="D:\PizzaHot\pizza-hot\src\libs\swagger\api-responses.decorator.ts">
+        <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="4"/>
+        <line num="5" count="27" type="stmt"/>
+        <line num="9" count="11" type="stmt"/>
+        <line num="16" count="6" type="stmt"/>
+        <line num="23" count="4" type="stmt"/>
+      </file>
+    </package>
+    <package name="libs.upload">
+      <metrics statements="37" coveredstatements="34" conditionals="16" coveredconditionals="14" methods="9" coveredmethods="8"/>
+      <file name="image-multer.config.ts" path="D:\PizzaHot\pizza-hot\src\libs\upload\image-multer.config.ts">
+        <metrics statements="9" coveredstatements="7" conditionals="2" coveredconditionals="2" methods="4" coveredmethods="3"/>
+        <line num="10" count="3" type="stmt"/>
+        <line num="12" count="3" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="16" count="0" type="stmt"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="30" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="31" count="3" type="stmt"/>
+        <line num="32" count="3" type="stmt"/>
+        <line num="35" count="3" type="stmt"/>
+      </file>
+      <file name="image-storage.service.ts" path="D:\PizzaHot\pizza-hot\src\libs\upload\image-storage.service.ts">
+        <metrics statements="20" coveredstatements="19" conditionals="10" coveredconditionals="8" methods="4" coveredmethods="4"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="13" count="9" type="stmt"/>
+        <line num="14" count="5" type="stmt"/>
+        <line num="17" count="4" type="stmt"/>
+        <line num="21" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="23" count="3" type="stmt"/>
+        <line num="24" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="25" count="1" type="stmt"/>
+        <line num="26" count="1" type="stmt"/>
+        <line num="29" count="2" type="stmt"/>
+        <line num="30" count="2" type="stmt"/>
+        <line num="31" count="1" type="stmt"/>
+        <line num="33" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="34" count="1" type="stmt"/>
+        <line num="35" count="1" type="stmt"/>
+        <line num="38" count="0" type="stmt"/>
+        <line num="43" count="3" type="stmt"/>
+        <line num="44" count="3" type="cond" truecount="1" falsecount="1"/>
+        <line num="45" count="3" type="stmt"/>
+        <line num="47" count="3" type="cond" truecount="2" falsecount="0"/>
+      </file>
+      <file name="image-validation.pipe.ts" path="D:\PizzaHot\pizza-hot\src\libs\upload\image-validation.pipe.ts">
+        <metrics statements="8" coveredstatements="8" conditionals="4" coveredconditionals="4" methods="1" coveredmethods="1"/>
+        <line num="6" count="9" type="stmt"/>
+        <line num="8" count="9" type="cond" truecount="2" falsecount="0"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="12" count="8" type="stmt"/>
+        <line num="13" count="8" type="stmt"/>
+        <line num="14" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="15" count="3" type="stmt"/>
+        <line num="20" count="5" type="stmt"/>
+      </file>
+    </package>
+    <package name="libs.validation">
+      <metrics statements="5" coveredstatements="5" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="2"/>
+      <file name="zod-validation.pipe.ts" path="D:\PizzaHot\pizza-hot\src\libs\validation\zod-validation.pipe.ts">
+        <metrics statements="5" coveredstatements="5" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="2"/>
+        <line num="5" count="27" type="stmt"/>
+        <line num="8" count="6" type="stmt"/>
+        <line num="9" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="10" count="3" type="stmt"/>
+        <line num="13" count="3" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>

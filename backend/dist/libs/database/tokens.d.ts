@@ -1,0 +1,11 @@
+export declare const USERS_REPOSITORY: unique symbol;
+export declare const PIZZAS_REPOSITORY: unique symbol;
+export declare const INGREDIENTS_REPOSITORY: unique symbol;
+export declare const CART_REPOSITORY: unique symbol;
+export declare const CART_ITEMS_REPOSITORY: unique symbol;
+export declare const PIZZA_SNAPSHOT_REPOSITORY: unique symbol;
+export declare const ORDERS_REPOSITORY: unique symbol;
+export declare const ORDER_ITEMS_REPOSITORY: unique symbol;
+export declare const PROMOCODES_REPOSITORY: unique symbol;
+export declare const REDEMPTIONS_REPOSITORY: unique symbol;
+export declare const ANALYTICS_REPOSITORY: unique symbol;

@@ -1,0 +1,32 @@
+import { ChangePasswordDto } from "./dto/change-password.dto.ts";
+import { CreateUserDto } from "./dto/create-user.dto.ts";
+import { UpdateUserDto } from "./dto/update-user.dto.ts";
+import { Role } from "../../../libs/auth/auth.constant.ts";
+import { User } from "./user.entity.ts";
+import type { IUsersRepository } from "./user.types.ts";
+import type { ClientProxy } from "@nestjs/microservices";
+import { UserResponseDto } from "./dto/user-response.dto.ts";
+import type { IImageStorage } from "../../../libs/upload/index.ts";
+import type { PaginatedResult } from "../../../libs/pagination/pagination.types.ts";
+export declare class UsersService {
+    private readonly usersRepository;
+    private readonly events;
+    private readonly images;
+    private readonly logger;
+    constructor(usersRepository: IUsersRepository, events: ClientProxy, images: IImageStorage);
+    create(dto: CreateUserDto): Promise<User>;
+    createWithRole(dto: CreateUserDto, role: Role): Promise<User>;
+    setEmailVerified(id: string, isEmailVerified: boolean): Promise<void>;
+    findByVerificationToken(token: string): Promise<User | null>;
+    updateVerificationStatus(id: string, data: Partial<User>): Promise<void>;
+    findAll(page: number, limit: number, search?: string): Promise<PaginatedResult<UserResponseDto>>;
+    findEntityById(id: string): Promise<User>;
+    findById(id: string): Promise<UserResponseDto>;
+    findByEmail(email: string): Promise<User | null>;
+    update(id: string, dto: UpdateUserDto): Promise<UserResponseDto>;
+    setImagePath(id: string, imagePath: string): Promise<UserResponseDto>;
+    setRole(id: string, role: Role, actingUserId: string): Promise<UserResponseDto>;
+    remove(id: string): Promise<void>;
+    private notifyMissingAvatar;
+    changePassword(id: string, dto: ChangePasswordDto): Promise<void>;
+}
