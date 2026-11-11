@@ -22,6 +22,7 @@
     "@tanstack/vue-query": "^5.107.1",
     "@vuelidate/core": "^2.0.3",
     "@vuelidate/validators": "^2.0.4",
+    "axios": "^1.21.1",
     "pinia": "^4.0.3",
     "primeicons": "^8.0.2",
     "primevue": "^5.0.4",
