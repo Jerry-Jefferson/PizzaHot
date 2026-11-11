@@ -239,7 +239,7 @@ npm run test:cov
 
 When the services are up and running, access the web portals below:
 
-- **REST API & Swagger Documentation**: [http://localhost:3000/api/docs](http://localhost:3000/api/docs)
+- **REST API & Swagger Documentation**: [http://localhost:3000/api-docs](http://localhost:3000/api-docs)
 - **RabbitMQ Management Dashboard**: [http://localhost:15672](http://localhost:15672) *(Credentials: `guest` / `guest`)*
 - **Mailhog Web UI (Emails)**: [http://localhost:8025](http://localhost:8025)
 - **PostgreSQL Database**: `localhost:5432`

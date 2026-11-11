@@ -1,0 +1,59 @@
+{
+  "mcpServers": {
+    "postgres-identity": {
+      "command": "node",
+      "args": [
+        ".claude/mcp/launch.mjs",
+        "postgres",
+        "identity_db"
+      ]
+    },
+    "postgres-catalog": {
+      "command": "node",
+      "args": [
+        ".claude/mcp/launch.mjs",
+        "postgres",
+        "catalog_db"
+      ]
+    },
+    "postgres-cart": {
+      "command": "node",
+      "args": [
+        ".claude/mcp/launch.mjs",
+        "postgres",
+        "cart_db"
+      ]
+    },
+    "postgres-order": {
+      "command": "node",
+      "args": [
+        ".claude/mcp/launch.mjs",
+        "postgres",
+        "order_db"
+      ]
+    },
+    "postgres-promo": {
+      "command": "node",
+      "args": [
+        ".claude/mcp/launch.mjs",
+        "postgres",
+        "promo_db"
+      ]
+    },
+    "postgres-analytics": {
+      "command": "node",
+      "args": [
+        ".claude/mcp/launch.mjs",
+        "postgres",
+        "analytics_db"
+      ]
+    },
+    "mongodb": {
+      "command": "node",
+      "args": [
+        ".claude/mcp/launch.mjs",
+        "mongodb"
+      ]
+    }
+  }
+}
