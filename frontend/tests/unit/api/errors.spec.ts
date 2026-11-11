@@ -9,7 +9,10 @@ import { describe, expect, it } from "vitest";
 import {
   FALLBACK_ERROR_MESSAGE,
   getErrorMessage,
+  getErrorStatus,
   getFieldErrors,
+  getFirstFieldErrors,
+  isEmailNotVerifiedError,
   NETWORK_ERROR_MESSAGE,
 } from "@/api/errors";
 
@@ -86,5 +89,50 @@ describe("getErrorMessage", () => {
     ["oops", FALLBACK_ERROR_MESSAGE],
   ])("handles a non-axios error %#", (error, expected) => {
     expect(getErrorMessage(error)).toBe(expected);
+  });
+});
+
+describe("getErrorStatus", () => {
+  it("returns the response status, or undefined without a response", () => {
+    expect(getErrorStatus(httpError(409, {}))).toBe(409);
+    expect(getErrorStatus(networkError())).toBeUndefined();
+    expect(getErrorStatus(new Error("x"))).toBeUndefined();
+  });
+});
+
+describe("getFirstFieldErrors", () => {
+  it("keeps the first message of the requested fields only", () => {
+    const error = httpError(400, {
+      formErrors: [],
+      fieldErrors: { email: ["Invalid email", "Second"], role: ["Nope"] },
+    });
+
+    expect(getFirstFieldErrors(error, ["email", "password"])).toEqual({ email: "Invalid email" });
+  });
+
+  it("returns an empty object for non-validation errors", () => {
+    expect(getFirstFieldErrors(networkError(), ["email"])).toEqual({});
+  });
+});
+
+describe("isEmailNotVerifiedError", () => {
+  it("recognises the order guard response", () => {
+    const error = httpError(403, {
+      statusCode: 403,
+      message: "Email is not verified. Please verify your email first.",
+    });
+
+    expect(isEmailNotVerifiedError(error)).toBe(true);
+  });
+
+  it.each([
+    ["another 403", httpError(403, { statusCode: 403, message: "Forbidden resource" })],
+    [
+      "a 400 with the same text",
+      httpError(400, { statusCode: 400, message: "Email is not verified" }),
+    ],
+    ["a network error", networkError()],
+  ])("ignores %s", (_label, error) => {
+    expect(isEmailNotVerifiedError(error)).toBe(false);
   });
 });

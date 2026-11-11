@@ -7,3 +7,5 @@ export const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"] as 
 export const ORDER_COMMENT_MAX = 500;
 
 export const ADDRESS_MAX = 255;
+
+export const NAME_MAX = 100;

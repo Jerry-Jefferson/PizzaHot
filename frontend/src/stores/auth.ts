@@ -32,10 +32,10 @@ export const useAuthStore = defineStore("auth", () => {
     try {
       user.value = await authApi.me();
     } catch (error) {
-      user.value = null;
       if (!isAxiosError(error) || error.response?.status !== 401) {
         throw error;
       }
+      user.value = null;
     } finally {
       status.value = "ready";
     }

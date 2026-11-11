@@ -43,10 +43,8 @@ describe("routes", () => {
     }
   );
 
-  it("lazy-loads the sign-in hero into the auth layout aside", () => {
-    expect(typeof routes.find((route) => route.name === "sign-in")?.components?.aside).toBe(
-      "function"
-    );
+  it.each(["sign-in", "sign-up"])("lazy-loads the %s hero into the auth layout aside", (name) => {
+    expect(typeof routes.find((route) => route.name === name)?.components?.aside).toBe("function");
   });
 
   it.each(["sign-in", "sign-up"])("%s is guest-only with the auth layout", (name) => {

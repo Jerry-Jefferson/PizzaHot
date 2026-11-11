@@ -20,6 +20,22 @@ export interface SignUpPayload {
   gender?: Gender;
 }
 
+export interface SignUpFormValues {
+  name: string;
+  surname: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+export type SignUpField = keyof SignUpFormValues;
+
+export type SignUpErrors = Partial<Record<SignUpField, string>>;
+
+export interface SignUpFormExpose {
+  focusField: (field: SignUpField) => void;
+}
+
 export interface AuthResponse {
   accessToken: string;
   user: User;

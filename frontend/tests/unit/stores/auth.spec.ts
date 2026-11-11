@@ -89,14 +89,14 @@ describe("auth store", () => {
       expect(auth.status).toBe("ready");
     });
 
-    it("clears the user and re-throws other errors", async () => {
+    it("keeps the current user and re-throws other errors", async () => {
       const error = httpError(500);
       vi.mocked(authApi.me).mockRejectedValue(error);
       const auth = useAuthStore();
       auth.setUser(user());
 
       await expect(auth.restoreSession()).rejects.toBe(error);
-      expect(auth.user).toBeNull();
+      expect(auth.user).toEqual(user());
       expect(auth.status).toBe("ready");
     });
   });
