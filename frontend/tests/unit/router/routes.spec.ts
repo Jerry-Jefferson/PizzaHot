@@ -39,9 +39,15 @@ describe("routes", () => {
   it.each(routes.map((route) => [String(route.name), route] as const))(
     "lazy-loads the %s view",
     (_name, route) => {
-      expect(typeof route.component).toBe("function");
+      expect(typeof (route.component ?? route.components?.default)).toBe("function");
     }
   );
+
+  it("lazy-loads the sign-in hero into the auth layout aside", () => {
+    expect(typeof routes.find((route) => route.name === "sign-in")?.components?.aside).toBe(
+      "function"
+    );
+  });
 
   it.each(["sign-in", "sign-up"])("%s is guest-only with the auth layout", (name) => {
     expect(metaOf(name)).toEqual({ layout: "auth", guestOnly: true });
