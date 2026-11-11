@@ -68,6 +68,9 @@ export default defineConfig(
       ],
       "vue/block-lang": ["error", { script: { lang: "ts" } }],
       "vue/component-api-style": ["error", ["script-setup"]],
+      // Type-based props are already optional in TS; this rule contradicts
+      // @typescript-eslint/no-useless-default-assignment, which forbids `= undefined`.
+      "vue/require-default-prop": "off",
     },
   },
 
