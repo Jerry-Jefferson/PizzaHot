@@ -1,26 +1,24 @@
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import Drawer from "primevue/drawer";
 import { computed, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 
 import AdminSidebar from "@/components/layout/AdminSidebar.vue";
 import AdminTopbar from "@/components/layout/AdminTopbar.vue";
-import type { UserSummary } from "@/types/user.types";
+import { useSignOut } from "@/composables/useSignOut";
+import { useAuthStore } from "@/stores/auth";
 
 const route = useRoute();
-const router = useRouter();
+const { user } = storeToRefs(useAuthStore());
+const { signOut } = useSignOut();
 
-const user: UserSummary | null = null;
 const pendingCount = 0;
 
 const isDrawerOpen = ref(false);
 
 const currentRouteName = computed(() => (typeof route.name === "string" ? route.name : undefined));
 const title = computed(() => route.meta.title ?? "Admin");
-
-async function signOut(): Promise<void> {
-  await router.push({ name: "sign-in" });
-}
 </script>
 
 <template>

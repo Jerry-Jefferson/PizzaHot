@@ -1,4 +1,5 @@
 import { flushPromises, mount, type VueWrapper } from "@vue/test-utils";
+import { createPinia } from "pinia";
 import PrimeVue from "primevue/config";
 import ConfirmationService from "primevue/confirmationservice";
 import ToastService from "primevue/toastservice";
@@ -15,7 +16,7 @@ async function mountAt(path: string) {
   await router.push(path);
   wrapper = mount(App, {
     attachTo: document.body,
-    global: { plugins: [PrimeVue, ToastService, ConfirmationService, router] },
+    global: { plugins: [createPinia(), PrimeVue, ToastService, ConfirmationService, router] },
   });
   await flushPromises();
   return wrapper;
