@@ -24,3 +24,5 @@ export interface User {
   createdAt: string;
   updatedAt: string;
 }
+
+export type UserSummary = Pick<User, "name" | "surname" | "email" | "image">;
