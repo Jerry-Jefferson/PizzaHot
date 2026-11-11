@@ -1,9 +1,10 @@
-import Aura from "@primeuix/themes/aura";
 import type { PrimeVueConfiguration } from "primevue/config";
+
+import { PizzeriaPreset } from "./pizzeria-preset";
 
 export const primeVueOptions: PrimeVueConfiguration = {
   theme: {
-    preset: Aura,
+    preset: PizzeriaPreset,
     options: {
       prefix: "p",
       darkModeSelector: ".app-dark",

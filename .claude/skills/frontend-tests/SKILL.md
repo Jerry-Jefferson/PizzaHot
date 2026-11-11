@@ -16,7 +16,7 @@ Setup: jsdom, **no globals** (import `describe`/`it`/`expect`/`vi`/`beforeEach` 
 
 ## Mock at the API boundary
 
-Mock the API modules (`@/api/<domain>`), never `fetch`. Keep stores, composables and components real.
+Mock the API modules (`@/api/<domain>`), never axios or `fetch`. Keep stores, composables and components real.
 
 ```ts
 import * as pizzasApi from "@/api/pizzas";
