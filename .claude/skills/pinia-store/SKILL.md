@@ -18,7 +18,7 @@ Paths are relative to `frontend/`. Follow the no-unnecessary-comments rule in `C
 
 ## 2. Location & naming
 
-- File `src/stores/<domain>.ts` (`cart.ts`), export `use<Domain>Store`, id = domain (`"cart"`). One domain per store; types in `src/types/<domain>.ts`.
+- File `src/stores/<domain>.ts` (`cart.ts`), export `use<Domain>Store`, id = domain (`"cart"`). One domain per store; types in `src/types/<domain>.types.ts`.
 
 ## 3. Setup-store skeleton
 
@@ -26,7 +26,7 @@ Paths are relative to `frontend/`. Follow the no-unnecessary-comments rule in `C
 import { acceptHMRUpdate, defineStore } from "pinia";
 import { computed, ref } from "vue";
 
-import type { CartItem } from "@/types/cart";
+import type { CartItem } from "@/types/cart.types";
 
 export const useCartStore = defineStore("cart", () => {
   const items = ref<CartItem[]>([]);
@@ -55,7 +55,7 @@ if (import.meta.hot) {
 - `ref` = state, `computed` = getters, functions = actions. Return **every** piece of state, otherwise devtools, HMR and plugins miss it.
 - Explicit return types; async actions return `Promise<T>` and let errors propagate. `$reset()` doesn't work in setup stores — expose `reset()`.
 - Mutate state only through intent-named actions (`add`, `applyPromocode`). Other stores may be used inside actions; avoid cycles.
-- No server-data fetching in stores; API calls only for client-owned flows (e.g. login storing the user).
+- No server-data fetching in stores; API calls only for client-owned flows (e.g. sign-in storing the user).
 
 ## 4. Using a store
 

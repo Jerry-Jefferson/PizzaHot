@@ -45,8 +45,8 @@ it("increments quantity for a repeated pizza", () => {
 });
 
 it("re-throws API errors", async () => {
-  vi.mocked(authApi.login).mockRejectedValue(error);
-  await expect(useAuthStore().login(CREDENTIALS)).rejects.toBe(error);
+  vi.mocked(authApi.signIn).mockRejectedValue(error);
+  await expect(useAuthStore().signIn(CREDENTIALS)).rejects.toBe(error);
 });
 ```
 

@@ -16,8 +16,9 @@ Paths are relative to `frontend/`. Follow the no-unnecessary-comments rule in `C
 | View (route page, the "ViewModel") | `src/views/<Name>View.vue` | `PizzaMenuView.vue` |
 | Base component (app-agnostic, dumb) | `src/components/base/Base<Name>.vue` | `BaseCard.vue` |
 | Feature component (domain-shaped, dumb) | `src/components/<feature>/<Name>.vue` | `pizza/PizzaCard.vue` |
-| Composable / store / types | `src/composables/use<Name>.ts`, `src/stores/<domain>.ts`, `src/types/<domain>.ts` | `usePizzas.ts`, `cart.ts` |
+| Composable / store / types | `src/composables/use<Name>.ts`, `src/stores/<domain>.ts`, `src/types/<domain>.types.ts` | `usePizzas.ts`, `cart.ts`, `pizza.types.ts` |
 
+- Types that aren't exported, are used only inside one component and are few may stay in that component's `<script setup>`; everything else goes in `src/types/<domain>.types.ts`.
 - PascalCase, always multi-word. Import via `@/`. Register views in `src/router/index.ts` with a `name`.
 - Only views touch the router, stores, composables and APIs; everything below receives props.
 
@@ -29,7 +30,7 @@ import Button from "primevue/button";
 import { computed } from "vue";
 
 import BaseCard from "@/components/base/BaseCard.vue";
-import type { Pizza } from "@/types/pizza";
+import type { Pizza } from "@/types/pizza.types";
 
 interface PizzaCardProps {
   pizza: Pizza;
