@@ -12,14 +12,25 @@ import App from "./App.vue";
 import { primeVueOptions } from "./plugins/primevue";
 import { vueQueryOptions } from "./plugins/vue-query";
 import router from "./router";
+import { useAuthStore } from "./stores/auth";
 
-const app = createApp(App);
+async function bootstrap(): Promise<void> {
+  const app = createApp(App);
+  app.use(createPinia());
 
-app
-  .use(createPinia())
-  .use(router)
-  .use(PrimeVue, primeVueOptions)
-  .use(ToastService)
-  .use(ConfirmationService)
-  .use(VueQueryPlugin, vueQueryOptions)
-  .mount("#app");
+  try {
+    await useAuthStore().restoreSession();
+  } catch {
+    // The app still starts as a guest when the server is unreachable.
+  }
+
+  app
+    .use(router)
+    .use(PrimeVue, primeVueOptions)
+    .use(ToastService)
+    .use(ConfirmationService)
+    .use(VueQueryPlugin, vueQueryOptions)
+    .mount("#app");
+}
+
+void bootstrap();

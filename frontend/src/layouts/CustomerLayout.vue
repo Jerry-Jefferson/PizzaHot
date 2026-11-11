@@ -1,22 +1,20 @@
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import { computed } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 
 import AppFooter from "@/components/layout/AppFooter.vue";
 import AppHeader from "@/components/layout/AppHeader.vue";
-import type { UserSummary } from "@/types/user.types";
+import { useSignOut } from "@/composables/useSignOut";
+import { useAuthStore } from "@/stores/auth";
 
 const route = useRoute();
-const router = useRouter();
+const { user } = storeToRefs(useAuthStore());
+const { signOut } = useSignOut();
 
-const user: UserSummary | null = null;
 const cartCount = 0;
 
 const currentRouteName = computed(() => (typeof route.name === "string" ? route.name : undefined));
-
-async function signOut(): Promise<void> {
-  await router.push({ name: "sign-in" });
-}
 </script>
 
 <template>
