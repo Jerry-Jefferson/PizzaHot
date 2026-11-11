@@ -7,7 +7,10 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/sign-in",
     name: "sign-in",
-    component: () => import("@/views/SignInView.vue"),
+    components: {
+      default: () => import("@/views/SignInView.vue"),
+      aside: () => import("@/components/auth/SignInHero.vue"),
+    },
     meta: { layout: "auth", guestOnly: true },
   },
   {

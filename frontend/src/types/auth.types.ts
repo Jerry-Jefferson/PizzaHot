@@ -7,6 +7,10 @@ export interface SignInPayload {
   password: string;
 }
 
+export type SignInField = keyof SignInPayload;
+
+export type SignInErrors = Partial<Record<SignInField, string>>;
+
 export interface SignUpPayload {
   email: string;
   password: string;
