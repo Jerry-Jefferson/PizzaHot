@@ -3,14 +3,17 @@ import { storeToRefs } from "pinia";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 
+import EmailVerificationBanner from "@/components/auth/EmailVerificationBanner.vue";
 import AppFooter from "@/components/layout/AppFooter.vue";
 import AppHeader from "@/components/layout/AppHeader.vue";
+import { useRefreshSession } from "@/composables/useRefreshSession";
 import { useSignOut } from "@/composables/useSignOut";
 import { useAuthStore } from "@/stores/auth";
 
 const route = useRoute();
-const { user } = storeToRefs(useAuthStore());
+const { user, isAuthenticated, isEmailVerified } = storeToRefs(useAuthStore());
 const { signOut } = useSignOut();
+const { isRefreshing, refreshSession } = useRefreshSession();
 
 const cartCount = 0;
 
@@ -24,6 +27,11 @@ const currentRouteName = computed(() => (typeof route.name === "string" ? route.
       :cart-count="cartCount"
       :current-route-name="currentRouteName"
       @sign-out="signOut"
+    />
+    <EmailVerificationBanner
+      v-if="isAuthenticated && !isEmailVerified"
+      :loading="isRefreshing"
+      @refresh="refreshSession"
     />
     <main class="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
       <slot />

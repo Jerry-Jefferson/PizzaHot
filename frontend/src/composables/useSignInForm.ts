@@ -1,15 +1,14 @@
 import { useVuelidate } from "@vuelidate/core";
 import { email, helpers, required } from "@vuelidate/validators";
-import { isAxiosError } from "axios";
-import { computed, type ComputedRef, reactive, type Ref, ref, toValue, watch } from "vue";
+import { computed, type ComputedRef, reactive, type Ref, toValue } from "vue";
 
-import { getErrorMessage, getFieldErrors } from "@/api/errors";
 import type { SignInErrors, SignInField, SignInPayload } from "@/types/auth.types";
 
-export const INVALID_CREDENTIALS_MESSAGE = "Invalid email or password";
-export const TOO_MANY_ATTEMPTS_MESSAGE = "Too many attempts, try again in a minute";
+import { TOO_MANY_ATTEMPTS_MESSAGE, useServerFormErrors } from "./useServerFormErrors";
 
-const SIGN_IN_FIELDS: SignInField[] = ["email", "password"];
+export const INVALID_CREDENTIALS_MESSAGE = "Invalid email or password";
+
+const SIGN_IN_FIELDS: readonly SignInField[] = ["email", "password"];
 
 interface SignInForm {
   form: SignInPayload;
@@ -23,8 +22,7 @@ interface SignInForm {
 
 export function useSignInForm(): SignInForm {
   const form = reactive<SignInPayload>({ email: "", password: "" });
-  const serverErrors = ref<SignInErrors>({});
-  const formError = ref<string | null>(null);
+  const server = useServerFormErrors(SIGN_IN_FIELDS, form);
 
   const rules = {
     email: {
@@ -42,27 +40,17 @@ export function useSignInForm(): SignInForm {
     Object.fromEntries(
       SIGN_IN_FIELDS.map((field) => {
         const clientError = v$.value[field].$errors[0]?.$message;
-        return [field, clientError ? toValue(clientError) : serverErrors.value[field]];
+        return [field, clientError ? toValue(clientError) : server.fieldErrors.value[field]];
       })
     )
   );
-
-  for (const field of SIGN_IN_FIELDS) {
-    watch(
-      () => form[field],
-      () => {
-        serverErrors.value = { ...serverErrors.value, [field]: undefined };
-      }
-    );
-  }
 
   function touch(field: SignInField): void {
     v$.value[field].$touch();
   }
 
   async function validate(): Promise<boolean> {
-    formError.value = null;
-    serverErrors.value = {};
+    server.clear();
     return v$.value.$validate();
   }
 
@@ -71,30 +59,20 @@ export function useSignInForm(): SignInForm {
   }
 
   function applyServerError(error: unknown): void {
-    const status = isAxiosError(error) ? error.response?.status : undefined;
-    if (status === 401 || status === 403) {
-      formError.value = INVALID_CREDENTIALS_MESSAGE;
-      return;
-    }
-    if (status === 429) {
-      formError.value = TOO_MANY_ATTEMPTS_MESSAGE;
-      return;
-    }
-
-    const fieldErrors = getFieldErrors(error);
-    const knownFieldErrors = Object.fromEntries(
-      SIGN_IN_FIELDS.filter((field) => fieldErrors[field]).map((field) => [
-        field,
-        fieldErrors[field]?.[0],
-      ])
-    ) as SignInErrors;
-
-    if (Object.keys(knownFieldErrors).length > 0) {
-      serverErrors.value = knownFieldErrors;
-      return;
-    }
-    formError.value = getErrorMessage(error);
+    server.apply(error, {
+      401: INVALID_CREDENTIALS_MESSAGE,
+      403: INVALID_CREDENTIALS_MESSAGE,
+      429: TOO_MANY_ATTEMPTS_MESSAGE,
+    });
   }
 
-  return { form, errors, formError, touch, validate, toPayload, applyServerError };
+  return {
+    form,
+    errors,
+    formError: server.formError,
+    touch,
+    validate,
+    toPayload,
+    applyServerError,
+  };
 }

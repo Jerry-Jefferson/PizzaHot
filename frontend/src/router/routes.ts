@@ -16,7 +16,10 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/sign-up",
     name: "sign-up",
-    component: () => import("@/views/SignUpView.vue"),
+    components: {
+      default: () => import("@/views/SignUpView.vue"),
+      aside: () => import("@/components/auth/SignUpHero.vue"),
+    },
     meta: { layout: "auth", guestOnly: true },
   },
   {
