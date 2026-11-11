@@ -1,6 +1,6 @@
 import pizzaPlaceholderUrl from "@/assets/images/pizza-placeholder.svg";
+import { API_BASE_URL } from "@/utils/constants/api";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "/api";
 const ABSOLUTE_URL_PATTERN = /^(https?:|data:|blob:)/i;
 
 const MEDIA_ORIGIN = /^https?:\/\//i.test(API_BASE_URL) ? new URL(API_BASE_URL).origin : "";
