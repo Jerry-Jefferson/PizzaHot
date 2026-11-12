@@ -13,6 +13,7 @@ function setup(props: {
   user?: UserSummary | null;
   cartCount?: number;
   currentRouteName?: string;
+  showAdminLink?: boolean;
 }) {
   const router = createRouter({ history: createMemoryHistory(), routes });
   return mount(AppHeader, {
@@ -95,5 +96,13 @@ describe("AppHeader", () => {
     await wrapper.get("[aria-label='Sign out']").trigger("click");
 
     expect(wrapper.emitted("signOut")).toHaveLength(1);
+  });
+
+  it("links to the admin panel only when asked", () => {
+    expect(setup({ user: USER }).find("[data-test='admin-panel-link']").exists()).toBe(false);
+
+    const link = setup({ user: USER, showAdminLink: true }).get("[data-test='admin-panel-link']");
+    expect(link.attributes("href")).toBe("/admin");
+    expect(link.text()).toBe("Admin panel");
   });
 });
