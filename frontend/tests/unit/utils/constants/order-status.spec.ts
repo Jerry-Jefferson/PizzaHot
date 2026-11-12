@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
 
 import { OrderStatus } from "@/types/order.types";
-import { ORDER_STATUS_META, ORDER_STATUSES } from "@/utils/constants/order-status";
+import {
+  isFinalOrderStatus,
+  ORDER_STATUS_META,
+  ORDER_STATUSES,
+} from "@/utils/constants/order-status";
 
 describe("ORDER_STATUS_META", () => {
   it("covers all 7 backend statuses in workflow order", () => {
@@ -27,5 +31,14 @@ describe("ORDER_STATUS_META", () => {
     [OrderStatus.CANCELLED, "Cancelled", "danger"],
   ])("maps %s to %s / %s", (status, label, tone) => {
     expect(ORDER_STATUS_META[status]).toEqual({ label, tone });
+  });
+});
+
+describe("isFinalOrderStatus", () => {
+  it("treats only completed and cancelled as final", () => {
+    expect(ORDER_STATUSES.filter((status) => isFinalOrderStatus(status))).toEqual([
+      "completed",
+      "cancelled",
+    ]);
   });
 });

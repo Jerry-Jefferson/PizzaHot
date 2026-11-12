@@ -17,3 +17,12 @@ export const ORDER_STATUS_META: Record<OrderStatus, OrderStatusMeta> = {
 };
 
 export const ORDER_STATUSES = Object.values(OrderStatus);
+
+const FINAL_ORDER_STATUSES: ReadonlySet<OrderStatus> = new Set([
+  OrderStatus.COMPLETED,
+  OrderStatus.CANCELLED,
+]);
+
+export function isFinalOrderStatus(status: OrderStatus): boolean {
+  return FINAL_ORDER_STATUSES.has(status);
+}

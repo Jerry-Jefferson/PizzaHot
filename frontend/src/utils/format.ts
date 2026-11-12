@@ -22,6 +22,15 @@ const dateTimeFormatter = new Intl.DateTimeFormat(LOCALE, {
   minute: "2-digit",
 });
 
+const weekdayDateFormatter = new Intl.DateTimeFormat(LOCALE, {
+  weekday: "short",
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+});
+
+const paddedTimeFormatter = new Intl.DateTimeFormat(LOCALE, { hour: "2-digit", minute: "2-digit" });
+
 const monthYearFormatter = new Intl.DateTimeFormat(LOCALE, { month: "short", year: "numeric" });
 
 export function formatPrice(value: number | string): string {
@@ -34,6 +43,11 @@ export function formatDate(value: string | Date): string {
 
 export function formatDateTime(value: string | Date): string {
   return dateTimeFormatter.format(new Date(value));
+}
+
+export function formatOrderDateTime(value: string | Date): string {
+  const date = new Date(value);
+  return `${weekdayDateFormatter.format(date)} · ${paddedTimeFormatter.format(date)}`;
 }
 
 export function formatMonthYear(value: string | Date): string {

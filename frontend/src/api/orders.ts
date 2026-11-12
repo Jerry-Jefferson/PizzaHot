@@ -12,3 +12,8 @@ export async function createOrder(payload: CreateOrderPayload): Promise<Order> {
   const { data } = await apiClient.post<Order>("/orders", payload);
   return data;
 }
+
+export async function getMyOrder(id: string): Promise<Order> {
+  const { data } = await apiClient.get<Order>(`/orders/my/${id}`);
+  return data;
+}

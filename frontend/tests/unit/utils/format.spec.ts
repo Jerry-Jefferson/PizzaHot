@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 
-import { formatDate, formatDateTime, formatMonthYear, formatPrice, shortId } from "@/utils/format";
+import {
+  formatDate,
+  formatDateTime,
+  formatMonthYear,
+  formatOrderDateTime,
+  formatPrice,
+  shortId,
+} from "@/utils/format";
 
 describe("formatPrice", () => {
   it.each([
@@ -33,6 +40,14 @@ describe("formatDate", () => {
 describe("formatDateTime", () => {
   it("adds the time", () => {
     expect(formatDateTime(new Date(2026, 10, 11, 15, 5))).toBe("Nov 11, 2026, 3:05 PM");
+  });
+});
+
+describe("formatOrderDateTime", () => {
+  it("shows the weekday and a zero-padded time", () => {
+    expect(formatOrderDateTime(new Date(2025, 8, 20, 18, 32))).toBe(
+      "Sat, Sep 20, 2025 · 06:32 PM"
+    );
   });
 });
 
