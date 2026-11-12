@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   formatDate,
   formatDateTime,
+  formatLongDate,
   formatMonthYear,
   formatOrderDateTime,
   formatPrice,
@@ -48,6 +49,12 @@ describe("formatOrderDateTime", () => {
     expect(formatOrderDateTime(new Date(2025, 8, 20, 18, 32))).toBe(
       "Sat, Sep 20, 2025 · 06:32 PM"
     );
+  });
+});
+
+describe("formatLongDate", () => {
+  it("spells out the weekday and month", () => {
+    expect(formatLongDate(new Date(2025, 8, 20, 18, 32))).toBe("Saturday, September 20, 2025");
   });
 });
 
