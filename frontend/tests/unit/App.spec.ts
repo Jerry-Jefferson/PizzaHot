@@ -1,13 +1,21 @@
+import { QueryClient, VueQueryPlugin } from "@tanstack/vue-query";
 import { flushPromises, mount, type VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import PrimeVue from "primevue/config";
 import ConfirmationService from "primevue/confirmationservice";
 import ToastService from "primevue/toastservice";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { createMemoryHistory, createRouter } from "vue-router";
 
 import App from "@/App.vue";
 import { routes } from "@/router/routes";
+
+vi.mock("@/api/pizzas", () => ({
+  listPizzas: vi.fn(() =>
+    Promise.resolve({ data: [], page: 1, limit: 9, total: 0, totalPages: 0 })
+  ),
+  getPizza: vi.fn(),
+}));
 
 let wrapper: VueWrapper | undefined;
 
@@ -16,7 +24,16 @@ async function mountAt(path: string) {
   await router.push(path);
   wrapper = mount(App, {
     attachTo: document.body,
-    global: { plugins: [createPinia(), PrimeVue, ToastService, ConfirmationService, router] },
+    global: {
+      plugins: [
+        createPinia(),
+        PrimeVue,
+        ToastService,
+        ConfirmationService,
+        router,
+        [VueQueryPlugin, { queryClient: new QueryClient() }],
+      ],
+    },
   });
   await flushPromises();
   return wrapper;

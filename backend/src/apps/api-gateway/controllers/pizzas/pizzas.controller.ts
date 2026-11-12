@@ -45,6 +45,7 @@ import {
 } from "./pizzas.api-docs.ts";
 import { Can } from "../../../../libs/auth/decorators/can.decorator.ts";
 import { Permission } from "../../../../libs/auth/permission.constant.ts";
+import { Public } from "../../../../libs/auth/decorators/public.decorator.ts";
 
 @ApiTags("Pizzas")
 @ApiBearerAuth()
@@ -53,7 +54,7 @@ export class PizzasController {
   constructor(private readonly pizzasService: CatalogClient) {}
 
   @Get()
-  @Can(Permission.PIZZA_READ)
+  @Public()
   @ApiFindAllPizza()
   async findAll(
     @Query(new ZodValidationPipe(listPizzasQuerySchema))
@@ -67,7 +68,7 @@ export class PizzasController {
   }
 
   @Get(":id")
-  @Can(Permission.PIZZA_READ)
+  @Public()
   @ApiFindOnePizza()
   async findOne(@Param("id", ParseUUIDPipe) id: string): Promise<PizzaResponseDto> {
     return this.pizzasService.findById(id);
