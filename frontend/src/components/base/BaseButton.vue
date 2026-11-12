@@ -4,7 +4,7 @@ import { computed } from "vue";
 
 import type { ComponentSize } from "@/types/ui.types";
 
-type ButtonVariant = "primary" | "secondary" | "ghost" | "danger-outline";
+type ButtonVariant = "primary" | "secondary" | "outline" | "ghost" | "danger-outline";
 
 interface BaseButtonProps {
   label?: string;
@@ -33,6 +33,7 @@ const VARIANT_CLASSES: Record<ButtonVariant, string> = {
     "border-primary bg-primary text-primary-foreground hover:border-primary-hover hover:bg-primary-hover",
   secondary:
     "border-secondary bg-secondary text-secondary-foreground hover:border-secondary-hover hover:bg-secondary-hover",
+  outline: "border-primary bg-card text-primary hover:bg-primary/5",
   ghost: "border-transparent bg-transparent text-foreground hover:bg-muted",
   "danger-outline": "border-primary bg-transparent text-primary hover:bg-primary/10",
 };

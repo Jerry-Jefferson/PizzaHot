@@ -18,13 +18,14 @@ interface AppHeaderProps {
   user: UserSummary | null;
   cartCount: number;
   currentRouteName?: string;
+  showAdminLink?: boolean;
 }
 
 interface AppHeaderEmits {
   signOut: [];
 }
 
-const { user, cartCount, currentRouteName } = defineProps<AppHeaderProps>();
+const { user, cartCount, currentRouteName, showAdminLink } = defineProps<AppHeaderProps>();
 const emit = defineEmits<AppHeaderEmits>();
 
 const NAV_ITEMS: NavItem[] = [
@@ -83,6 +84,15 @@ const cartLabel = computed(() =>
       </nav>
 
       <div class="ml-auto flex items-center gap-2">
+        <RouterLink
+          v-if="showAdminLink"
+          :to="{ name: 'admin-dashboard' }"
+          data-test="admin-panel-link"
+          class="hidden h-10 items-center gap-2 rounded-control px-3 text-sm font-medium text-foreground hover:bg-muted md:inline-flex"
+        >
+          <i class="pi pi-objects-column" aria-hidden="true" />
+          Admin panel
+        </RouterLink>
         <RouterLink
           :to="{ name: 'cart' }"
           :aria-label="cartLabel"
@@ -152,6 +162,15 @@ const cartLabel = computed(() =>
           @click="isDrawerOpen = false"
         >
           {{ item.label }}
+        </RouterLink>
+        <RouterLink
+          v-if="showAdminLink"
+          :to="{ name: 'admin-dashboard' }"
+          class="flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium text-foreground hover:bg-muted"
+          @click="isDrawerOpen = false"
+        >
+          <i class="pi pi-objects-column" aria-hidden="true" />
+          Admin panel
         </RouterLink>
       </nav>
     </Drawer>
