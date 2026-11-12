@@ -67,3 +67,14 @@ export interface OrderSearchQuery extends PaginationQuery {
   delivery?: DeliveryType;
   paymentMethod?: PaymentMethod;
 }
+
+export interface CheckoutFormValues {
+  delivery: DeliveryType;
+  paymentMethod: PaymentMethod | "";
+  address: string;
+  comment: string;
+}
+
+export type CheckoutField = keyof CheckoutFormValues;
+
+export type CheckoutErrors = Partial<Record<CheckoutField, string>>;

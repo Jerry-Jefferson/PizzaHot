@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { apiClient } from "@/api";
-import { listMyOrders } from "@/api/orders";
+import { createOrder, listMyOrders } from "@/api/orders";
 
 const response = (data: unknown) => ({ data }) as Awaited<ReturnType<typeof apiClient.get>>;
 
@@ -16,5 +16,14 @@ describe("orders api", () => {
 
     await expect(listMyOrders({ page: 2, limit: 5 })).resolves.toEqual(page);
     expect(get).toHaveBeenCalledWith("/orders/my", { params: { page: 2, limit: 5 } });
+  });
+
+  it("creates an order through POST /orders", async () => {
+    const order = { id: "o1" };
+    const payload = { delivery: "pickup", paymentMethod: "cash", comment: null } as const;
+    const post = vi.spyOn(apiClient, "post").mockResolvedValue(response(order));
+
+    await expect(createOrder(payload)).resolves.toEqual(order);
+    expect(post).toHaveBeenCalledWith("/orders", payload);
   });
 });
