@@ -9,7 +9,15 @@ import {
 import { storeToRefs } from "pinia";
 import { computed, type ComputedRef } from "vue";
 
-import { addItem, clearCart, getCart, removeItem, updateItemQuantity } from "@/api/cart";
+import {
+  addItem,
+  applyPromocode,
+  clearCart,
+  getCart,
+  removeItem,
+  removePromocode,
+  updateItemQuantity,
+} from "@/api/cart";
 import { useAuthStore } from "@/stores/auth";
 import type {
   AddCartItemPayload,
@@ -19,6 +27,7 @@ import type {
 } from "@/types/cart.types";
 
 export const CART_QUERY_KEY = ["cart"] as const;
+const UPDATE_CART_ITEM_KEY = ["cart", "update-item"] as const;
 
 interface CartSnapshot {
   previousCart: Cart | undefined;
@@ -96,6 +105,7 @@ export function useUpdateCartItem(): UseMutationReturnType<
   const queryClient = useQueryClient();
 
   return useMutation({
+    mutationKey: UPDATE_CART_ITEM_KEY,
     mutationFn: (payload) => updateItemQuantity(payload),
     onMutate: async ({ pizzaId, quantity }) => {
       await queryClient.cancelQueries({ queryKey: CART_QUERY_KEY });
@@ -115,7 +125,11 @@ export function useUpdateCartItem(): UseMutationReturnType<
         queryClient.setQueryData<Cart>(CART_QUERY_KEY, (cart) => upsertCartItem(cart, item));
       }
     },
-    onSettled: () => refreshCart(queryClient),
+    onSettled: async () => {
+      if (queryClient.isMutating({ mutationKey: UPDATE_CART_ITEM_KEY }) === 1) {
+        await refreshCart(queryClient);
+      }
+    },
   });
 }
 
@@ -134,5 +148,27 @@ export function useClearCart(): UseMutationReturnType<void, Error, void, unknown
   return useMutation({
     mutationFn: () => clearCart(),
     onSuccess: () => refreshCart(queryClient),
+  });
+}
+
+export function useApplyPromocode(): UseMutationReturnType<Cart, Error, string, unknown> {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (code) => applyPromocode(code),
+    onSuccess: (cart) => {
+      queryClient.setQueryData(CART_QUERY_KEY, cart);
+    },
+  });
+}
+
+export function useRemovePromocode(): UseMutationReturnType<Cart, Error, void, unknown> {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => removePromocode(),
+    onSuccess: (cart) => {
+      queryClient.setQueryData(CART_QUERY_KEY, cart);
+    },
   });
 }

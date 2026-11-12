@@ -14,10 +14,12 @@ import * as cartApi from "@/api/cart";
 import {
   CART_QUERY_KEY,
   useAddToCart,
+  useApplyPromocode,
   useCart,
   useCartItemCount,
   useClearCart,
   useRemoveCartItem,
+  useRemovePromocode,
   useUpdateCartItem,
 } from "@/composables/useCart";
 import { useAuthStore } from "@/stores/auth";
@@ -223,5 +225,55 @@ describe("useRemoveCartItem / useClearCart", () => {
 
     expect(cartApi.clearCart).toHaveBeenCalledOnce();
     expect(invalidate).toHaveBeenCalledWith({ queryKey: CART_QUERY_KEY });
+  });
+});
+
+describe("useUpdateCartItem concurrency", () => {
+  it("refetches the cart only after the last of several quick updates", async () => {
+    const resolvers: ((value: CartItem | null) => void)[] = [];
+    vi.mocked(cartApi.updateItemQuantity).mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolvers.push(resolve);
+        })
+    );
+    vi.mocked(cartApi.getCart).mockReturnValue(new Promise(() => undefined));
+    const { result, queryClient } = withQuery(() => useUpdateCartItem());
+    queryClient.setQueryData(CART_QUERY_KEY, cartWith(item("p1", 1)));
+    const invalidate = vi.spyOn(queryClient, "invalidateQueries");
+
+    result.mutate({ pizzaId: "p1", quantity: 2 });
+    result.mutate({ pizzaId: "p1", quantity: 3 });
+    await flushPromises();
+    resolvers[0]?.(item("p1", 2));
+    await flushPromises();
+
+    expect(invalidate).not.toHaveBeenCalled();
+
+    resolvers[1]?.(item("p1", 3));
+    await flushPromises();
+
+    expect(invalidate).toHaveBeenCalledOnce();
+  });
+});
+
+describe("promo code mutations", () => {
+  it("writes the cart returned by apply and remove into the cache", async () => {
+    const discounted = { ...cartWith(item("p1", 1)), discountAmount: 2, finalPrice: 8 };
+    vi.mocked(cartApi.applyPromocode).mockResolvedValue(discounted);
+    vi.mocked(cartApi.removePromocode).mockResolvedValue(cartWith(item("p1", 1)));
+    const { result, queryClient } = withQuery(() => ({
+      apply: useApplyPromocode(),
+      remove: useRemovePromocode(),
+    }));
+
+    await result.apply.mutateAsync("WELCOME20");
+
+    expect(cartApi.applyPromocode).toHaveBeenCalledWith("WELCOME20");
+    expect(cachedCart(queryClient)).toEqual(discounted);
+
+    await result.remove.mutateAsync();
+
+    expect(cachedCart(queryClient)?.discountAmount).toBe(0);
   });
 });
