@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { formatDate, formatDateTime, formatPrice, shortId } from "@/utils/format";
+import { formatDate, formatDateTime, formatMonthYear, formatPrice, shortId } from "@/utils/format";
 
 describe("formatPrice", () => {
   it.each([
@@ -11,6 +11,12 @@ describe("formatPrice", () => {
     ["13.9", "$13.90"],
   ])("formats %j as %s", (value, expected) => {
     expect(formatPrice(value)).toBe(expected);
+  });
+});
+
+describe("formatMonthYear", () => {
+  it("formats a date as short month and year", () => {
+    expect(formatMonthYear(new Date(2024, 2, 15))).toBe("Mar 2024");
   });
 });
 
