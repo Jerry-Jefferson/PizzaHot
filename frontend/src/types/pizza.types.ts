@@ -22,3 +22,9 @@ export interface PizzaPayload {
   price: number;
   ingredientIds: string[];
 }
+
+export interface PizzaListQuery {
+  page?: number;
+  limit?: number;
+  search?: string;
+}

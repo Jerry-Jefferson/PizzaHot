@@ -24,3 +24,13 @@ export interface Cart {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface AddCartItemPayload {
+  pizzaId: string;
+  quantity: number;
+}
+
+export interface UpdateCartItemPayload {
+  pizzaId: string;
+  quantity: number;
+}

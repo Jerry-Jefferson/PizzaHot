@@ -42,11 +42,20 @@ describe("api-gateway (e2e)", () => {
         .expect(200)
         .expect("PizzaHot API is running. See /api-docs for the interactive documentation.");
     });
+
+    it.each(["/api/pizzas", "/api/pizzas/22222222-2222-4222-8222-222222222222"])(
+      "lets a guest past the guards on GET %s",
+      async (path) => {
+        const response = await request(app.getHttpServer()).get(path);
+
+        expect(response.status).not.toBe(401);
+        expect(response.status).not.toBe(403);
+      }
+    );
   });
 
   describe("authentication", () => {
     it.each([
-      ["/api/pizzas", "GET"],
       ["/api/carts", "GET"],
       ["/api/users", "GET"],
     ])("refuses %s %s without a token", (path) => {
@@ -55,7 +64,7 @@ describe("api-gateway (e2e)", () => {
 
     it("refuses a token it did not sign", () => {
       return request(app.getHttpServer())
-        .get("/api/pizzas")
+        .get("/api/carts")
         .set("Authorization", "Bearer not.a.real.token")
         .expect(401);
     });
@@ -64,7 +73,7 @@ describe("api-gateway (e2e)", () => {
       const malformed = jwt.sign({ sub: "not-a-uuid", email: "nope", role: "wizard" });
 
       return request(app.getHttpServer())
-        .get("/api/pizzas")
+        .get("/api/carts")
         .set("Authorization", `Bearer ${malformed}`)
         .expect(401);
     });
@@ -73,7 +82,7 @@ describe("api-gateway (e2e)", () => {
   describe("permissions", () => {
     it("lets a customer reach a route their role covers", async () => {
       const response = await request(app.getHttpServer())
-        .get("/api/pizzas")
+        .get("/api/carts")
         .set("Authorization", `Bearer ${tokenFor(Role.USER)}`);
 
       expect(response.status).not.toBe(401);
