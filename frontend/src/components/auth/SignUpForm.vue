@@ -2,6 +2,7 @@
 import { useTemplateRef } from "vue";
 
 import BaseButton from "@/components/base/BaseButton.vue";
+import BaseFormAlert from "@/components/base/BaseFormAlert.vue";
 import BaseFormField from "@/components/base/BaseFormField.vue";
 import BaseInput from "@/components/base/BaseInput.vue";
 import BasePasswordInput from "@/components/base/BasePasswordInput.vue";
@@ -46,15 +47,7 @@ defineExpose<SignUpFormExpose>({ focusField });
 
 <template>
   <form ref="form" class="flex flex-col gap-5" novalidate @submit.prevent="emit('submit')">
-    <div
-      v-if="formError"
-      class="flex items-center gap-2 rounded-control bg-primary/10 px-3 py-2.5 text-sm text-primary"
-      role="alert"
-      data-test="form-error"
-    >
-      <i class="pi pi-exclamation-circle" aria-hidden="true" />
-      {{ formError }}
-    </div>
+    <BaseFormAlert v-if="formError" :message="formError" />
 
     <div class="grid gap-5 sm:grid-cols-2">
       <BaseFormField

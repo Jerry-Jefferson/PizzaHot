@@ -2,7 +2,11 @@ import axios, { isAxiosError } from "axios";
 
 import { API_BASE_URL } from "@/utils/constants/api";
 
-const PATHS_WITHOUT_UNAUTHORIZED_HANDLER = new Set(["/auth/me", "/auth/login"]);
+const PATHS_WITHOUT_UNAUTHORIZED_HANDLER = new Set([
+  "/auth/me",
+  "/auth/login",
+  "/users/me/password",
+]);
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,

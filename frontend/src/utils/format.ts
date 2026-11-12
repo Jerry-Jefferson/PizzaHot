@@ -22,6 +22,8 @@ const dateTimeFormatter = new Intl.DateTimeFormat(LOCALE, {
   minute: "2-digit",
 });
 
+const monthYearFormatter = new Intl.DateTimeFormat(LOCALE, { month: "short", year: "numeric" });
+
 export function formatPrice(value: number | string): string {
   return priceFormatter.format(Number(value));
 }
@@ -32,6 +34,10 @@ export function formatDate(value: string | Date): string {
 
 export function formatDateTime(value: string | Date): string {
   return dateTimeFormatter.format(new Date(value));
+}
+
+export function formatMonthYear(value: string | Date): string {
+  return monthYearFormatter.format(new Date(value));
 }
 
 export function shortId(uuid: string): string {

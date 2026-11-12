@@ -67,6 +67,7 @@ const formattedPrice = computed(() => `$${pizza.price.toFixed(2)}`);
 | Reusable logic (pagination, search, Vuelidate forms) | Composable `use<Name>()` |
 | One component's UI state | Local `ref` |
 
+- Mutations: wrap the API call — `mutationFn: (payload) => updateMe(payload)`, never `mutationFn: updateMe` (vue-query passes a context object as the 2nd argument, which leaks into the API function).
 - Composables: one concern, explicit return type, accept `MaybeRefOrGetter<T>` + `toValue()`, return refs (destructurable).
 - Stores: read state with `storeToRefs()`, call actions directly; use them in views, not in dumb components.
 - Routing: `useRoute()` / `useRouter()` only; navigate by name (`router.push({ name: "pizza-details", params: { id } })`) and `void`/`await` the promise. Keep filters/search/page in `route.query`.

@@ -100,14 +100,17 @@ describe("401 interceptor", () => {
     expect(handler).toHaveBeenCalledOnce();
   });
 
-  it.each(["/auth/me", "/auth/login"])("skips the handler for %s", async (path) => {
-    const handler = vi.fn();
-    setUnauthorizedHandler(handler);
-    adapter.mockImplementation(respondWith(401));
+  it.each(["/auth/me", "/auth/login", "/users/me/password"])(
+    "skips the handler for %s",
+    async (path) => {
+      const handler = vi.fn();
+      setUnauthorizedHandler(handler);
+      adapter.mockImplementation(respondWith(401));
 
-    await expect(apiClient.post(path)).rejects.toBeInstanceOf(AxiosError);
-    expect(handler).not.toHaveBeenCalled();
-  });
+      await expect(apiClient.post(path)).rejects.toBeInstanceOf(AxiosError);
+      expect(handler).not.toHaveBeenCalled();
+    }
+  );
 
   it("ignores other error statuses", async () => {
     const handler = vi.fn();
