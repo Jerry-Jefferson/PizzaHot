@@ -11,6 +11,7 @@ export const QUERY_KEYS = {
       ["pizzas", "list", page, limit, search] as const,
     detail: (id: MaybeRef<string>) => ["pizzas", "detail", id] as const,
   },
+  ingredients: ["ingredients"] as const,
   myOrders: {
     all: ["orders", "my"] as const,
     list: (page: MaybeRef<number>, limit: MaybeRef<number>) =>
