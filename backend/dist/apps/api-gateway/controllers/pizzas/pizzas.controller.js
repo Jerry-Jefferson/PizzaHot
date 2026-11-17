@@ -22,6 +22,7 @@ import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { ApiAddPizza, ApiFindAllPizza, ApiFindOnePizza, ApiRemovePizza, ApiUpdatePizza, ApiUploadImagePizza, } from "./pizzas.api-docs.js";
 import { Can } from "../../../../libs/auth/decorators/can.decorator.js";
 import { Permission } from "../../../../libs/auth/permission.constant.js";
+import { Public } from "../../../../libs/auth/decorators/public.decorator.js";
 let PizzasController = class PizzasController {
     pizzasService;
     constructor(pizzasService) {
@@ -49,7 +50,7 @@ let PizzasController = class PizzasController {
 };
 __decorate([
     Get(),
-    Can(Permission.PIZZA_READ),
+    Public(),
     ApiFindAllPizza(),
     __param(0, Query(new ZodValidationPipe(listPizzasQuerySchema))),
     __metadata("design:type", Function),
@@ -58,7 +59,7 @@ __decorate([
 ], PizzasController.prototype, "findAll", null);
 __decorate([
     Get(":id"),
-    Can(Permission.PIZZA_READ),
+    Public(),
     ApiFindOnePizza(),
     __param(0, Param("id", ParseUUIDPipe)),
     __metadata("design:type", Function),
