@@ -3,7 +3,6 @@ import BaseButton from "@/components/base/BaseButton.vue";
 import BaseFormAlert from "@/components/base/BaseFormAlert.vue";
 import BaseFormField from "@/components/base/BaseFormField.vue";
 import BaseInput from "@/components/base/BaseInput.vue";
-import BasePasswordInput from "@/components/base/BasePasswordInput.vue";
 import type { SignInErrors, SignInField } from "@/types/auth.types";
 
 interface SignInFormProps {
@@ -53,10 +52,12 @@ const password = defineModel<string>("password", { required: true });
       label="Password"
       :error="errors.password"
     >
-      <BasePasswordInput
+      <BaseInput
         :id="id"
         v-model="password"
+        is-password
         placeholder="Enter your password"
+        autocomplete="current-password"
         :invalid="invalid"
         :aria-describedby="describedBy"
         @blur="emit('blur', 'password')"

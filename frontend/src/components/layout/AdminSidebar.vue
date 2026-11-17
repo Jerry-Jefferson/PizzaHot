@@ -2,6 +2,7 @@
 import { RouterLink } from "vue-router";
 
 import type { UserSummary } from "@/types/user.types";
+import { ROUTES } from "@/utils/constants/routes.constants";
 
 import AdminSidebarUser from "./AdminSidebarUser.vue";
 import AppLogo from "./AppLogo.vue";
@@ -40,34 +41,43 @@ const SECTIONS: SidebarSection[] = [
       {
         label: "Dashboard",
         icon: "pi pi-th-large",
-        routeName: "admin-dashboard",
-        matches: ["admin-dashboard"],
+        routeName: ROUTES.ADMIN.NAME,
+        matches: [ROUTES.ADMIN.NAME],
       },
       {
         label: "Pizzas",
         icon: "pi pi-box",
-        routeName: "admin-pizzas",
-        matches: ["admin-pizzas", "admin-pizza-new", "admin-pizza-edit"],
+        routeName: ROUTES.ADMIN_PIZZAS.NAME,
+        matches: [
+          ROUTES.ADMIN_PIZZAS.NAME,
+          ROUTES.ADMIN_PIZZAS_NEW.NAME,
+          ROUTES.ADMIN_PIZZAS_EDIT.NAME,
+        ],
       },
       {
         label: "Orders",
         icon: "pi pi-receipt",
-        routeName: "admin-orders",
-        matches: ["admin-orders"],
+        routeName: ROUTES.ADMIN_ORDERS.NAME,
+        matches: [ROUTES.ADMIN_ORDERS.NAME],
         showsPendingCount: true,
       },
-      { label: "Users", icon: "pi pi-users", routeName: "admin-users", matches: ["admin-users"] },
+      {
+        label: "Users",
+        icon: "pi pi-users",
+        routeName: ROUTES.ADMIN_USERS.NAME,
+        matches: [ROUTES.ADMIN_USERS.NAME],
+      },
       {
         label: "Promo codes",
         icon: "pi pi-tag",
-        routeName: "admin-promocodes",
-        matches: ["admin-promocodes"],
+        routeName: ROUTES.ADMIN_PROMOCODES.NAME,
+        matches: [ROUTES.ADMIN_PROMOCODES.NAME],
       },
       {
         label: "Analytics",
         icon: "pi pi-chart-bar",
-        routeName: "admin-analytics",
-        matches: ["admin-analytics"],
+        routeName: ROUTES.ADMIN_ANALYTICS.NAME,
+        matches: [ROUTES.ADMIN_ANALYTICS.NAME],
       },
     ],
   },
@@ -77,8 +87,8 @@ const SECTIONS: SidebarSection[] = [
       {
         label: "Profile",
         icon: "pi pi-user",
-        routeName: "admin-profile",
-        matches: ["admin-profile"],
+        routeName: ROUTES.ADMIN_PROFILE.NAME,
+        matches: [ROUTES.ADMIN_PROFILE.NAME],
       },
     ],
   },
@@ -91,7 +101,7 @@ const isActive = (item: SidebarItem): boolean =>
 <template>
   <div class="theme-sidebar flex h-full flex-col bg-sidebar text-sidebar-foreground">
     <div class="px-5 py-6">
-      <RouterLink :to="{ name: 'admin-dashboard' }" aria-label="Admin dashboard">
+      <RouterLink :to="{ name: ROUTES.ADMIN.NAME }" aria-label="Admin dashboard">
         <AppLogo inverted />
       </RouterLink>
     </div>

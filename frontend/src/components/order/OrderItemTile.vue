@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BasePizzaIcon from "@/components/base/BasePizzaIcon.vue";
+import PizzaIcon from "@/components/icon/PizzaIcon.vue";
 
 interface OrderItemTileProps {
   size?: "sm" | "md";
@@ -15,6 +15,6 @@ const { size = "md" } = defineProps<OrderItemTileProps>();
       size === 'sm' ? 'size-10' : 'size-14',
     ]"
   >
-    <BasePizzaIcon :class="size === 'sm' ? 'size-5' : 'size-6'" />
+    <PizzaIcon :class="size === 'sm' ? 'size-5' : 'size-6'" />
   </span>
 </template>

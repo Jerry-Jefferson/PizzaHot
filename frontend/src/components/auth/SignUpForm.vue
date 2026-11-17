@@ -5,7 +5,6 @@ import BaseButton from "@/components/base/BaseButton.vue";
 import BaseFormAlert from "@/components/base/BaseFormAlert.vue";
 import BaseFormField from "@/components/base/BaseFormField.vue";
 import BaseInput from "@/components/base/BaseInput.vue";
-import BasePasswordInput from "@/components/base/BasePasswordInput.vue";
 import type { SignUpErrors, SignUpField, SignUpFormExpose } from "@/types/auth.types";
 
 interface SignUpFormProps {
@@ -111,9 +110,10 @@ defineExpose<SignUpFormExpose>({ focusField });
       label="Password"
       :error="errors.password"
     >
-      <BasePasswordInput
+      <BaseInput
         :id="id"
         v-model="password"
+        is-password
         placeholder="Create a password"
         autocomplete="new-password"
         :invalid="invalid"
@@ -128,9 +128,10 @@ defineExpose<SignUpFormExpose>({ focusField });
       label="Confirm password"
       :error="errors.confirmPassword"
     >
-      <BasePasswordInput
+      <BaseInput
         :id="id"
         v-model="confirmPassword"
+        is-password
         placeholder="Repeat your password"
         autocomplete="new-password"
         :invalid="invalid"

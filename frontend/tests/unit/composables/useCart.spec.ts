@@ -1,18 +1,10 @@
 import { QueryClient, VueQueryPlugin } from "@tanstack/vue-query";
 import { flushPromises, mount } from "@vue/test-utils";
-import {
-  AxiosError,
-  AxiosHeaders,
-  type InternalAxiosRequestConfig,
-  type RawAxiosResponseHeaders,
-} from "axios";
 import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { defineComponent } from "vue";
 
-import * as cartApi from "@/api/cart";
 import {
-  CART_QUERY_KEY,
   useAddToCart,
   useApplyPromocode,
   useCart,
@@ -22,11 +14,14 @@ import {
   useRemovePromocode,
   useUpdateCartItem,
 } from "@/composables/useCart";
+import * as cartApi from "@/services/api/cart";
+import { ApiError } from "@/services/errors";
 import { useAuthStore } from "@/stores/auth";
 import type { Cart, CartItem } from "@/types/cart.types";
 import type { User } from "@/types/user.types";
+import { QUERY_KEYS } from "@/utils/constants/query-keys.constants";
 
-vi.mock("@/api/cart", () => ({
+vi.mock("@/services/api/cart", () => ({
   getCart: vi.fn(),
   addItem: vi.fn(),
   updateItemQuantity: vi.fn(),
@@ -35,7 +30,12 @@ vi.mock("@/api/cart", () => ({
   applyPromocode: vi.fn(),
   removePromocode: vi.fn(),
 }));
-vi.mock("@/api/auth", () => ({ me: vi.fn(), signIn: vi.fn(), signUp: vi.fn(), signOut: vi.fn() }));
+vi.mock("@/services/api/auth", () => ({
+  me: vi.fn(),
+  signIn: vi.fn(),
+  signUp: vi.fn(),
+  signOut: vi.fn(),
+}));
 
 const item = (pizzaId: string, quantity: number): CartItem => ({
   id: `item-${pizzaId}`,
@@ -54,14 +54,7 @@ const cartWith = (...cartItems: CartItem[]): Cart => ({
   updatedAt: "2026-01-01T00:00:00.000Z",
 });
 
-const config = { headers: new AxiosHeaders() } as InternalAxiosRequestConfig;
-const badRequest = new AxiosError("Bad", "ERR_BAD_REQUEST", config, null, {
-  data: { statusCode: 400, message: "Quantity cannot exceed 50" },
-  status: 400,
-  statusText: "",
-  headers: {} as RawAxiosResponseHeaders,
-  config,
-});
+const badRequest = new ApiError("Quantity cannot exceed 50", { status: 400 });
 
 function withQuery<T>(composable: () => T, signedIn = true) {
   const pinia = createPinia();
@@ -85,7 +78,7 @@ function withQuery<T>(composable: () => T, signedIn = true) {
   return { result, queryClient };
 }
 
-const cachedCart = (queryClient: QueryClient) => queryClient.getQueryData<Cart>(CART_QUERY_KEY);
+const cachedCart = (queryClient: QueryClient) => queryClient.getQueryData<Cart>(QUERY_KEYS.cart);
 
 beforeEach(() => {
   vi.resetAllMocks();
@@ -131,23 +124,23 @@ describe("useAddToCart", () => {
     vi.mocked(cartApi.getCart).mockResolvedValue(cartWith(item("p1", 3), item("p2", 1)));
     vi.mocked(cartApi.addItem).mockResolvedValue(item("p2", 1));
     const { result, queryClient } = withQuery(() => useAddToCart());
-    queryClient.setQueryData(CART_QUERY_KEY, cartWith(item("p1", 3)));
+    queryClient.setQueryData(QUERY_KEYS.cart, cartWith(item("p1", 3)));
     const setQueryData = vi.spyOn(queryClient, "setQueryData");
     const invalidate = vi.spyOn(queryClient, "invalidateQueries");
 
     await result.mutateAsync({ pizzaId: "p2", quantity: 1 });
 
     expect(cartApi.addItem).toHaveBeenCalledWith({ pizzaId: "p2", quantity: 1 });
-    expect(setQueryData).toHaveBeenCalledWith(CART_QUERY_KEY, expect.any(Function));
+    expect(setQueryData).toHaveBeenCalledWith(QUERY_KEYS.cart, expect.any(Function));
     expect(setQueryData.mock.results[0]?.value).toEqual(cartWith(item("p1", 3), item("p2", 1)));
-    expect(invalidate).toHaveBeenCalledWith({ queryKey: CART_QUERY_KEY });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: QUERY_KEYS.cart });
   });
 
   it("replaces an item that is already in the cart", async () => {
     vi.mocked(cartApi.getCart).mockReturnValue(new Promise(() => undefined));
     vi.mocked(cartApi.addItem).mockResolvedValue(item("p1", 4));
     const { result, queryClient } = withQuery(() => useAddToCart());
-    queryClient.setQueryData(CART_QUERY_KEY, cartWith(item("p1", 3)));
+    queryClient.setQueryData(QUERY_KEYS.cart, cartWith(item("p1", 3)));
 
     await result.mutateAsync({ pizzaId: "p1", quantity: 1 });
 
@@ -165,7 +158,7 @@ describe("useUpdateCartItem", () => {
     );
     vi.mocked(cartApi.getCart).mockResolvedValue(cartWith(item("p1", 5)));
     const { result, queryClient } = withQuery(() => useUpdateCartItem());
-    queryClient.setQueryData(CART_QUERY_KEY, cartWith(item("p1", 2)));
+    queryClient.setQueryData(QUERY_KEYS.cart, cartWith(item("p1", 2)));
 
     result.mutate({ pizzaId: "p1", quantity: 5 });
     await flushPromises();
@@ -183,7 +176,7 @@ describe("useUpdateCartItem", () => {
     vi.mocked(cartApi.getCart).mockReturnValue(new Promise(() => undefined));
     const { result, queryClient } = withQuery(() => useUpdateCartItem());
     const previous = cartWith(item("p1", 2));
-    queryClient.setQueryData(CART_QUERY_KEY, previous);
+    queryClient.setQueryData(QUERY_KEYS.cart, previous);
 
     await expect(result.mutateAsync({ pizzaId: "p1", quantity: 51 })).rejects.toBe(badRequest);
 
@@ -194,13 +187,13 @@ describe("useUpdateCartItem", () => {
     vi.mocked(cartApi.updateItemQuantity).mockResolvedValue(null);
     vi.mocked(cartApi.getCart).mockReturnValue(new Promise(() => undefined));
     const { result, queryClient } = withQuery(() => useUpdateCartItem());
-    queryClient.setQueryData(CART_QUERY_KEY, cartWith(item("p1", 2), item("p2", 1)));
+    queryClient.setQueryData(QUERY_KEYS.cart, cartWith(item("p1", 2), item("p2", 1)));
     const invalidate = vi.spyOn(queryClient, "invalidateQueries");
 
     await result.mutateAsync({ pizzaId: "p1", quantity: 0 });
 
     expect(cachedCart(queryClient)?.cartItems).toEqual([item("p2", 1)]);
-    expect(invalidate).toHaveBeenCalledWith({ queryKey: CART_QUERY_KEY });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: QUERY_KEYS.cart });
   });
 });
 
@@ -213,7 +206,7 @@ describe("useRemoveCartItem / useClearCart", () => {
     await result.mutateAsync("p1");
 
     expect(cartApi.removeItem).toHaveBeenCalledWith("p1");
-    expect(invalidate).toHaveBeenCalledWith({ queryKey: CART_QUERY_KEY });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: QUERY_KEYS.cart });
   });
 
   it("invalidates the cart after clearing it", async () => {
@@ -224,7 +217,7 @@ describe("useRemoveCartItem / useClearCart", () => {
     await result.mutateAsync();
 
     expect(cartApi.clearCart).toHaveBeenCalledOnce();
-    expect(invalidate).toHaveBeenCalledWith({ queryKey: CART_QUERY_KEY });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: QUERY_KEYS.cart });
   });
 });
 
@@ -239,7 +232,7 @@ describe("useUpdateCartItem concurrency", () => {
     );
     vi.mocked(cartApi.getCart).mockReturnValue(new Promise(() => undefined));
     const { result, queryClient } = withQuery(() => useUpdateCartItem());
-    queryClient.setQueryData(CART_QUERY_KEY, cartWith(item("p1", 1)));
+    queryClient.setQueryData(QUERY_KEYS.cart, cartWith(item("p1", 1)));
     const invalidate = vi.spyOn(queryClient, "invalidateQueries");
 
     result.mutate({ pizzaId: "p1", quantity: 2 });

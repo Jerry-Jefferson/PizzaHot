@@ -1,8 +1,8 @@
 import { useToast } from "primevue/usetoast";
 
-import { getErrorMessage } from "@/api/errors";
+import { getErrorMessage } from "@/services/errors";
 
-export const TOAST_LIFE_MS = 3000;
+const TOAST_LIFE_MS = 3000;
 
 interface AppToast {
   showSuccess: (summary: string, detail?: string) => void;

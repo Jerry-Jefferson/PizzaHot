@@ -6,8 +6,6 @@ interface AuthHeroPanelProps {
 }
 
 const { headline, subtitle, chips = [] } = defineProps<AuthHeroPanelProps>();
-
-defineSlots<{ default?: () => unknown; footnote?: () => unknown }>();
 </script>
 
 <template>

@@ -2,6 +2,7 @@
 import { RouterLink, RouterView } from "vue-router";
 
 import AppLogo from "@/components/layout/AppLogo.vue";
+import { ROUTES } from "@/utils/constants/routes.constants";
 </script>
 
 <template>
@@ -18,7 +19,7 @@ import AppLogo from "@/components/layout/AppLogo.vue";
         aria-hidden="true"
       />
       <div class="relative px-6 py-4 lg:px-12 lg:pt-12">
-        <RouterLink :to="{ name: 'menu' }" aria-label="Pizzeria home" class="inline-flex">
+        <RouterLink :to="{ name: ROUTES.HOME.NAME }" aria-label="Pizzeria home" class="inline-flex">
           <AppLogo inverted />
         </RouterLink>
       </div>

@@ -1,22 +1,22 @@
-import { useVuelidate } from "@vuelidate/core";
 import { email, helpers, required, sameAs } from "@vuelidate/validators";
-import { computed, type ComputedRef, reactive, type Ref, toRef, toValue } from "vue";
+import { type ComputedRef, reactive, type Ref, toRef } from "vue";
 
-import { getErrorStatus } from "@/api/errors";
+import { getErrorStatus } from "@/services/errors";
 import type {
   SignUpErrors,
   SignUpField,
   SignUpFormValues,
   SignUpPayload,
 } from "@/types/auth.types";
-import { NAME_MAX } from "@/utils/constants/limits";
+import { TOO_MANY_ATTEMPTS_MESSAGE } from "@/utils/constants/auth.constants";
+import { NAME_MAX } from "@/utils/constants/limits.constants";
 import { PASSWORD_RULES } from "@/utils/password-rules";
 
-import { TOO_MANY_ATTEMPTS_MESSAGE, useServerFormErrors } from "./useServerFormErrors";
+import { useValidatedForm } from "./useValidatedForm";
 
 export const EMAIL_TAKEN_MESSAGE = "An account with this email already exists";
 
-export const SIGN_UP_FIELDS: readonly SignUpField[] = [
+const SIGN_UP_FIELDS: readonly SignUpField[] = [
   "name",
   "surname",
   "email",
@@ -52,7 +52,6 @@ export function useSignUpForm(): SignUpForm {
     password: "",
     confirmPassword: "",
   });
-  const server = useServerFormErrors(SIGN_UP_FIELDS, form);
 
   const rules = {
     name: {
@@ -86,27 +85,11 @@ export function useSignUpForm(): SignUpForm {
     },
   };
 
-  const v$ = useVuelidate(rules, form);
-
-  const errors = computed<SignUpErrors>(() =>
-    Object.fromEntries(
-      SIGN_UP_FIELDS.map((field) => {
-        const clientError = v$.value[field].$errors[0]?.$message;
-        return [field, clientError ? toValue(clientError) : server.fieldErrors.value[field]];
-      })
-    )
+  const { server, errors, touch, validate, firstInvalidField, formError } = useValidatedForm(
+    SIGN_UP_FIELDS,
+    form,
+    rules
   );
-
-  const firstInvalidField = computed(() => SIGN_UP_FIELDS.find((field) => errors.value[field]));
-
-  function touch(field: SignUpField): void {
-    v$.value[field].$touch();
-  }
-
-  async function validate(): Promise<boolean> {
-    server.clear();
-    return v$.value.$validate();
-  }
 
   function toPayload(): SignUpPayload {
     return {
@@ -129,7 +112,7 @@ export function useSignUpForm(): SignUpForm {
   return {
     form,
     errors,
-    formError: server.formError,
+    formError,
     firstInvalidField,
     touch,
     validate,

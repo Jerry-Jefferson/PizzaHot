@@ -17,17 +17,10 @@ import {
   removeItem,
   removePromocode,
   updateItemQuantity,
-} from "@/api/cart";
+} from "@/services/api/cart";
 import { useAuthStore } from "@/stores/auth";
-import type {
-  AddCartItemPayload,
-  Cart,
-  CartItem,
-  UpdateCartItemPayload,
-} from "@/types/cart.types";
-
-export const CART_QUERY_KEY = ["cart"] as const;
-const UPDATE_CART_ITEM_KEY = ["cart", "update-item"] as const;
+import type { Cart, CartItem, CartItemPayload } from "@/types/cart.types";
+import { QUERY_KEYS } from "@/utils/constants/query-keys.constants";
 
 interface CartSnapshot {
   previousCart: Cart | undefined;
@@ -59,14 +52,14 @@ function setItemQuantity(
 }
 
 function refreshCart(queryClient: QueryClient): Promise<void> {
-  return queryClient.invalidateQueries({ queryKey: CART_QUERY_KEY });
+  return queryClient.invalidateQueries({ queryKey: QUERY_KEYS.cart });
 }
 
 export function useCart(): UseQueryReturnType<Cart, Error> {
   const { isAuthenticated } = storeToRefs(useAuthStore());
 
   return useQuery({
-    queryKey: CART_QUERY_KEY,
+    queryKey: QUERY_KEYS.cart,
     queryFn: () => getCart(),
     enabled: isAuthenticated,
   });
@@ -79,18 +72,13 @@ export function useCartItemCount(): ComputedRef<number> {
   );
 }
 
-export function useAddToCart(): UseMutationReturnType<
-  CartItem,
-  Error,
-  AddCartItemPayload,
-  unknown
-> {
+export function useAddToCart(): UseMutationReturnType<CartItem, Error, CartItemPayload, unknown> {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (payload) => addItem(payload),
     onSuccess: async (item) => {
-      queryClient.setQueryData<Cart>(CART_QUERY_KEY, (cart) => upsertCartItem(cart, item));
+      queryClient.setQueryData<Cart>(QUERY_KEYS.cart, (cart) => upsertCartItem(cart, item));
       await refreshCart(queryClient);
     },
   });
@@ -99,34 +87,34 @@ export function useAddToCart(): UseMutationReturnType<
 export function useUpdateCartItem(): UseMutationReturnType<
   CartItem | null,
   Error,
-  UpdateCartItemPayload,
+  CartItemPayload,
   CartSnapshot
 > {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: UPDATE_CART_ITEM_KEY,
+    mutationKey: QUERY_KEYS.cartUpdateItem,
     mutationFn: (payload) => updateItemQuantity(payload),
     onMutate: async ({ pizzaId, quantity }) => {
-      await queryClient.cancelQueries({ queryKey: CART_QUERY_KEY });
-      const previousCart = queryClient.getQueryData<Cart>(CART_QUERY_KEY);
-      queryClient.setQueryData<Cart>(CART_QUERY_KEY, (cart) =>
+      await queryClient.cancelQueries({ queryKey: QUERY_KEYS.cart });
+      const previousCart = queryClient.getQueryData<Cart>(QUERY_KEYS.cart);
+      queryClient.setQueryData<Cart>(QUERY_KEYS.cart, (cart) =>
         setItemQuantity(cart, pizzaId, quantity)
       );
       return { previousCart };
     },
     onError: (_error, _payload, context) => {
       if (context?.previousCart) {
-        queryClient.setQueryData(CART_QUERY_KEY, context.previousCart);
+        queryClient.setQueryData(QUERY_KEYS.cart, context.previousCart);
       }
     },
     onSuccess: (item) => {
       if (item) {
-        queryClient.setQueryData<Cart>(CART_QUERY_KEY, (cart) => upsertCartItem(cart, item));
+        queryClient.setQueryData<Cart>(QUERY_KEYS.cart, (cart) => upsertCartItem(cart, item));
       }
     },
     onSettled: async () => {
-      if (queryClient.isMutating({ mutationKey: UPDATE_CART_ITEM_KEY }) === 1) {
+      if (queryClient.isMutating({ mutationKey: QUERY_KEYS.cartUpdateItem }) === 1) {
         await refreshCart(queryClient);
       }
     },
@@ -157,7 +145,7 @@ export function useApplyPromocode(): UseMutationReturnType<Cart, Error, string, 
   return useMutation({
     mutationFn: (code) => applyPromocode(code),
     onSuccess: (cart) => {
-      queryClient.setQueryData(CART_QUERY_KEY, cart);
+      queryClient.setQueryData(QUERY_KEYS.cart, cart);
     },
   });
 }
@@ -168,7 +156,7 @@ export function useRemovePromocode(): UseMutationReturnType<Cart, Error, void, u
   return useMutation({
     mutationFn: () => removePromocode(),
     onSuccess: (cart) => {
-      queryClient.setQueryData(CART_QUERY_KEY, cart);
+      queryClient.setQueryData(QUERY_KEYS.cart, cart);
     },
   });
 }

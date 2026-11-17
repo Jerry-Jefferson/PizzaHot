@@ -2,6 +2,7 @@
 import { RouterLink } from "vue-router";
 
 import { OrderStatus } from "@/types/order.types";
+import { ROUTES } from "@/utils/constants/routes.constants";
 
 interface AdminTopbarProps {
   title: string;
@@ -31,7 +32,7 @@ const emit = defineEmits<AdminTopbarEmits>();
     <h1 class="flex-1 font-display text-2xl font-bold text-foreground">{{ title }}</h1>
     <RouterLink
       v-if="pendingCount > 0"
-      :to="{ name: 'admin-orders', query: { status: OrderStatus.PENDING } }"
+      :to="{ name: ROUTES.ADMIN_ORDERS.NAME, query: { status: OrderStatus.PENDING } }"
       data-test="pending-pill"
       class="inline-flex items-center gap-1.5 rounded-full bg-status-warning-bg px-3 py-1 text-xs font-medium text-status-warning-fg"
     >

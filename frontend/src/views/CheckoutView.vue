@@ -3,7 +3,6 @@ import { storeToRefs } from "pinia";
 import { computed, nextTick, ref, watch } from "vue";
 import { RouterLink, useRouter } from "vue-router";
 
-import { getErrorMessage, isEmailNotVerifiedError } from "@/api/errors";
 import EmailVerificationBanner from "@/components/auth/EmailVerificationBanner.vue";
 import BaseButton from "@/components/base/BaseButton.vue";
 import BaseCard from "@/components/base/BaseCard.vue";
@@ -17,9 +16,12 @@ import { useCart } from "@/composables/useCart";
 import { useCheckoutForm } from "@/composables/useCheckoutForm";
 import { useCreateOrder } from "@/composables/useCreateOrder";
 import { useRefreshSession } from "@/composables/useRefreshSession";
+import { getErrorMessage, isEmailNotVerifiedError } from "@/services/errors";
 import { useAuthStore } from "@/stores/auth";
 import { DeliveryType } from "@/types/order.types";
+import { ROUTES } from "@/utils/constants/routes.constants";
 import { formatPrice } from "@/utils/format";
+import { logError } from "@/utils/logger";
 
 const FIELD_INPUT_IDS: Partial<Record<string, string>> = {
   address: "checkout-address",
@@ -50,7 +52,7 @@ watch(
   cart,
   (current) => {
     if (current?.cartItems.length === 0 && !isSubmitting.value) {
-      void router.replace({ name: "cart" });
+      router.replace({ name: ROUTES.CART.NAME }).catch(logError("Empty cart redirect"));
     }
   },
   { immediate: true }
@@ -87,24 +89,24 @@ async function placeOrder(): Promise<void> {
     }
     const order = await createOrder.mutateAsync(checkout.toPayload());
     await router.push({
-      name: "my-order-details",
+      name: ROUTES.MY_ORDERS_DETAILS.NAME,
       params: { id: order.id },
       query: { placed: "1" },
     });
   } catch (error) {
     isSubmitting.value = false;
-    handleOrderError(error);
+    await handleOrderError(error);
   }
 }
 
-function handleOrderError(error: unknown): void {
+async function handleOrderError(error: unknown): Promise<void> {
   if (isEmailNotVerifiedError(error)) {
     emailNotVerified.value = true;
     return;
   }
   checkout.applyServerError(error);
   if (checkout.firstInvalidField.value) {
-    void focusFirstInvalidField();
+    await focusFirstInvalidField();
     return;
   }
   orderError.value = getErrorMessage(error);
@@ -116,7 +118,7 @@ function handleOrderError(error: unknown): void {
   <section class="flex flex-col gap-6">
     <header class="flex items-center gap-3">
       <RouterLink
-        :to="{ name: 'cart' }"
+        :to="{ name: ROUTES.CART.NAME }"
         aria-label="Back to cart"
         class="flex size-10 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
       >
@@ -140,7 +142,10 @@ function handleOrderError(error: unknown): void {
     >
       <i class="pi pi-exclamation-circle" aria-hidden="true" />
       <span>{{ orderError }}</span>
-      <RouterLink :to="{ name: 'cart' }" class="font-semibold underline underline-offset-2">
+      <RouterLink
+        :to="{ name: ROUTES.CART.NAME }"
+        class="font-semibold underline underline-offset-2"
+      >
         Review your cart
       </RouterLink>
     </div>

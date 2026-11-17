@@ -1,14 +1,9 @@
 import { mount } from "@vue/test-utils";
-import {
-  AxiosError,
-  AxiosHeaders,
-  type InternalAxiosRequestConfig,
-  type RawAxiosResponseHeaders,
-} from "axios";
 import { describe, expect, it } from "vitest";
 import { defineComponent } from "vue";
 
 import { useCheckoutForm } from "@/composables/useCheckoutForm";
+import { ApiError } from "@/services/errors";
 import { DeliveryType, PaymentMethod } from "@/types/order.types";
 
 function setup() {
@@ -107,14 +102,10 @@ describe("useCheckoutForm", () => {
 
   it("maps server field errors and clears them when the field changes", async () => {
     const checkout = setup();
-    const config = { headers: new AxiosHeaders() } as InternalAxiosRequestConfig;
     checkout.applyServerError(
-      new AxiosError("Bad", "ERR_BAD_REQUEST", config, null, {
-        data: { formErrors: [], fieldErrors: { address: ["Address is required for delivery"] } },
+      new ApiError("Address is required for delivery", {
         status: 400,
-        statusText: "",
-        headers: {} as RawAxiosResponseHeaders,
-        config,
+        fieldErrors: { address: ["Address is required for delivery"] },
       })
     );
 

@@ -6,13 +6,13 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { defineComponent } from "vue";
 import { createMemoryHistory, createRouter } from "vue-router";
 
-import * as authApi from "@/api/auth";
 import { useSignOut } from "@/composables/useSignOut";
 import { routes } from "@/router/routes";
+import * as authApi from "@/services/api/auth";
 import { useAuthStore } from "@/stores/auth";
 import type { User } from "@/types/user.types";
 
-vi.mock("@/api/auth", () => ({ signOut: vi.fn(), me: vi.fn(), signIn: vi.fn(), signUp: vi.fn() }));
+vi.mock("@/services/api/auth", () => ({ signOut: vi.fn(), me: vi.fn(), signIn: vi.fn(), signUp: vi.fn() }));
 
 const USER = { id: "u1", role: "user", email: "mario@x.io" } as User;
 

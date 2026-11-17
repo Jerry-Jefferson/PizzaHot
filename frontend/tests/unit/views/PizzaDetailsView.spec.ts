@@ -1,28 +1,29 @@
 import { QueryClient, VueQueryPlugin } from "@tanstack/vue-query";
 import { flushPromises, mount, type VueWrapper } from "@vue/test-utils";
-import {
-  AxiosError,
-  AxiosHeaders,
-  type InternalAxiosRequestConfig,
-  type RawAxiosResponseHeaders,
-} from "axios";
 import { createPinia, setActivePinia } from "pinia";
 import PrimeVue from "primevue/config";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createMemoryHistory, createRouter, createWebHistory } from "vue-router";
 
-import * as cartApi from "@/api/cart";
-import * as pizzasApi from "@/api/pizzas";
 import { routes } from "@/router/routes";
+import * as cartApi from "@/services/api/cart";
+import * as pizzasApi from "@/services/api/pizzas";
+import { ApiError } from "@/services/errors";
 import { useAuthStore } from "@/stores/auth";
 import type { Cart } from "@/types/cart.types";
 import type { Pizza } from "@/types/pizza.types";
 import type { User } from "@/types/user.types";
+import { QUERY_KEYS } from "@/utils/constants/query-keys.constants";
 import PizzaDetailsView from "@/views/PizzaDetailsView.vue";
 
-vi.mock("@/api/pizzas", () => ({ listPizzas: vi.fn(), getPizza: vi.fn() }));
-vi.mock("@/api/cart", () => ({ getCart: vi.fn(), addItem: vi.fn() }));
-vi.mock("@/api/auth", () => ({ me: vi.fn(), signIn: vi.fn(), signUp: vi.fn(), signOut: vi.fn() }));
+vi.mock("@/services/api/pizzas", () => ({ listPizzas: vi.fn(), getPizza: vi.fn() }));
+vi.mock("@/services/api/cart", () => ({ getCart: vi.fn(), addItem: vi.fn() }));
+vi.mock("@/services/api/auth", () => ({
+  me: vi.fn(),
+  signIn: vi.fn(),
+  signUp: vi.fn(),
+  signOut: vi.fn(),
+}));
 
 const { toastAdd } = vi.hoisted(() => ({ toastAdd: vi.fn() }));
 vi.mock("primevue/usetoast", () => ({ useToast: () => ({ add: toastAdd }) }));
@@ -60,15 +61,7 @@ const cartWith = (quantity: number): Cart => ({
   updatedAt: "",
 });
 
-const config = { headers: new AxiosHeaders() } as InternalAxiosRequestConfig;
-const httpError = (status: number, message: string) =>
-  new AxiosError("Request failed", "ERR_BAD_REQUEST", config, null, {
-    data: { statusCode: status, message },
-    status,
-    statusText: "",
-    headers: {} as RawAxiosResponseHeaders,
-    config,
-  });
+const httpError = (status: number, message: string) => new ApiError(message, { status });
 
 let wrapper: VueWrapper | undefined;
 
@@ -159,7 +152,7 @@ describe("PizzaDetailsView", () => {
   it("uses the pizza from the menu cache without waiting for the request", async () => {
     vi.mocked(pizzasApi.getPizza).mockReturnValue(new Promise(() => undefined));
     const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-    queryClient.setQueryData(["pizzas", 1, 9, ""], {
+    queryClient.setQueryData(QUERY_KEYS.pizzas.list(1, 9, ""), {
       data: [PIZZA],
       page: 1,
       limit: 9,

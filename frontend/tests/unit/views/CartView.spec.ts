@@ -1,11 +1,5 @@
 import { QueryClient, VueQueryPlugin } from "@tanstack/vue-query";
 import { flushPromises, mount, type VueWrapper } from "@vue/test-utils";
-import {
-  AxiosError,
-  AxiosHeaders,
-  type InternalAxiosRequestConfig,
-  type RawAxiosResponseHeaders,
-} from "axios";
 import { createPinia, setActivePinia } from "pinia";
 import PrimeVue from "primevue/config";
 import ConfirmationService from "primevue/confirmationservice";
@@ -13,16 +7,17 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { defineComponent, h } from "vue";
 import { createMemoryHistory, createRouter } from "vue-router";
 
-import * as cartApi from "@/api/cart";
 import BaseConfirmDialog from "@/components/base/BaseConfirmDialog.vue";
 import { routes } from "@/router/routes";
+import * as cartApi from "@/services/api/cart";
+import { ApiError, FALLBACK_ERROR_MESSAGE, type FieldErrors } from "@/services/errors";
 import { useAuthStore } from "@/stores/auth";
 import type { Cart, CartItem } from "@/types/cart.types";
 import { DiscountMode } from "@/types/promocode.types";
 import type { User } from "@/types/user.types";
 import CartView from "@/views/CartView.vue";
 
-vi.mock("@/api/cart", () => ({
+vi.mock("@/services/api/cart", () => ({
   getCart: vi.fn(),
   addItem: vi.fn(),
   updateItemQuantity: vi.fn(),
@@ -31,7 +26,7 @@ vi.mock("@/api/cart", () => ({
   applyPromocode: vi.fn(),
   removePromocode: vi.fn(),
 }));
-vi.mock("@/api/auth", () => ({ me: vi.fn(), signIn: vi.fn(), signUp: vi.fn(), signOut: vi.fn() }));
+vi.mock("@/services/api/auth", () => ({ me: vi.fn(), signIn: vi.fn(), signUp: vi.fn(), signOut: vi.fn() }));
 
 const { toastAdd } = vi.hoisted(() => ({ toastAdd: vi.fn() }));
 vi.mock("primevue/usetoast", () => ({ useToast: () => ({ add: toastAdd }) }));
@@ -81,15 +76,8 @@ const PROMO = {
   validTill: "2030-01-01T00:00:00.000Z",
 };
 
-const config = { headers: new AxiosHeaders() } as InternalAxiosRequestConfig;
-const httpError = (status: number, data: unknown) =>
-  new AxiosError("Request failed", "ERR_BAD_REQUEST", config, null, {
-    data,
-    status,
-    statusText: "",
-    headers: {} as RawAxiosResponseHeaders,
-    config,
-  });
+const httpError = (status: number, message: string, fieldErrors: FieldErrors = {}) =>
+  new ApiError(message, { status, fieldErrors });
 
 let wrapper: VueWrapper | undefined;
 
@@ -193,7 +181,7 @@ describe("CartView", () => {
 
   it("rolls back and toasts when the quantity update fails", async () => {
     vi.mocked(cartApi.updateItemQuantity).mockRejectedValue(
-      httpError(400, { statusCode: 400, message: "Quantity cannot exceed 50" })
+      httpError(400, "Quantity cannot exceed 50")
     );
     const { wrapper } = await setup();
 
@@ -269,7 +257,7 @@ describe("CartView", () => {
 
     it("shows the backend error and clears it when the code is edited", async () => {
       vi.mocked(cartApi.applyPromocode).mockRejectedValue(
-        httpError(404, { statusCode: 404, message: "Promocode not found" })
+        httpError(404, "Promocode not found")
       );
       const { wrapper } = await setup();
 
@@ -286,7 +274,7 @@ describe("CartView", () => {
     });
 
     it("falls back to a generic promo message for an unreadable error", async () => {
-      vi.mocked(cartApi.applyPromocode).mockRejectedValue(httpError(500, "oops"));
+      vi.mocked(cartApi.applyPromocode).mockRejectedValue(httpError(500, FALLBACK_ERROR_MESSAGE));
       const { wrapper } = await setup();
 
       await promoInput(wrapper).setValue("NOPE");

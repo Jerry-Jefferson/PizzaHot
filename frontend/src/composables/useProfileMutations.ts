@@ -1,9 +1,10 @@
 import { useMutation, type UseMutationReturnType, useQueryClient } from "@tanstack/vue-query";
 import { useRouter } from "vue-router";
 
-import { changePassword, deleteMe, updateMe } from "@/api/users";
+import { changePassword, deleteMe, updateMe } from "@/services/api/users";
 import { useAuthStore } from "@/stores/auth";
 import type { ChangePasswordPayload, UpdateMePayload, User } from "@/types/user.types";
+import { ROUTES } from "@/utils/constants/routes.constants";
 
 import { useAppToast } from "./useAppToast";
 
@@ -46,7 +47,7 @@ export function useDeleteAccount(): UseMutationReturnType<void, Error, void, unk
     mutationFn: () => deleteMe(),
     onSuccess: async () => {
       auth.reset();
-      await router.push({ name: "sign-in" });
+      await router.push({ name: ROUTES.SIGN_IN.NAME });
       queryClient.clear();
       showSuccess("Account deleted", "We're sorry to see you go");
     },

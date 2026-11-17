@@ -1,12 +1,12 @@
-import { useVuelidate } from "@vuelidate/core";
 import { email, helpers, required } from "@vuelidate/validators";
-import { computed, type ComputedRef, reactive, type Ref, toValue } from "vue";
+import { type ComputedRef, reactive, type Ref } from "vue";
 
 import type { SignInErrors, SignInField, SignInPayload } from "@/types/auth.types";
+import { TOO_MANY_ATTEMPTS_MESSAGE } from "@/utils/constants/auth.constants";
 
-import { TOO_MANY_ATTEMPTS_MESSAGE, useServerFormErrors } from "./useServerFormErrors";
+import { useValidatedForm } from "./useValidatedForm";
 
-export const INVALID_CREDENTIALS_MESSAGE = "Invalid email or password";
+const INVALID_CREDENTIALS_MESSAGE = "Invalid email or password";
 
 const SIGN_IN_FIELDS: readonly SignInField[] = ["email", "password"];
 
@@ -22,7 +22,6 @@ interface SignInForm {
 
 export function useSignInForm(): SignInForm {
   const form = reactive<SignInPayload>({ email: "", password: "" });
-  const server = useServerFormErrors(SIGN_IN_FIELDS, form);
 
   const rules = {
     email: {
@@ -34,25 +33,11 @@ export function useSignInForm(): SignInForm {
     },
   };
 
-  const v$ = useVuelidate(rules, form);
-
-  const errors = computed<SignInErrors>(() =>
-    Object.fromEntries(
-      SIGN_IN_FIELDS.map((field) => {
-        const clientError = v$.value[field].$errors[0]?.$message;
-        return [field, clientError ? toValue(clientError) : server.fieldErrors.value[field]];
-      })
-    )
+  const { server, errors, touch, validate, formError } = useValidatedForm(
+    SIGN_IN_FIELDS,
+    form,
+    rules
   );
-
-  function touch(field: SignInField): void {
-    v$.value[field].$touch();
-  }
-
-  async function validate(): Promise<boolean> {
-    server.clear();
-    return v$.value.$validate();
-  }
 
   function toPayload(): SignInPayload {
     return { email: form.email.trim(), password: form.password };
@@ -69,7 +54,7 @@ export function useSignInForm(): SignInForm {
   return {
     form,
     errors,
-    formError: server.formError,
+    formError,
     touch,
     validate,
     toPayload,

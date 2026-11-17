@@ -3,8 +3,9 @@ import { computed } from "vue";
 import { RouterLink } from "vue-router";
 
 import type { Order } from "@/types/order.types";
+import { ROUTES } from "@/utils/constants/routes.constants";
 import { formatOrderDateTime, formatPrice, shortId } from "@/utils/format";
-import { summarizeOrderItems } from "@/utils/order-items-summary";
+import { summarizeOrderItems } from "@/utils/order";
 
 import OrderItemTile from "./OrderItemTile.vue";
 import OrderStatusBadge from "./OrderStatusBadge.vue";
@@ -20,7 +21,7 @@ const itemsSummary = computed(() => summarizeOrderItems(order.orderItems));
 
 <template>
   <RouterLink
-    :to="{ name: 'my-order-details', params: { id: order.id } }"
+    :to="{ name: ROUTES.MY_ORDERS_DETAILS.NAME, params: { id: order.id } }"
     class="flex flex-col gap-3 rounded-card border border-border bg-card p-5 text-card-foreground shadow-card transition hover:border-primary/30 hover:shadow-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
     :aria-label="`Order ${shortId(order.id)}`"
   >

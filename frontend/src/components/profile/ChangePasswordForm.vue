@@ -3,7 +3,7 @@ import BaseButton from "@/components/base/BaseButton.vue";
 import BaseCard from "@/components/base/BaseCard.vue";
 import BaseFormAlert from "@/components/base/BaseFormAlert.vue";
 import BaseFormField from "@/components/base/BaseFormField.vue";
-import BasePasswordInput from "@/components/base/BasePasswordInput.vue";
+import BaseInput from "@/components/base/BaseInput.vue";
 import type { ChangePasswordErrors, ChangePasswordField } from "@/types/user.types";
 
 interface ChangePasswordFormProps {
@@ -43,9 +43,10 @@ const confirmPassword = defineModel<string>("confirmPassword", { required: true 
         label="Current password"
         :error="errors.currentPassword"
       >
-        <BasePasswordInput
+        <BaseInput
           :id="id"
           v-model="currentPassword"
+          is-password
           autocomplete="current-password"
           :invalid="invalid"
           :aria-describedby="describedBy"
@@ -59,9 +60,10 @@ const confirmPassword = defineModel<string>("confirmPassword", { required: true 
         label="New password"
         :error="errors.newPassword"
       >
-        <BasePasswordInput
+        <BaseInput
           :id="id"
           v-model="newPassword"
+          is-password
           autocomplete="new-password"
           :invalid="invalid"
           :aria-describedby="describedBy"
@@ -75,9 +77,10 @@ const confirmPassword = defineModel<string>("confirmPassword", { required: true 
         label="Confirm new password"
         :error="errors.confirmPassword"
       >
-        <BasePasswordInput
+        <BaseInput
           :id="id"
           v-model="confirmPassword"
+          is-password
           autocomplete="new-password"
           :invalid="invalid"
           :aria-describedby="describedBy"

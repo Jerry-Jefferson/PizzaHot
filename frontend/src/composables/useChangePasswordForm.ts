@@ -1,8 +1,8 @@
-import { useVuelidate, type ValidationArgs } from "@vuelidate/core";
+import type { ValidationArgs } from "@vuelidate/core";
 import { helpers, maxLength, minLength, required, sameAs } from "@vuelidate/validators";
-import { computed, type ComputedRef, reactive, type Ref, toRef, toValue } from "vue";
+import { type ComputedRef, reactive, type Ref, toRef } from "vue";
 
-import { getErrorStatus } from "@/api/errors";
+import { getErrorStatus } from "@/services/errors";
 import type {
   ChangePasswordErrors,
   ChangePasswordField,
@@ -10,11 +10,11 @@ import type {
   ChangePasswordPayload,
 } from "@/types/user.types";
 
-import { useServerFormErrors } from "./useServerFormErrors";
+import { useValidatedForm } from "./useValidatedForm";
 
-export const PASSWORD_CHANGE_MIN = 8;
-export const PASSWORD_CHANGE_MAX = 128;
-export const INCORRECT_CURRENT_PASSWORD_MESSAGE = "Current password is incorrect";
+const PASSWORD_CHANGE_MIN = 8;
+const PASSWORD_CHANGE_MAX = 128;
+const INCORRECT_CURRENT_PASSWORD_MESSAGE = "Current password is incorrect";
 
 const CHANGE_PASSWORD_FIELDS: readonly ChangePasswordField[] = [
   "currentPassword",
@@ -53,7 +53,6 @@ export function useChangePasswordForm(): ChangePasswordForm {
     newPassword: "",
     confirmPassword: "",
   });
-  const server = useServerFormErrors(CHANGE_PASSWORD_FIELDS, form);
 
   const rules = {
     currentPassword: lengthRules("Current password"),
@@ -73,25 +72,11 @@ export function useChangePasswordForm(): ChangePasswordForm {
     },
   };
 
-  const v$ = useVuelidate(rules, form);
-
-  const errors = computed<ChangePasswordErrors>(() =>
-    Object.fromEntries(
-      CHANGE_PASSWORD_FIELDS.map((field) => {
-        const clientError = v$.value[field].$errors[0]?.$message;
-        return [field, clientError ? toValue(clientError) : server.fieldErrors.value[field]];
-      })
-    )
+  const { v$, server, errors, touch, validate, formError } = useValidatedForm(
+    CHANGE_PASSWORD_FIELDS,
+    form,
+    rules
   );
-
-  function touch(field: ChangePasswordField): void {
-    v$.value[field].$touch();
-  }
-
-  async function validate(): Promise<boolean> {
-    server.clear();
-    return v$.value.$validate();
-  }
 
   function toPayload(): ChangePasswordPayload {
     return { currentPassword: form.currentPassword, newPassword: form.newPassword };
@@ -116,7 +101,7 @@ export function useChangePasswordForm(): ChangePasswordForm {
   return {
     form,
     errors,
-    formError: server.formError,
+    formError,
     touch,
     validate,
     toPayload,

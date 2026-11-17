@@ -2,7 +2,7 @@
 import BaseQuantityStepper from "@/components/base/BaseQuantityStepper.vue";
 import type { CartItem } from "@/types/cart.types";
 import { formatPrice } from "@/utils/format";
-import { toMediaUrl } from "@/utils/media-url";
+import { toMediaUrl } from "@/utils/media";
 
 interface CartItemRowProps {
   item: CartItem;

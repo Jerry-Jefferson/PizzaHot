@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BasePizzaIcon from "@/components/base/BasePizzaIcon.vue";
+import PizzaIcon from "@/components/icon/PizzaIcon.vue";
 
 interface AppLogoProps {
   inverted?: boolean;
@@ -14,7 +14,7 @@ const { inverted } = defineProps<AppLogoProps>();
       class="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground"
       aria-hidden="true"
     >
-      <BasePizzaIcon class="size-5" />
+      <PizzaIcon class="size-5" />
     </span>
     <span
       :class="[

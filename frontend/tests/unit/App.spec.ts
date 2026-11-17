@@ -10,7 +10,7 @@ import { createMemoryHistory, createRouter } from "vue-router";
 import App from "@/App.vue";
 import { routes } from "@/router/routes";
 
-vi.mock("@/api/pizzas", () => ({
+vi.mock("@/services/api/pizzas", () => ({
   listPizzas: vi.fn(() =>
     Promise.resolve({ data: [], page: 1, limit: 9, total: 0, totalPages: 0 })
   ),

@@ -7,11 +7,11 @@ import {
 } from "@tanstack/vue-query";
 import { computed, type MaybeRefOrGetter, toValue } from "vue";
 
-import { getPizza, listPizzas } from "@/api/pizzas";
-import type { Paginated } from "@/types/api.types";
+import { getPizza, listPizzas } from "@/services/api/pizzas";
+import type { Paginated } from "@/types/pagination.types";
 import type { Pizza, PizzaListQuery } from "@/types/pizza.types";
-
-export const MENU_PAGE_SIZE = 9;
+import { MENU_PAGE_SIZE } from "@/utils/constants/pizza.constants";
+import { QUERY_KEYS } from "@/utils/constants/query-keys.constants";
 
 export function usePizzas(
   query: MaybeRefOrGetter<PizzaListQuery> = {}
@@ -21,7 +21,7 @@ export function usePizzas(
   const search = computed(() => toValue(query).search?.trim() ?? "");
 
   return useQuery({
-    queryKey: ["pizzas", page, limit, search],
+    queryKey: QUERY_KEYS.pizzas.list(page, limit, search),
     queryFn: () => listPizzas({ page: page.value, limit: limit.value, search: search.value }),
     placeholderData: keepPreviousData,
   });
@@ -33,11 +33,13 @@ interface CachedPizza {
 }
 
 function isPizzaPage(value: unknown): value is Paginated<Pizza> {
-  return typeof value === "object" && value !== null && Array.isArray((value as Paginated<Pizza>).data);
+  return (
+    typeof value === "object" && value !== null && Array.isArray((value as Paginated<Pizza>).data)
+  );
 }
 
 function findPizzaInLists(queryClient: QueryClient, id: string): CachedPizza | undefined {
-  for (const query of queryClient.getQueryCache().findAll({ queryKey: ["pizzas"] })) {
+  for (const query of queryClient.getQueryCache().findAll({ queryKey: QUERY_KEYS.pizzas.all })) {
     const page: unknown = query.state.data;
     const pizza = isPizzaPage(page) ? page.data.find((item) => item.id === id) : undefined;
     if (pizza) {
@@ -52,7 +54,7 @@ export function usePizza(id: MaybeRefOrGetter<string>): UseQueryReturnType<Pizza
   const pizzaId = computed(() => toValue(id));
 
   return useQuery({
-    queryKey: ["pizzas", pizzaId],
+    queryKey: QUERY_KEYS.pizzas.detail(pizzaId),
     queryFn: () => getPizza(pizzaId.value),
     initialData: () => findPizzaInLists(queryClient, pizzaId.value)?.pizza,
     initialDataUpdatedAt: () => findPizzaInLists(queryClient, pizzaId.value)?.updatedAt,

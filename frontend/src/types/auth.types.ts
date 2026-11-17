@@ -1,3 +1,4 @@
+import type { FormErrors } from "./form.types";
 import type { Gender, User } from "./user.types";
 
 export type AuthStatus = "idle" | "loading" | "ready";
@@ -9,7 +10,7 @@ export interface SignInPayload {
 
 export type SignInField = keyof SignInPayload;
 
-export type SignInErrors = Partial<Record<SignInField, string>>;
+export type SignInErrors = FormErrors<SignInField>;
 
 export interface SignUpPayload {
   email: string;
@@ -30,7 +31,7 @@ export interface SignUpFormValues {
 
 export type SignUpField = keyof SignUpFormValues;
 
-export type SignUpErrors = Partial<Record<SignUpField, string>>;
+export type SignUpErrors = FormErrors<SignUpField>;
 
 export interface SignUpFormExpose {
   focusField: (field: SignUpField) => void;

@@ -5,6 +5,7 @@ import { RouterLink } from "vue-router";
 
 import BaseAvatar from "@/components/base/BaseAvatar.vue";
 import type { UserSummary } from "@/types/user.types";
+import { ROUTES } from "@/utils/constants/routes.constants";
 
 import AppLogo from "./AppLogo.vue";
 
@@ -29,12 +30,20 @@ const { user, cartCount, currentRouteName, showAdminLink } = defineProps<AppHead
 const emit = defineEmits<AppHeaderEmits>();
 
 const NAV_ITEMS: NavItem[] = [
-  { label: "Menu", routeName: "menu", matches: ["menu", "pizza-details"] },
-  { label: "Orders", routeName: "my-orders", matches: ["my-orders", "my-order-details"] },
-  { label: "Profile", routeName: "profile", matches: ["profile"] },
+  {
+    label: "Menu",
+    routeName: ROUTES.HOME.NAME,
+    matches: [ROUTES.HOME.NAME, ROUTES.PIZZA_DETAILS.NAME],
+  },
+  {
+    label: "Orders",
+    routeName: ROUTES.MY_ORDERS.NAME,
+    matches: [ROUTES.MY_ORDERS.NAME, ROUTES.MY_ORDERS_DETAILS.NAME],
+  },
+  { label: "Profile", routeName: ROUTES.PROFILE.NAME, matches: [ROUTES.PROFILE.NAME] },
 ];
 
-const CART_ROUTES = ["cart", "checkout"];
+const CART_ROUTES: readonly string[] = [ROUTES.CART.NAME, ROUTES.CHECKOUT.NAME];
 
 const isDrawerOpen = ref(false);
 
@@ -62,7 +71,7 @@ const cartLabel = computed(() =>
         <i class="pi pi-bars" aria-hidden="true" />
       </button>
 
-      <RouterLink :to="{ name: 'menu' }" aria-label="Pizzeria home">
+      <RouterLink :to="{ name: ROUTES.HOME.NAME }" aria-label="Pizzeria home">
         <AppLogo />
       </RouterLink>
 
@@ -86,7 +95,7 @@ const cartLabel = computed(() =>
       <div class="ml-auto flex items-center gap-2">
         <RouterLink
           v-if="showAdminLink"
-          :to="{ name: 'admin-dashboard' }"
+          :to="{ name: ROUTES.ADMIN.NAME }"
           data-test="admin-panel-link"
           class="hidden h-10 items-center gap-2 rounded-control px-3 text-sm font-medium text-foreground hover:bg-muted md:inline-flex"
         >
@@ -94,7 +103,7 @@ const cartLabel = computed(() =>
           Admin panel
         </RouterLink>
         <RouterLink
-          :to="{ name: 'cart' }"
+          :to="{ name: ROUTES.CART.NAME }"
           :aria-label="cartLabel"
           data-test="cart-button"
           :data-highlighted="isCartHighlighted"
@@ -140,7 +149,7 @@ const cartLabel = computed(() =>
         </template>
         <RouterLink
           v-else
-          :to="{ name: 'sign-in' }"
+          :to="{ name: ROUTES.SIGN_IN.NAME }"
           class="inline-flex h-10 items-center rounded-control px-3 text-sm font-medium text-primary hover:bg-primary/10"
         >
           Sign in
@@ -165,7 +174,7 @@ const cartLabel = computed(() =>
         </RouterLink>
         <RouterLink
           v-if="showAdminLink"
-          :to="{ name: 'admin-dashboard' }"
+          :to="{ name: ROUTES.ADMIN.NAME }"
           class="flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium text-foreground hover:bg-muted"
           @click="isDrawerOpen = false"
         >

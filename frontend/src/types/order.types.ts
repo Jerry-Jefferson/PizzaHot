@@ -1,4 +1,5 @@
-import type { PaginationQuery } from "./api.types";
+import type { FormErrors } from "./form.types";
+import type { PaginationQuery } from "./pagination.types";
 
 export const OrderStatus = {
   PENDING: "pending",
@@ -77,4 +78,4 @@ export interface CheckoutFormValues {
 
 export type CheckoutField = keyof CheckoutFormValues;
 
-export type CheckoutErrors = Partial<Record<CheckoutField, string>>;
+export type CheckoutErrors = FormErrors<CheckoutField>;

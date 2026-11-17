@@ -1,11 +1,5 @@
 import { QueryClient, VueQueryPlugin } from "@tanstack/vue-query";
 import { flushPromises, mount, type VueWrapper } from "@vue/test-utils";
-import {
-  AxiosError,
-  AxiosHeaders,
-  type InternalAxiosRequestConfig,
-  type RawAxiosResponseHeaders,
-} from "axios";
 import { createPinia, setActivePinia } from "pinia";
 import PrimeVue from "primevue/config";
 import ConfirmationService from "primevue/confirmationservice";
@@ -13,18 +7,19 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { defineComponent, h } from "vue";
 import { createMemoryHistory, createRouter } from "vue-router";
 
-import * as ordersApi from "@/api/orders";
-import * as usersApi from "@/api/users";
 import BaseConfirmDialog from "@/components/base/BaseConfirmDialog.vue";
 import { routes } from "@/router/routes";
+import * as ordersApi from "@/services/api/orders";
+import * as usersApi from "@/services/api/users";
+import { ApiError } from "@/services/errors";
 import { useAuthStore } from "@/stores/auth";
 import type { Order } from "@/types/order.types";
 import type { User } from "@/types/user.types";
 import ProfileView from "@/views/ProfileView.vue";
 
-vi.mock("@/api/users", () => ({ updateMe: vi.fn(), changePassword: vi.fn(), deleteMe: vi.fn() }));
-vi.mock("@/api/orders", () => ({ listMyOrders: vi.fn() }));
-vi.mock("@/api/auth", () => ({ me: vi.fn(), signIn: vi.fn(), signUp: vi.fn(), signOut: vi.fn() }));
+vi.mock("@/services/api/users", () => ({ updateMe: vi.fn(), changePassword: vi.fn(), deleteMe: vi.fn() }));
+vi.mock("@/services/api/orders", () => ({ listMyOrders: vi.fn() }));
+vi.mock("@/services/api/auth", () => ({ me: vi.fn(), signIn: vi.fn(), signUp: vi.fn(), signOut: vi.fn() }));
 
 const { toastAdd } = vi.hoisted(() => ({ toastAdd: vi.fn() }));
 vi.mock("primevue/usetoast", () => ({ useToast: () => ({ add: toastAdd }) }));
@@ -42,15 +37,7 @@ const USER: User = {
   updatedAt: "2024-03-15T10:00:00.000Z",
 };
 
-const config = { headers: new AxiosHeaders() } as InternalAxiosRequestConfig;
-const httpError = (status: number, message = "Failed") =>
-  new AxiosError("Request failed", "ERR_BAD_REQUEST", config, null, {
-    data: { statusCode: status, message },
-    status,
-    statusText: "",
-    headers: {} as RawAxiosResponseHeaders,
-    config,
-  });
+const httpError = (status: number, message = "Failed") => new ApiError(message, { status });
 
 let wrapper: VueWrapper | undefined;
 
@@ -169,12 +156,9 @@ describe("ProfileView", () => {
 
     it("maps server field errors onto the fields", async () => {
       vi.mocked(usersApi.updateMe).mockRejectedValue(
-        new AxiosError("Bad", "ERR_BAD_REQUEST", config, null, {
-          data: { formErrors: [], fieldErrors: { surname: ["Surname must not be empty"] } },
+        new ApiError("Surname must not be empty", {
           status: 400,
-          statusText: "",
-          headers: {} as RawAxiosResponseHeaders,
-          config,
+          fieldErrors: { surname: ["Surname must not be empty"] },
         })
       );
       const { wrapper } = await setup();

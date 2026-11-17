@@ -2,6 +2,7 @@ import { type Ref, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import { useAuthStore } from "@/stores/auth";
+import { ROUTES } from "@/utils/constants/routes.constants";
 
 import { useAppToast } from "./useAppToast";
 
@@ -26,7 +27,7 @@ export function useRefreshSession(): RefreshSession {
     try {
       await auth.restoreSession();
       if (!auth.user) {
-        await router.push({ name: "sign-in", query: { redirect: route.fullPath } });
+        await router.push({ name: ROUTES.SIGN_IN.NAME, query: { redirect: route.fullPath } });
       } else if (auth.isEmailVerified) {
         showSuccess("Email verified", "You can now place orders");
       }

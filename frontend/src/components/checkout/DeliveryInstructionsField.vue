@@ -4,7 +4,7 @@ import { computed } from "vue";
 import BaseFormField from "@/components/base/BaseFormField.vue";
 import BaseTextarea from "@/components/base/BaseTextarea.vue";
 import { DeliveryType } from "@/types/order.types";
-import { ORDER_COMMENT_MAX } from "@/utils/constants/limits";
+import { ORDER_COMMENT_MAX } from "@/utils/constants/limits.constants";
 
 interface DeliveryInstructionsFieldProps {
   delivery: DeliveryType;

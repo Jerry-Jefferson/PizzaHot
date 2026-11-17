@@ -1,18 +1,13 @@
-import {
-  AxiosError,
-  AxiosHeaders,
-  type InternalAxiosRequestConfig,
-  type RawAxiosResponseHeaders,
-} from "axios";
 import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import * as authApi from "@/api/auth";
 import { queryClient } from "@/plugins/vue-query";
+import * as authApi from "@/services/api/auth";
+import { ApiError } from "@/services/errors";
 import { useAuthStore } from "@/stores/auth";
 import type { User } from "@/types/user.types";
 
-vi.mock("@/api/auth", () => ({
+vi.mock("@/services/api/auth", () => ({
   me: vi.fn(),
   signIn: vi.fn(),
   signUp: vi.fn(),
@@ -33,15 +28,7 @@ const user = (overrides: Partial<User> = {}): User => ({
   ...overrides,
 });
 
-const config = { headers: new AxiosHeaders() } as InternalAxiosRequestConfig;
-const httpError = (status: number): AxiosError =>
-  new AxiosError("Request failed", "ERR_BAD_REQUEST", config, null, {
-    data: { statusCode: status, message: "Failed" },
-    status,
-    statusText: "",
-    headers: {} as RawAxiosResponseHeaders,
-    config,
-  });
+const httpError = (status: number): ApiError => new ApiError("Failed", { status });
 
 const CREDENTIALS = { email: "mario@x.io", password: "Secret1!" };
 
@@ -98,6 +85,31 @@ describe("auth store", () => {
       await expect(auth.restoreSession()).rejects.toBe(error);
       expect(auth.user).toEqual(user());
       expect(auth.status).toBe("ready");
+    });
+  });
+
+  describe("ensureSession", () => {
+    it("requests /auth/me only once", async () => {
+      vi.mocked(authApi.me).mockResolvedValue(user());
+      const auth = useAuthStore();
+
+      await Promise.all([auth.ensureSession(), auth.ensureSession()]);
+      await auth.ensureSession();
+
+      expect(authApi.me).toHaveBeenCalledTimes(1);
+      expect(auth.user).toEqual(user());
+    });
+
+    it("resolves as a guest when the server fails", async () => {
+      const consoleError = vi.spyOn(console, "error").mockImplementation(() => undefined);
+      vi.mocked(authApi.me).mockRejectedValue(httpError(500));
+      const auth = useAuthStore();
+
+      await expect(auth.ensureSession()).resolves.toBeUndefined();
+
+      expect(auth.user).toBeNull();
+      expect(auth.status).toBe("ready");
+      expect(consoleError).toHaveBeenCalled();
     });
   });
 

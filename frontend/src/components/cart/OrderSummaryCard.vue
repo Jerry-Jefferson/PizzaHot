@@ -12,10 +12,6 @@ interface OrderSummaryCardProps {
 const { totalPrice, discountAmount, finalPrice, promoCode = null } =
   defineProps<OrderSummaryCardProps>();
 
-defineSlots<{
-  default?: () => unknown;
-  actions?: () => unknown;
-}>();
 </script>
 
 <template>

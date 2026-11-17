@@ -2,7 +2,7 @@
 import { computed } from "vue";
 
 import { type DeliveryType, OrderStatus } from "@/types/order.types";
-import { getProgressSteps, getStepState } from "@/utils/constants/order-progress";
+import { getProgressSteps, getStepState } from "@/utils/order";
 
 interface OrderProgressStepperProps {
   status: OrderStatus;

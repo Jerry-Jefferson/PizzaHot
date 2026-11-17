@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import { toMediaUrl } from "@/utils/media-url";
+import { toMediaUrl } from "@/utils/media";
 
 interface PizzaDetailsImageProps {
   image: string | null;

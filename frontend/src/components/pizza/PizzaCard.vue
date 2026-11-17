@@ -4,8 +4,9 @@ import { RouterLink } from "vue-router";
 
 import BaseButton from "@/components/base/BaseButton.vue";
 import type { Pizza } from "@/types/pizza.types";
+import { ROUTES } from "@/utils/constants/routes.constants";
 import { formatPrice } from "@/utils/format";
-import { toMediaUrl } from "@/utils/media-url";
+import { toMediaUrl } from "@/utils/media";
 
 interface PizzaCardProps {
   pizza: Pizza;
@@ -31,7 +32,7 @@ const isInCart = computed(() => cartQuantity > 0);
     class="flex flex-col overflow-hidden rounded-card border border-border bg-card text-card-foreground shadow-card"
   >
     <RouterLink
-      :to="{ name: 'pizza-details', params: { id: pizza.id } }"
+      :to="{ name: ROUTES.PIZZA_DETAILS.NAME, params: { id: pizza.id } }"
       class="group flex flex-col gap-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       <img

@@ -7,6 +7,7 @@ import { useAppToast } from "@/composables/useAppToast";
 import { useSignUpForm } from "@/composables/useSignUpForm";
 import { useAuthStore } from "@/stores/auth";
 import type { SignUpFormExpose } from "@/types/auth.types";
+import { ROUTES } from "@/utils/constants/routes.constants";
 
 const auth = useAuthStore();
 const router = useRouter();
@@ -36,7 +37,7 @@ async function submit(): Promise<void> {
   try {
     await auth.signUp(toPayload());
     showSuccess("Account created", "Check your inbox to verify your email");
-    await router.push({ name: "menu" });
+    await router.push({ name: ROUTES.HOME.NAME });
   } catch (error) {
     applyServerError(error);
     await focusFirstInvalidField();
@@ -69,7 +70,10 @@ async function submit(): Promise<void> {
 
     <p class="text-center text-sm text-muted-foreground">
       Already have an account?
-      <RouterLink :to="{ name: 'sign-in' }" class="font-medium text-primary hover:underline">
+      <RouterLink
+        :to="{ name: ROUTES.SIGN_IN.NAME }"
+        class="font-medium text-primary hover:underline"
+      >
         Sign in
       </RouterLink>
     </p>

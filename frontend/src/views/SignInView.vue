@@ -4,8 +4,9 @@ import { RouterLink, useRoute, useRouter } from "vue-router";
 
 import SignInForm from "@/components/auth/SignInForm.vue";
 import { useSignInForm } from "@/composables/useSignInForm";
-import { getPostSignInRoute } from "@/router/guards";
 import { useAuthStore } from "@/stores/auth";
+import { getPostSignInRoute } from "@/utils/auth-redirect";
+import { ROUTES } from "@/utils/constants/routes.constants";
 
 const auth = useAuthStore();
 const route = useRoute();
@@ -49,7 +50,10 @@ async function submit(): Promise<void> {
 
     <p class="text-center text-sm text-muted-foreground">
       Don't have an account?
-      <RouterLink :to="{ name: 'sign-up' }" class="font-medium text-primary hover:underline">
+      <RouterLink
+        :to="{ name: ROUTES.SIGN_UP.NAME }"
+        class="font-medium text-primary hover:underline"
+      >
         Create one
       </RouterLink>
     </p>

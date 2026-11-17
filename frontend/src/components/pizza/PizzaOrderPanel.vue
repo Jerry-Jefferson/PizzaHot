@@ -3,10 +3,9 @@ import { computed } from "vue";
 
 import BaseButton from "@/components/base/BaseButton.vue";
 import BaseQuantityStepper from "@/components/base/BaseQuantityStepper.vue";
-import { MAX_PIZZA_QUANTITY } from "@/utils/constants/limits";
+import type { PendingAction } from "@/types/pizza.types";
+import { MAX_PIZZA_QUANTITY } from "@/utils/constants/limits.constants";
 import { formatPrice } from "@/utils/format";
-
-type PendingAction = "add" | "order";
 
 interface PizzaOrderPanelProps {
   price: number;

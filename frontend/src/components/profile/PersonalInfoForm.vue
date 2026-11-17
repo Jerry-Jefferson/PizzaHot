@@ -5,7 +5,8 @@ import BaseFormAlert from "@/components/base/BaseFormAlert.vue";
 import BaseFormField from "@/components/base/BaseFormField.vue";
 import BaseInput from "@/components/base/BaseInput.vue";
 import BaseSelect from "@/components/base/BaseSelect.vue";
-import { Gender, type PersonalInfoErrors, type PersonalInfoField } from "@/types/user.types";
+import type { Gender, PersonalInfoErrors, PersonalInfoField } from "@/types/user.types";
+import { GENDER_LABELS, GENDERS } from "@/utils/constants/user.constants";
 
 interface PersonalInfoFormProps {
   email: string;
@@ -28,8 +29,7 @@ const gender = defineModel<Gender | "">("gender", { required: true });
 
 const GENDER_OPTIONS: { label: string; value: Gender | "" }[] = [
   { label: "Not specified", value: "" },
-  { label: "Male", value: Gender.MALE },
-  { label: "Female", value: Gender.FEMALE },
+  ...GENDERS.map((value) => ({ label: GENDER_LABELS[value], value })),
 ];
 </script>
 

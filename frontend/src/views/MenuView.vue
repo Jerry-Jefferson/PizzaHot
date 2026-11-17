@@ -11,9 +11,11 @@ import PizzaGrid from "@/components/pizza/PizzaGrid.vue";
 import { useAppToast } from "@/composables/useAppToast";
 import { useAddToCart, useCart } from "@/composables/useCart";
 import { useMenuFilters } from "@/composables/useMenuFilters";
-import { MENU_PAGE_SIZE, usePizzas } from "@/composables/usePizzas";
+import { usePizzas } from "@/composables/usePizzas";
 import { useAuthStore } from "@/stores/auth";
 import type { Pizza } from "@/types/pizza.types";
+import { MENU_PAGE_SIZE } from "@/utils/constants/pizza.constants";
+import { ROUTES } from "@/utils/constants/routes.constants";
 
 const route = useRoute();
 const router = useRouter();
@@ -53,7 +55,7 @@ const cartQuantities = computed(() =>
 
 async function handleAddToCart(pizza: Pizza): Promise<void> {
   if (!isAuthenticated.value) {
-    await router.push({ name: "sign-in", query: { redirect: route.fullPath } });
+    await router.push({ name: ROUTES.SIGN_IN.NAME, query: { redirect: route.fullPath } });
     return;
   }
   if (addingPizzaIds.has(pizza.id)) {
@@ -82,7 +84,11 @@ async function handleAddToCart(pizza: Pizza): Promise<void> {
 
     <div class="flex flex-col gap-2 sm:max-w-md">
       <MenuSearchBar v-model="searchInput" />
-      <p v-if="search && pizzasQuery.isSuccess.value" class="text-caption" data-test="search-caption">
+      <p
+        v-if="search && pizzasQuery.isSuccess.value"
+        class="text-caption"
+        data-test="search-caption"
+      >
         {{ resultsCaption }}
       </p>
     </div>

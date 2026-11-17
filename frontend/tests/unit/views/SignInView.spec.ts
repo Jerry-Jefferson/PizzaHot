@@ -1,22 +1,17 @@
 import { flushPromises, mount } from "@vue/test-utils";
-import {
-  AxiosError,
-  AxiosHeaders,
-  type InternalAxiosRequestConfig,
-  type RawAxiosResponseHeaders,
-} from "axios";
 import { createPinia, setActivePinia } from "pinia";
 import PrimeVue from "primevue/config";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createMemoryHistory, createRouter } from "vue-router";
 
-import * as authApi from "@/api/auth";
 import { routes } from "@/router/routes";
+import * as authApi from "@/services/api/auth";
+import { ApiError, type FieldErrors, NETWORK_ERROR_MESSAGE } from "@/services/errors";
 import { useAuthStore } from "@/stores/auth";
 import type { User } from "@/types/user.types";
 import SignInView from "@/views/SignInView.vue";
 
-vi.mock("@/api/auth", () => ({ signIn: vi.fn(), signUp: vi.fn(), me: vi.fn(), signOut: vi.fn() }));
+vi.mock("@/services/api/auth", () => ({ signIn: vi.fn(), signUp: vi.fn(), me: vi.fn(), signOut: vi.fn() }));
 
 const user = (role: User["role"]): User => ({
   id: "u1",
@@ -31,15 +26,8 @@ const user = (role: User["role"]): User => ({
   updatedAt: "2026-01-01T00:00:00.000Z",
 });
 
-const config = { headers: new AxiosHeaders() } as InternalAxiosRequestConfig;
-const httpError = (status: number, data: unknown = { statusCode: status, message: "Failed" }) =>
-  new AxiosError("Request failed", "ERR_BAD_REQUEST", config, null, {
-    data,
-    status,
-    statusText: "",
-    headers: {} as RawAxiosResponseHeaders,
-    config,
-  });
+const httpError = (status: number, message = "Failed", fieldErrors: FieldErrors = {}) =>
+  new ApiError(message, { status, fieldErrors });
 
 async function setup(path = "/sign-in") {
   const pinia = createPinia();
@@ -159,7 +147,7 @@ describe("SignInView", () => {
 
   it("maps server field errors onto the fields and clears them on edit", async () => {
     vi.mocked(authApi.signIn).mockRejectedValue(
-      httpError(400, { formErrors: [], fieldErrors: { email: ["Invalid email format"] } })
+      httpError(400, "Invalid email format", { email: ["Invalid email format"] })
     );
     const { wrapper } = await setup();
 
@@ -174,7 +162,7 @@ describe("SignInView", () => {
   });
 
   it("shows the network message when the server is unreachable", async () => {
-    vi.mocked(authApi.signIn).mockRejectedValue(new AxiosError("Network Error", "ERR_NETWORK"));
+    vi.mocked(authApi.signIn).mockRejectedValue(new ApiError(NETWORK_ERROR_MESSAGE, { status: undefined }));
     const { wrapper } = await setup();
 
     await submitWith(wrapper, "mario@x.io", "Secret1!");
