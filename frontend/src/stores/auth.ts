@@ -8,6 +8,7 @@ import type { AuthStatus, SignInPayload, SignUpPayload } from "@/types/auth.type
 import { Role, type User } from "@/types/user.types";
 import { getInitials } from "@/utils/initials";
 import { logError } from "@/utils/logger";
+import { getUserDisplayName } from "@/utils/user";
 
 export const useAuthStore = defineStore("auth", () => {
   const user = ref<User | null>(null);
@@ -17,16 +18,7 @@ export const useAuthStore = defineStore("auth", () => {
   const isAdmin = computed(() => user.value?.role === Role.ADMIN);
   const isEmailVerified = computed(() => user.value?.isEmailVerified ?? false);
   const initials = computed(() => (user.value ? getInitials(user.value) : ""));
-  const displayName = computed(() => {
-    if (!user.value) {
-      return "";
-    }
-    const fullName = [user.value.name, user.value.surname]
-      .map((part) => part?.trim())
-      .filter(Boolean)
-      .join(" ");
-    return fullName || user.value.email;
-  });
+  const displayName = computed(() => (user.value ? getUserDisplayName(user.value) : ""));
 
   async function restoreSession(): Promise<void> {
     status.value = "loading";

@@ -80,6 +80,10 @@ Ensure you have the following installed on your local machine:
    PORT=3000
    NODE_ENV=development
 
+   # Admin account created by the SeedAdminUser migration
+   ADMIN_EMAIL=admin@example.com
+   ADMIN_PASSWORD=password
+
    # Postgres Database
    POSTGRES_HOST=localhost
    POSTGRES_PORT=5432
@@ -127,6 +131,13 @@ Check the status of running containers:
 docker-compose ps
 ```
 
+Run the Identity Service migrations (creates the admin account from `ADMIN_EMAIL` / `ADMIN_PASSWORD`) inside the running container, which already has the built code and the database credentials:
+
+```bash
+docker-compose exec identity-service node dist/apps/identity-service/migrate.js            # apply
+docker-compose exec identity-service node dist/apps/identity-service/migrate.js --revert   # revert the last one
+```
+
 To stop all services:
 
 ```bash
@@ -149,14 +160,14 @@ If you prefer running databases in Docker while developing microservices locally
    npm install
    ```
 
-3. **Run database migrations** (Identity Service):
-   ```bash
-   npm run migration:run
-   ```
-
-4. **Build the applications**:
+3. **Build the applications** (migrations run from `dist/`):
    ```bash
    npm run build
+   ```
+
+4. **Run database migrations** (Identity Service; reads `.env` from the current directory):
+   ```bash
+   npm run migration:run
    ```
 
 ---
@@ -202,9 +213,10 @@ npm run build
 npm run lint         # Run ESLint with auto-fix
 npm run format       # Run Prettier on src/ and test/
 
-# Database Migrations (Identity Service)
-npm run migration:run     # Run pending TypeORM migrations
+# Database Migrations (Identity Service) — build first, they run from dist/
+npm run migration:run     # Run pending TypeORM migrations (loads .env)
 npm run migration:revert  # Revert last migration
+# Full Docker stack: docker-compose exec identity-service node dist/apps/identity-service/migrate.js [--revert]
 
 # Unit Testing (Native ESM Mode)
 npm test                  # Run all unit tests
