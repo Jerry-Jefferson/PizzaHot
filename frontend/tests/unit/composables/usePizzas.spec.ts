@@ -3,14 +3,18 @@ import { flushPromises, mount } from "@vue/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { defineComponent, ref } from "vue";
 
-import { usePizza, usePizzas } from "@/composables/usePizzas";
+import { useDeletePizza, usePizza, usePizzas } from "@/composables/usePizzas";
 import * as pizzasApi from "@/services/api/pizzas";
 import type { Paginated } from "@/types/pagination.types";
 import type { Pizza, PizzaListQuery } from "@/types/pizza.types";
 import { MENU_PAGE_SIZE } from "@/utils/constants/pizza.constants";
 import { QUERY_KEYS } from "@/utils/constants/query-keys.constants";
 
-vi.mock("@/services/api/pizzas", () => ({ listPizzas: vi.fn(), getPizza: vi.fn() }));
+vi.mock("@/services/api/pizzas", () => ({
+  listPizzas: vi.fn(),
+  getPizza: vi.fn(),
+  deletePizza: vi.fn(),
+}));
 
 const pageOf = (names: string[], page = 1): Paginated<Pizza> => ({
   data: names.map((name) => ({ id: name, name }) as Pizza),
@@ -113,5 +117,31 @@ describe("usePizza", () => {
 
     expect(result.data.value?.name).toBe("Diavola");
     expect(pizzasApi.getPizza).not.toHaveBeenCalled();
+  });
+});
+
+describe("useDeletePizza", () => {
+  it("deletes the pizza, drops its details and marks pizza lists stale", async () => {
+    vi.mocked(pizzasApi.deletePizza).mockResolvedValue();
+    const { result, queryClient } = withQuery(() => useDeletePizza());
+    queryClient.setQueryData(QUERY_KEYS.pizzas.detail("p1"), { id: "p1" } as Pizza);
+    queryClient.setQueryData(QUERY_KEYS.pizzas.list(1, 10, ""), { data: [] });
+
+    await result.mutateAsync("p1");
+    await flushPromises();
+
+    expect(pizzasApi.deletePizza).toHaveBeenCalledWith("p1");
+    expect(queryClient.getQueryData(QUERY_KEYS.pizzas.detail("p1"))).toBeUndefined();
+    expect(queryClient.getQueryState(QUERY_KEYS.pizzas.list(1, 10, ""))?.isInvalidated).toBe(true);
+  });
+
+  it("keeps the cache when the delete fails", async () => {
+    const error = new Error("Server error");
+    vi.mocked(pizzasApi.deletePizza).mockRejectedValue(error);
+    const { result, queryClient } = withQuery(() => useDeletePizza());
+    queryClient.setQueryData(QUERY_KEYS.pizzas.detail("p1"), { id: "p1" } as Pizza);
+
+    await expect(result.mutateAsync("p1")).rejects.toBe(error);
+    expect(queryClient.getQueryData(QUERY_KEYS.pizzas.detail("p1"))).toEqual({ id: "p1" });
   });
 });

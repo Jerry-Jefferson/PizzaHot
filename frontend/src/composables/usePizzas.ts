@@ -1,13 +1,15 @@
 import {
   keepPreviousData,
   type QueryClient,
+  useMutation,
+  type UseMutationReturnType,
   useQuery,
   useQueryClient,
   type UseQueryReturnType,
 } from "@tanstack/vue-query";
 import { computed, type MaybeRefOrGetter, toValue } from "vue";
 
-import { getPizza, listPizzas } from "@/services/api/pizzas";
+import { deletePizza, getPizza, listPizzas } from "@/services/api/pizzas";
 import type { Paginated } from "@/types/pagination.types";
 import type { Pizza, PizzaListQuery } from "@/types/pizza.types";
 import { MENU_PAGE_SIZE } from "@/utils/constants/pizza.constants";
@@ -58,5 +60,17 @@ export function usePizza(id: MaybeRefOrGetter<string>): UseQueryReturnType<Pizza
     queryFn: () => getPizza(pizzaId.value),
     initialData: () => findPizzaInLists(queryClient, pizzaId.value)?.pizza,
     initialDataUpdatedAt: () => findPizzaInLists(queryClient, pizzaId.value)?.updatedAt,
+  });
+}
+
+export function useDeletePizza(): UseMutationReturnType<void, Error, string, unknown> {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id) => deletePizza(id),
+    onSuccess: async (_result, id) => {
+      queryClient.removeQueries({ queryKey: QUERY_KEYS.pizzas.detail(id) });
+      await queryClient.invalidateQueries({ queryKey: QUERY_KEYS.pizzas.all });
+    },
   });
 }
