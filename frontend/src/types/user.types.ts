@@ -1,4 +1,5 @@
 import type { FormErrors } from "./form.types";
+import type { PaginationQuery } from "./pagination.types";
 
 export const Role = {
   USER: "user",
@@ -28,6 +29,10 @@ export interface User {
 }
 
 export type UserSummary = Pick<User, "name" | "surname" | "email" | "image">;
+
+export interface UserListQuery extends PaginationQuery {
+  search?: string;
+}
 
 export interface UpdateMePayload {
   name: string | null;

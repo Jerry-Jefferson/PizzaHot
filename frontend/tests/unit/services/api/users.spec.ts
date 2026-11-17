@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { apiClient } from "@/services";
-import { changePassword, deleteMe, updateMe } from "@/services/api/users";
+import { changePassword, deleteMe, getUser, listUsers, updateMe } from "@/services/api/users";
 import type { User } from "@/types/user.types";
 
 const response = (data: unknown) => ({ data }) as Awaited<ReturnType<typeof apiClient.get>>;
@@ -33,5 +33,21 @@ describe("users api", () => {
 
     await expect(deleteMe()).resolves.toBeUndefined();
     expect(remove).toHaveBeenCalledWith("/users/me");
+  });
+
+  it("lists users through GET /users with pagination and search params", async () => {
+    const page = { data: [], page: 1, limit: 1, total: 12, totalPages: 12 };
+    const get = vi.spyOn(apiClient, "get").mockResolvedValue(response(page));
+
+    await expect(listUsers({ page: 1, limit: 1, search: "mar" })).resolves.toEqual(page);
+    expect(get).toHaveBeenCalledWith("/users", { params: { page: 1, limit: 1, search: "mar" } });
+  });
+
+  it("gets one user through GET /users/:id", async () => {
+    const user = { id: "u1" } as User;
+    const get = vi.spyOn(apiClient, "get").mockResolvedValue(response(user));
+
+    await expect(getUser("u1")).resolves.toEqual(user);
+    expect(get).toHaveBeenCalledWith("/users/u1");
   });
 });

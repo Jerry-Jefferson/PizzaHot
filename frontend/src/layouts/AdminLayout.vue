@@ -6,6 +6,7 @@ import { useRoute } from "vue-router";
 
 import AdminSidebar from "@/components/layout/AdminSidebar.vue";
 import AdminTopbar from "@/components/layout/AdminTopbar.vue";
+import { usePendingOrdersCount } from "@/composables/useAdminOrders";
 import { useSignOut } from "@/composables/useSignOut";
 import { useAuthStore } from "@/stores/auth";
 
@@ -13,7 +14,8 @@ const route = useRoute();
 const { user } = storeToRefs(useAuthStore());
 const { signOut } = useSignOut();
 
-const pendingCount = 0;
+const pendingOrders = usePendingOrdersCount();
+const pendingCount = computed(() => pendingOrders.data.value ?? 0);
 
 const isDrawerOpen = ref(false);
 

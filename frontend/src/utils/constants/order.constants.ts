@@ -34,6 +34,10 @@ export const ORDER_SUMMARY_VISIBLE_ITEMS = 3;
 
 export const MY_ORDERS_PAGE_SIZE = 10;
 
+export const RECENT_ORDERS_LIMIT = 5;
+
+export const PENDING_ORDERS_REFETCH_MS = 60_000;
+
 export const FINAL_ORDER_STATUSES: ReadonlySet<OrderStatus> = new Set([
   OrderStatus.COMPLETED,
   OrderStatus.CANCELLED,
