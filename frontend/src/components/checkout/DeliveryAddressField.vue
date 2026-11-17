@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import BaseFormField from "@/components/base/BaseFormField.vue";
 import BaseInput from "@/components/base/BaseInput.vue";
-import { ADDRESS_MAX } from "@/utils/constants/limits";
+import { ADDRESS_MAX } from "@/utils/constants/limits.constants";
 
 interface DeliveryAddressFieldProps {
   error?: string;

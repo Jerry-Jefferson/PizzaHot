@@ -1,23 +1,20 @@
 import { type Ref, ref, type ShallowRef, shallowRef, watch } from "vue";
 
-import { getErrorMessage, getErrorStatus, getFirstFieldErrors } from "@/api/errors";
-
-export const TOO_MANY_ATTEMPTS_MESSAGE = "Too many attempts, try again in a minute";
-
-type FieldMessages<TField extends string> = Partial<Record<TField, string>>;
+import { getErrorMessage, getErrorStatus, getFirstFieldErrors } from "@/services/errors";
+import type { FormErrors } from "@/types/form.types";
 
 function withMessage<TField extends string>(
-  messages: FieldMessages<TField>,
+  messages: FormErrors<TField>,
   field: TField,
   message: string | undefined
-): FieldMessages<TField> {
-  const next: FieldMessages<TField> = { ...messages };
+): FormErrors<TField> {
+  const next: FormErrors<TField> = { ...messages };
   next[field] = message;
   return next;
 }
 
-interface ServerFormErrors<TField extends string> {
-  fieldErrors: ShallowRef<FieldMessages<TField>>;
+export interface ServerFormErrors<TField extends string> {
+  fieldErrors: ShallowRef<FormErrors<TField>>;
   formError: Ref<string | null>;
   clear: () => void;
   setFieldError: (field: TField, message: string) => void;
@@ -28,14 +25,14 @@ export function useServerFormErrors<TField extends string>(
   fields: readonly TField[],
   values: Record<TField, string>
 ): ServerFormErrors<TField> {
-  const fieldErrors: ShallowRef<FieldMessages<TField>> = shallowRef({});
+  const fieldErrors: ShallowRef<FormErrors<TField>> = shallowRef({});
   const formError = ref<string | null>(null);
 
   for (const field of fields) {
     watch(
       () => values[field],
       () => {
-        const current: FieldMessages<TField> = fieldErrors.value;
+        const current: FormErrors<TField> = fieldErrors.value;
         if (current[field]) {
           fieldErrors.value = withMessage(current, field, undefined);
         }

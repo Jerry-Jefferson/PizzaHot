@@ -1,10 +1,4 @@
-<script setup lang="ts">
-defineSlots<{
-  header?: () => unknown;
-  default?: () => unknown;
-  footer?: () => unknown;
-}>();
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <section

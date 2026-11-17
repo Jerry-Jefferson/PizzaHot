@@ -1,32 +1,32 @@
 import { QueryClient, VueQueryPlugin } from "@tanstack/vue-query";
 import { flushPromises, mount, type VueWrapper } from "@vue/test-utils";
-import {
-  AxiosError,
-  AxiosHeaders,
-  type InternalAxiosRequestConfig,
-  type RawAxiosResponseHeaders,
-} from "axios";
 import { createPinia, setActivePinia } from "pinia";
 import PrimeVue from "primevue/config";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createMemoryHistory, createRouter } from "vue-router";
 
-import * as authApi from "@/api/auth";
-import * as cartApi from "@/api/cart";
-import * as ordersApi from "@/api/orders";
-import { CART_QUERY_KEY } from "@/composables/useCart";
 import { CART_CLEAR_REFETCH_DELAY_MS } from "@/composables/useCreateOrder";
 import { routes } from "@/router/routes";
+import * as authApi from "@/services/api/auth";
+import * as cartApi from "@/services/api/cart";
+import * as ordersApi from "@/services/api/orders";
+import { ApiError, type FieldErrors } from "@/services/errors";
 import { useAuthStore } from "@/stores/auth";
 import type { Cart, CartItem } from "@/types/cart.types";
 import type { Order } from "@/types/order.types";
 import { DiscountMode } from "@/types/promocode.types";
 import type { User } from "@/types/user.types";
+import { QUERY_KEYS } from "@/utils/constants/query-keys.constants";
 import CheckoutView from "@/views/CheckoutView.vue";
 
-vi.mock("@/api/cart", () => ({ getCart: vi.fn() }));
-vi.mock("@/api/orders", () => ({ createOrder: vi.fn(), listMyOrders: vi.fn() }));
-vi.mock("@/api/auth", () => ({ me: vi.fn(), signIn: vi.fn(), signUp: vi.fn(), signOut: vi.fn() }));
+vi.mock("@/services/api/cart", () => ({ getCart: vi.fn() }));
+vi.mock("@/services/api/orders", () => ({ createOrder: vi.fn(), listMyOrders: vi.fn() }));
+vi.mock("@/services/api/auth", () => ({
+  me: vi.fn(),
+  signIn: vi.fn(),
+  signUp: vi.fn(),
+  signOut: vi.fn(),
+}));
 
 const { toastAdd } = vi.hoisted(() => ({ toastAdd: vi.fn() }));
 vi.mock("primevue/usetoast", () => ({ useToast: () => ({ add: toastAdd }) }));
@@ -67,15 +67,8 @@ const CART: Cart = {
 
 const ORDER_ID = "22222222-2222-4222-8222-222222222222";
 
-const config = { headers: new AxiosHeaders() } as InternalAxiosRequestConfig;
-const httpError = (status: number, data: unknown) =>
-  new AxiosError("Request failed", "ERR_BAD_REQUEST", config, null, {
-    data,
-    status,
-    statusText: "",
-    headers: {} as RawAxiosResponseHeaders,
-    config,
-  });
+const httpError = (status: number, message: string, fieldErrors: FieldErrors = {}) =>
+  new ApiError(message, { status, fieldErrors });
 
 let wrapper: VueWrapper | undefined;
 
@@ -121,9 +114,7 @@ describe("CheckoutView", () => {
       "Margherita ×2$25.00",
       "Diavola ×1$15.00",
     ]);
-    expect(wrapper.get("[data-test='summary-discount']").text()).toBe(
-      "Discount (WELCOME20)−$8.00"
-    );
+    expect(wrapper.get("[data-test='summary-discount']").text()).toBe("Discount (WELCOME20)−$8.00");
     expect(wrapper.get("button[type='submit']").text()).toBe("Place order · $32.00");
     expect(wrapper.text()).toContain("By placing your order you agree to our terms of service.");
     expect(wrapper.get("a[aria-label='Back to cart']").attributes("href")).toBe("/cart");
@@ -181,7 +172,7 @@ describe("CheckoutView", () => {
     });
     expect(router.currentRoute.value.params.id).toBe(ORDER_ID);
     expect(router.currentRoute.value.query.placed).toBe("1");
-    expect(queryClient.getQueryData<Cart>(CART_QUERY_KEY)?.cartItems).toEqual([]);
+    expect(queryClient.getQueryData<Cart>(QUERY_KEYS.cart)?.cartItems).toEqual([]);
   });
 
   it("places a pickup order without an address", async () => {
@@ -206,12 +197,12 @@ describe("CheckoutView", () => {
     await wrapper.get("form").trigger("submit");
     await vi.advanceTimersByTimeAsync(0);
 
-    expect(invalidate).toHaveBeenCalledWith({ queryKey: ["orders", "my"] });
-    expect(invalidate).not.toHaveBeenCalledWith({ queryKey: CART_QUERY_KEY });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: QUERY_KEYS.myOrders.all });
+    expect(invalidate).not.toHaveBeenCalledWith({ queryKey: QUERY_KEYS.cart });
 
     await vi.advanceTimersByTimeAsync(CART_CLEAR_REFETCH_DELAY_MS);
 
-    expect(invalidate).toHaveBeenCalledWith({ queryKey: CART_QUERY_KEY });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: QUERY_KEYS.cart });
   });
 
   it("does not submit twice while the order is being placed", async () => {
@@ -229,10 +220,7 @@ describe("CheckoutView", () => {
 
   it("shows the verification banner inline on 403 and hides it once verified", async () => {
     vi.mocked(ordersApi.createOrder).mockRejectedValue(
-      httpError(403, {
-        statusCode: 403,
-        message: "Email is not verified. Please verify your email first.",
-      })
+      httpError(403, "Email is not verified. Please verify your email first.")
     );
     const { wrapper, router } = await setup();
     useAuthStore().setUser({ ...USER, isEmailVerified: false });
@@ -254,7 +242,7 @@ describe("CheckoutView", () => {
 
   it("shows an unavailable-pizza error with a link back to the cart", async () => {
     vi.mocked(ordersApi.createOrder).mockRejectedValue(
-      httpError(400, { statusCode: 400, message: 'Pizza "p2" is no longer available' })
+      httpError(400, 'Pizza "p2" is no longer available')
     );
     const { wrapper } = await setup();
 
@@ -272,9 +260,8 @@ describe("CheckoutView", () => {
 
   it("puts server field errors on the matching field", async () => {
     vi.mocked(ordersApi.createOrder).mockRejectedValue(
-      httpError(400, {
-        formErrors: [],
-        fieldErrors: { address: ["Address must be at most 255 characters"] },
+      httpError(400, "Address must be at most 255 characters", {
+        address: ["Address must be at most 255 characters"],
       })
     );
     const { wrapper } = await setup();

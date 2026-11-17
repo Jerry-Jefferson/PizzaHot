@@ -5,10 +5,13 @@ import { RouterLink, useRoute, useRouter } from "vue-router";
 
 import BaseButton from "@/components/base/BaseButton.vue";
 import BaseEmptyState from "@/components/base/BaseEmptyState.vue";
-import BaseIconCircle from "@/components/base/BaseIconCircle.vue";
 import BasePagination from "@/components/base/BasePagination.vue";
+import IconCircle from "@/components/icon/IconCircle.vue";
 import OrderListCard from "@/components/order/OrderListCard.vue";
-import { MY_ORDERS_PAGE_SIZE, useMyOrders } from "@/composables/useMyOrders";
+import { useMyOrders } from "@/composables/useMyOrders";
+import { MY_ORDERS_PAGE_SIZE } from "@/utils/constants/order.constants";
+import { ROUTES } from "@/utils/constants/routes.constants";
+import { logError } from "@/utils/logger";
 
 const route = useRoute();
 const router = useRouter();
@@ -19,7 +22,9 @@ const page = computed({
     return Number.isInteger(value) && value > 1 ? value : 1;
   },
   set: (value: number) => {
-    void router.push({ query: { ...route.query, page: value > 1 ? String(value) : undefined } });
+    router
+      .push({ query: { ...route.query, page: value > 1 ? String(value) : undefined } })
+      .catch(logError("My orders page navigation"));
   },
 });
 
@@ -61,13 +66,13 @@ const isEmpty = computed(() => ordersQuery.isSuccess.value && orders.value.lengt
       class="flex flex-col items-center gap-3 px-4 py-16 text-center"
       data-test="orders-empty"
     >
-      <BaseIconCircle icon="pi pi-clipboard" />
+      <IconCircle icon="pi pi-clipboard" />
       <h2 class="text-label font-bold">No orders yet</h2>
       <p class="max-w-sm text-muted-foreground">
         Once you place an order, you'll be able to track it here.
       </p>
       <RouterLink
-        :to="{ name: 'menu' }"
+        :to="{ name: ROUTES.HOME.NAME }"
         class="mt-2 inline-flex h-10 items-center gap-2 rounded-control bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover"
       >
         Browse menu

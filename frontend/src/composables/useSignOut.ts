@@ -1,6 +1,7 @@
 import { useRouter } from "vue-router";
 
 import { useAuthStore } from "@/stores/auth";
+import { ROUTES } from "@/utils/constants/routes.constants";
 
 import { useAppToast } from "./useAppToast";
 
@@ -15,7 +16,7 @@ export function useSignOut(): { signOut: () => Promise<void> } {
     } catch (error) {
       showError(error, "Sign-out failed");
     }
-    await router.push({ name: "sign-in" });
+    await router.push({ name: ROUTES.SIGN_IN.NAME });
   }
 
   return { signOut };

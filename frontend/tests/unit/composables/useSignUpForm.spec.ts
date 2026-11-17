@@ -1,15 +1,11 @@
 import { mount } from "@vue/test-utils";
-import {
-  AxiosError,
-  AxiosHeaders,
-  type InternalAxiosRequestConfig,
-  type RawAxiosResponseHeaders,
-} from "axios";
 import { describe, expect, it } from "vitest";
 import { defineComponent, nextTick } from "vue";
 
 import { EMAIL_TAKEN_MESSAGE, useSignUpForm } from "@/composables/useSignUpForm";
+import { ApiError, type FieldErrors } from "@/services/errors";
 import type { SignUpFormValues } from "@/types/auth.types";
+import { TOO_MANY_ATTEMPTS_MESSAGE } from "@/utils/constants/auth.constants";
 
 const VALID: SignUpFormValues = {
   name: "Mario",
@@ -33,15 +29,8 @@ function setup(values: Partial<SignUpFormValues> = {}) {
   return result;
 }
 
-const config = { headers: new AxiosHeaders() } as InternalAxiosRequestConfig;
-const httpError = (status: number, data: unknown = { statusCode: status, message: "Failed" }) =>
-  new AxiosError("Request failed", "ERR_BAD_REQUEST", config, null, {
-    data,
-    status,
-    statusText: "",
-    headers: {} as RawAxiosResponseHeaders,
-    config,
-  });
+const httpError = (status: number, message = "Failed", fieldErrors: FieldErrors = {}) =>
+  new ApiError(message, { status, fieldErrors });
 
 describe("useSignUpForm", () => {
   it("accepts a valid form", async () => {
@@ -115,7 +104,7 @@ describe("useSignUpForm", () => {
   it("maps a 409 onto the email field until the email changes", async () => {
     const form = setup();
 
-    form.applyServerError(httpError(409, { statusCode: 409, message: "exists" }));
+    form.applyServerError(httpError(409, "exists"));
 
     expect(form.errors.value.email).toBe(EMAIL_TAKEN_MESSAGE);
     expect(form.firstInvalidField.value).toBe("email");
@@ -131,7 +120,7 @@ describe("useSignUpForm", () => {
     const form = setup();
 
     form.applyServerError(
-      httpError(400, { formErrors: [], fieldErrors: { password: ["Too weak"], other: ["x"] } })
+      httpError(400, "Too weak", { password: ["Too weak"], other: ["x"] })
     );
 
     expect(form.errors.value).toEqual({ password: "Too weak" });
@@ -142,12 +131,12 @@ describe("useSignUpForm", () => {
 
     form.applyServerError(httpError(429));
 
-    expect(form.formError.value).toBe("Too many attempts, try again in a minute");
+    expect(form.formError.value).toBe(TOO_MANY_ATTEMPTS_MESSAGE);
   });
 
   it("clears server errors on the next validation", async () => {
     const form = setup();
-    form.applyServerError(httpError(500, { statusCode: 500, message: "Boom" }));
+    form.applyServerError(httpError(500, "Boom"));
     expect(form.formError.value).toBe("Boom");
 
     await form.validate();

@@ -1,30 +1,25 @@
 import { QueryClient, VueQueryPlugin } from "@tanstack/vue-query";
 import { flushPromises, mount, type VueWrapper } from "@vue/test-utils";
-import {
-  AxiosError,
-  AxiosHeaders,
-  type InternalAxiosRequestConfig,
-  type RawAxiosResponseHeaders,
-} from "axios";
 import { createPinia, setActivePinia } from "pinia";
 import PrimeVue from "primevue/config";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createMemoryHistory, createRouter } from "vue-router";
 
-import * as cartApi from "@/api/cart";
-import * as pizzasApi from "@/api/pizzas";
 import { SEARCH_DEBOUNCE_MS } from "@/composables/useMenuFilters";
-import { MENU_PAGE_SIZE } from "@/composables/usePizzas";
 import { routes } from "@/router/routes";
+import * as cartApi from "@/services/api/cart";
+import * as pizzasApi from "@/services/api/pizzas";
+import { ApiError } from "@/services/errors";
 import { useAuthStore } from "@/stores/auth";
-import type { Paginated } from "@/types/api.types";
 import type { Cart } from "@/types/cart.types";
+import type { Paginated } from "@/types/pagination.types";
 import type { Pizza, PizzaListQuery } from "@/types/pizza.types";
 import type { User } from "@/types/user.types";
+import { MENU_PAGE_SIZE } from "@/utils/constants/pizza.constants";
 import MenuView from "@/views/MenuView.vue";
 
-vi.mock("@/api/pizzas", () => ({ listPizzas: vi.fn(), getPizza: vi.fn() }));
-vi.mock("@/api/cart", () => ({
+vi.mock("@/services/api/pizzas", () => ({ listPizzas: vi.fn(), getPizza: vi.fn() }));
+vi.mock("@/services/api/cart", () => ({
   getCart: vi.fn(),
   addItem: vi.fn(),
   updateItemQuantity: vi.fn(),
@@ -33,7 +28,7 @@ vi.mock("@/api/cart", () => ({
   applyPromocode: vi.fn(),
   removePromocode: vi.fn(),
 }));
-vi.mock("@/api/auth", () => ({ me: vi.fn(), signIn: vi.fn(), signUp: vi.fn(), signOut: vi.fn() }));
+vi.mock("@/services/api/auth", () => ({ me: vi.fn(), signIn: vi.fn(), signUp: vi.fn(), signOut: vi.fn() }));
 
 const { toastAdd } = vi.hoisted(() => ({ toastAdd: vi.fn() }));
 vi.mock("primevue/usetoast", () => ({ useToast: () => ({ add: toastAdd }) }));
@@ -70,14 +65,7 @@ const EMPTY_CART: Cart = {
   updatedAt: "",
 };
 
-const config = { headers: new AxiosHeaders() } as InternalAxiosRequestConfig;
-const badRequest = new AxiosError("Bad", "ERR_BAD_REQUEST", config, null, {
-  data: { statusCode: 400, message: "Quantity cannot exceed 50 (current: 50)" },
-  status: 400,
-  statusText: "",
-  headers: {} as RawAxiosResponseHeaders,
-  config,
-});
+const badRequest = new ApiError("Quantity cannot exceed 50 (current: 50)", { status: 400 });
 
 function respondWithCatalog(totalPages = 1) {
   vi.mocked(pizzasApi.listPizzas).mockImplementation((query: PizzaListQuery = {}) => {

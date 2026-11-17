@@ -1,23 +1,18 @@
 import { QueryClient, VueQueryPlugin } from "@tanstack/vue-query";
 import { flushPromises, mount, type VueWrapper } from "@vue/test-utils";
-import {
-  AxiosError,
-  AxiosHeaders,
-  type InternalAxiosRequestConfig,
-  type RawAxiosResponseHeaders,
-} from "axios";
 import { createPinia, setActivePinia } from "pinia";
 import PrimeVue from "primevue/config";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createMemoryHistory, createRouter } from "vue-router";
 
-import * as ordersApi from "@/api/orders";
 import { ORDER_POLL_INTERVAL_MS } from "@/composables/useMyOrders";
 import { routes } from "@/router/routes";
+import * as ordersApi from "@/services/api/orders";
+import { ApiError } from "@/services/errors";
 import type { Order } from "@/types/order.types";
 import MyOrderDetailsView from "@/views/MyOrderDetailsView.vue";
 
-vi.mock("@/api/orders", () => ({ listMyOrders: vi.fn(), getMyOrder: vi.fn() }));
+vi.mock("@/services/api/orders", () => ({ listMyOrders: vi.fn(), getMyOrder: vi.fn() }));
 
 const ORDER_ID = "3f2a9c1e-7b4d-4e8a-9c2f-1a2b3c4d5e6f";
 
@@ -49,15 +44,7 @@ const order = (overrides: Partial<Order> = {}): Order => ({
   ...overrides,
 });
 
-const config = { headers: new AxiosHeaders() } as InternalAxiosRequestConfig;
-const httpError = (status: number) =>
-  new AxiosError("Request failed", "ERR_BAD_REQUEST", config, null, {
-    data: { statusCode: status, message: "Order not found" },
-    status,
-    statusText: "",
-    headers: {} as RawAxiosResponseHeaders,
-    config,
-  });
+const httpError = (status: number) => new ApiError("Order not found", { status });
 
 let wrapper: VueWrapper | undefined;
 

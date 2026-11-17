@@ -1,37 +1,25 @@
 import { flushPromises, mount } from "@vue/test-utils";
-import {
-  AxiosError,
-  AxiosHeaders,
-  type InternalAxiosRequestConfig,
-  type RawAxiosResponseHeaders,
-} from "axios";
 import { createPinia, setActivePinia } from "pinia";
 import PrimeVue from "primevue/config";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createMemoryHistory, createRouter } from "vue-router";
 
-import * as authApi from "@/api/auth";
 import { routes } from "@/router/routes";
+import * as authApi from "@/services/api/auth";
+import { ApiError } from "@/services/errors";
 import { useAuthStore } from "@/stores/auth";
 import type { User } from "@/types/user.types";
 import SignUpView from "@/views/SignUpView.vue";
 
-vi.mock("@/api/auth", () => ({ signIn: vi.fn(), signUp: vi.fn(), me: vi.fn(), signOut: vi.fn() }));
+vi.mock("@/services/api/auth", () => ({ signIn: vi.fn(), signUp: vi.fn(), me: vi.fn(), signOut: vi.fn() }));
 
 const { toastAdd } = vi.hoisted(() => ({ toastAdd: vi.fn() }));
 vi.mock("primevue/usetoast", () => ({ useToast: () => ({ add: toastAdd }) }));
 
 const USER = { id: "u1", role: "user", email: "mario@x.io", isEmailVerified: false } as User;
 
-const config = { headers: new AxiosHeaders() } as InternalAxiosRequestConfig;
 const httpError = (status: number) =>
-  new AxiosError("Request failed", "ERR_BAD_REQUEST", config, null, {
-    data: { statusCode: status, message: "User with this email already exists" },
-    status,
-    statusText: "",
-    headers: {} as RawAxiosResponseHeaders,
-    config,
-  });
+  new ApiError("User with this email already exists", { status });
 
 let wrapper: Awaited<ReturnType<typeof setup>>["wrapper"] | undefined;
 

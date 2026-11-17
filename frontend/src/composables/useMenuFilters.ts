@@ -1,6 +1,8 @@
 import { computed, onWatcherCleanup, type Ref, ref, watch, type WritableComputedRef } from "vue";
 import { type LocationQueryValue, useRoute, useRouter } from "vue-router";
 
+import { logError } from "@/utils/logger";
+
 export const SEARCH_DEBOUNCE_MS = 300;
 
 interface MenuFilters {
@@ -30,7 +32,9 @@ export function useMenuFilters(): MenuFilters {
   const page = computed({
     get: () => parsePage(firstValue(route.query.page)),
     set: (value: number) => {
-      void router.push({ query: { ...route.query, page: value > 1 ? String(value) : undefined } });
+      router
+        .push({ query: { ...route.query, page: value > 1 ? String(value) : undefined } })
+        .catch(logError("Menu page navigation"));
     },
   });
 
@@ -39,9 +43,9 @@ export function useMenuFilters(): MenuFilters {
     if (nextSearch === search.value) {
       return;
     }
-    void router.replace({
-      query: { ...route.query, search: nextSearch || undefined, page: undefined },
-    });
+    router
+      .replace({ query: { ...route.query, search: nextSearch || undefined, page: undefined } })
+      .catch(logError("Menu search navigation"));
   }
 
   watch(searchInput, (value) => {

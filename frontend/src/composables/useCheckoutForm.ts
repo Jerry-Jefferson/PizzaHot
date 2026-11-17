@@ -1,6 +1,5 @@
-import { useVuelidate } from "@vuelidate/core";
 import { helpers, required } from "@vuelidate/validators";
-import { computed, type ComputedRef, reactive, type Ref, toValue } from "vue";
+import { computed, type ComputedRef, reactive, type Ref } from "vue";
 
 import {
   type CheckoutErrors,
@@ -10,11 +9,11 @@ import {
   DeliveryType,
   PaymentMethod,
 } from "@/types/order.types";
-import { ADDRESS_MAX, ORDER_COMMENT_MAX } from "@/utils/constants/limits";
+import { ADDRESS_MAX, ORDER_COMMENT_MAX } from "@/utils/constants/limits.constants";
 
-import { useServerFormErrors } from "./useServerFormErrors";
+import { useValidatedForm } from "./useValidatedForm";
 
-export const CHECKOUT_FIELDS: readonly CheckoutField[] = [
+const CHECKOUT_FIELDS: readonly CheckoutField[] = [
   "delivery",
   "paymentMethod",
   "address",
@@ -44,7 +43,6 @@ export function useCheckoutForm(): CheckoutForm {
     address: "",
     comment: "",
   });
-  const server = useServerFormErrors(CHECKOUT_FIELDS, form);
 
   const isDelivery = computed(() => form.delivery === DeliveryType.DELIVERY);
 
@@ -69,27 +67,11 @@ export function useCheckoutForm(): CheckoutForm {
     },
   };
 
-  const v$ = useVuelidate(rules, form);
-
-  const errors = computed<CheckoutErrors>(() =>
-    Object.fromEntries(
-      CHECKOUT_FIELDS.map((field) => {
-        const clientError = v$.value[field].$errors[0]?.$message;
-        return [field, clientError ? toValue(clientError) : server.fieldErrors.value[field]];
-      })
-    )
+  const { server, errors, touch, validate, firstInvalidField, formError } = useValidatedForm(
+    CHECKOUT_FIELDS,
+    form,
+    rules
   );
-
-  const firstInvalidField = computed(() => CHECKOUT_FIELDS.find((field) => errors.value[field]));
-
-  function touch(field: CheckoutField): void {
-    v$.value[field].$touch();
-  }
-
-  async function validate(): Promise<boolean> {
-    server.clear();
-    return v$.value.$validate();
-  }
 
   function toPayload(): CreateOrderPayload {
     if (form.paymentMethod === "") {
@@ -111,7 +93,7 @@ export function useCheckoutForm(): CheckoutForm {
   return {
     form,
     errors,
-    formError: server.formError,
+    formError,
     firstInvalidField,
     touch,
     validate,

@@ -3,12 +3,14 @@ import { flushPromises, mount } from "@vue/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { defineComponent, ref } from "vue";
 
-import * as pizzasApi from "@/api/pizzas";
-import { MENU_PAGE_SIZE, usePizza, usePizzas } from "@/composables/usePizzas";
-import type { Paginated } from "@/types/api.types";
+import { usePizza, usePizzas } from "@/composables/usePizzas";
+import * as pizzasApi from "@/services/api/pizzas";
+import type { Paginated } from "@/types/pagination.types";
 import type { Pizza, PizzaListQuery } from "@/types/pizza.types";
+import { MENU_PAGE_SIZE } from "@/utils/constants/pizza.constants";
+import { QUERY_KEYS } from "@/utils/constants/query-keys.constants";
 
-vi.mock("@/api/pizzas", () => ({ listPizzas: vi.fn(), getPizza: vi.fn() }));
+vi.mock("@/services/api/pizzas", () => ({ listPizzas: vi.fn(), getPizza: vi.fn() }));
 
 const pageOf = (names: string[], page = 1): Paginated<Pizza> => ({
   data: names.map((name) => ({ id: name, name }) as Pizza),
@@ -52,7 +54,7 @@ describe("usePizzas", () => {
       search: "",
     });
     expect(result.data.value?.data.map((pizza) => pizza.name)).toEqual(["Margherita"]);
-    expect(queryClient.getQueryData(["pizzas", 1, MENU_PAGE_SIZE, ""])).toBeDefined();
+    expect(queryClient.getQueryData(QUERY_KEYS.pizzas.list(1, MENU_PAGE_SIZE, ""))).toBeDefined();
   });
 
   it("keeps the previous page while the next one loads", async () => {
@@ -94,14 +96,17 @@ describe("usePizza", () => {
 
     expect(pizzasApi.getPizza).toHaveBeenCalledWith("p1");
     expect(result.data.value?.name).toBe("Margherita");
-    expect(queryClient.getQueryData(["pizzas", "p1"])).toBeDefined();
+    expect(queryClient.getQueryData(QUERY_KEYS.pizzas.detail("p1"))).toBeDefined();
   });
 
   it("starts from a fresh list cache entry without refetching", async () => {
     const queryClient = new QueryClient({
       defaultOptions: { queries: { retry: false, staleTime: 60_000 } },
     });
-    queryClient.setQueryData(["pizzas", 1, MENU_PAGE_SIZE, ""], pageOf(["Margherita", "Diavola"]));
+    queryClient.setQueryData(
+      QUERY_KEYS.pizzas.list(1, MENU_PAGE_SIZE, ""),
+      pageOf(["Margherita", "Diavola"])
+    );
 
     const { result } = withQuery(() => usePizza("Diavola"), queryClient);
     await flushPromises();

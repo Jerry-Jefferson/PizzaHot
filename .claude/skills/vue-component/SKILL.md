@@ -54,7 +54,7 @@ const formattedPrice = computed(() => `$${pizza.price.toFixed(2)}`);
 </template>
 ```
 
-- Never mutate props; use `defineModel<T>()` for two-way binding and `defineSlots<...>()` for typed slots.
+- Never mutate props; use `defineModel<T>()` for two-way binding, and `defineSlots<...>()` only for scoped or generic slots (slots that pass props); plain slots are already typed from the template.
 - Named functions need explicit return types; type imports are inline (`import { type Ref, ref } from "vue"`).
 - Import PrimeVue components per file. `npm run lint:fix` sorts imports and removes unused ones.
 

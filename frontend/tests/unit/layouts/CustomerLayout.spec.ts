@@ -6,16 +6,16 @@ import ToastService from "primevue/toastservice";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createMemoryHistory, createRouter } from "vue-router";
 
-import * as authApi from "@/api/auth";
-import * as cartApi from "@/api/cart";
 import CustomerLayout from "@/layouts/CustomerLayout.vue";
 import { routes } from "@/router/routes";
+import * as authApi from "@/services/api/auth";
+import * as cartApi from "@/services/api/cart";
 import { useAuthStore } from "@/stores/auth";
 import type { Cart } from "@/types/cart.types";
 import { Role, type User } from "@/types/user.types";
 
-vi.mock("@/api/auth", () => ({ me: vi.fn(), signIn: vi.fn(), signUp: vi.fn(), signOut: vi.fn() }));
-vi.mock("@/api/cart", () => ({ getCart: vi.fn() }));
+vi.mock("@/services/api/auth", () => ({ me: vi.fn(), signIn: vi.fn(), signUp: vi.fn(), signOut: vi.fn() }));
+vi.mock("@/services/api/cart", () => ({ getCart: vi.fn() }));
 
 const cartItem = (pizzaId: string, quantity: number) => ({
   id: `item-${pizzaId}`,

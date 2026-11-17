@@ -1,3 +1,5 @@
+import type { PaginationQuery } from "./pagination.types";
+
 export interface Ingredient {
   id: string;
   name: string;
@@ -23,8 +25,8 @@ export interface PizzaPayload {
   ingredientIds: string[];
 }
 
-export interface PizzaListQuery {
-  page?: number;
-  limit?: number;
+export type PendingAction = "add" | "order";
+
+export interface PizzaListQuery extends PaginationQuery {
   search?: string;
 }

@@ -3,7 +3,6 @@ import { storeToRefs } from "pinia";
 import { computed, onBeforeUnmount, ref, watch } from "vue";
 import { type RouteLocationRaw, useRoute, useRouter } from "vue-router";
 
-import { getErrorStatus } from "@/api/errors";
 import BaseBackLink from "@/components/base/BaseBackLink.vue";
 import BaseButton from "@/components/base/BaseButton.vue";
 import BaseEmptyState from "@/components/base/BaseEmptyState.vue";
@@ -15,9 +14,10 @@ import PizzaOrderPanel from "@/components/pizza/PizzaOrderPanel.vue";
 import { useAppToast } from "@/composables/useAppToast";
 import { useAddToCart, useCart } from "@/composables/useCart";
 import { usePizza } from "@/composables/usePizzas";
+import { getErrorStatus } from "@/services/errors";
 import { useAuthStore } from "@/stores/auth";
-
-type PendingAction = "add" | "order";
+import type { PendingAction } from "@/types/pizza.types";
+import { ROUTES } from "@/utils/constants/routes.constants";
 
 const NOT_FOUND_STATUSES = new Set([400, 404]);
 
@@ -41,10 +41,10 @@ const inCart = computed(
 
 const menuLink = computed<RouteLocationRaw>(() => {
   const back: unknown = router.options.history.state.back;
-  if (typeof back === "string" && router.resolve(back).name === "menu") {
+  if (typeof back === "string" && router.resolve(back).name === ROUTES.HOME.NAME) {
     return back;
   }
-  return { name: "menu" };
+  return { name: ROUTES.HOME.NAME };
 });
 
 const originalTitle = document.title;
@@ -69,7 +69,7 @@ async function submit(action: PendingAction): Promise<void> {
     return;
   }
   if (!isAuthenticated.value) {
-    await router.push({ name: "sign-in", query: { redirect: route.fullPath } });
+    await router.push({ name: ROUTES.SIGN_IN.NAME, query: { redirect: route.fullPath } });
     return;
   }
   pendingAction.value = action;
@@ -78,7 +78,7 @@ async function submit(action: PendingAction): Promise<void> {
     await addToCart.mutateAsync({ pizzaId: currentPizza.id, quantity: addedQuantity });
     quantity.value = 1;
     if (action === "order") {
-      await router.push({ name: "checkout" });
+      await router.push({ name: ROUTES.CHECKOUT.NAME });
     } else {
       showSuccess(`${currentPizza.name} ×${String(addedQuantity)} added to cart`);
     }

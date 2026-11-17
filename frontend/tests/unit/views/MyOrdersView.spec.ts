@@ -5,14 +5,15 @@ import PrimeVue from "primevue/config";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createMemoryHistory, createRouter } from "vue-router";
 
-import * as ordersApi from "@/api/orders";
-import { MY_ORDERS_PAGE_SIZE, ORDER_POLL_INTERVAL_MS } from "@/composables/useMyOrders";
+import { ORDER_POLL_INTERVAL_MS } from "@/composables/useMyOrders";
 import { routes } from "@/router/routes";
-import type { Paginated } from "@/types/api.types";
+import * as ordersApi from "@/services/api/orders";
 import type { Order, OrderStatus } from "@/types/order.types";
+import type { Paginated } from "@/types/pagination.types";
+import { MY_ORDERS_PAGE_SIZE } from "@/utils/constants/order.constants";
 import MyOrdersView from "@/views/MyOrdersView.vue";
 
-vi.mock("@/api/orders", () => ({ listMyOrders: vi.fn(), getMyOrder: vi.fn() }));
+vi.mock("@/services/api/orders", () => ({ listMyOrders: vi.fn(), getMyOrder: vi.fn() }));
 
 const order = (id: string, status: OrderStatus): Order =>
   ({

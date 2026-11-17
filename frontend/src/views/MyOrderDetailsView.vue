@@ -3,7 +3,6 @@ import Skeleton from "primevue/skeleton";
 import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-import { getErrorStatus } from "@/api/errors";
 import BaseBackLink from "@/components/base/BaseBackLink.vue";
 import BaseButton from "@/components/base/BaseButton.vue";
 import BaseCard from "@/components/base/BaseCard.vue";
@@ -14,7 +13,9 @@ import OrderPlacedBanner from "@/components/order/OrderPlacedBanner.vue";
 import OrderProgressStepper from "@/components/order/OrderProgressStepper.vue";
 import OrderStatusBadge from "@/components/order/OrderStatusBadge.vue";
 import { useMyOrder } from "@/composables/useMyOrders";
+import { getErrorStatus } from "@/services/errors";
 import { OrderStatus } from "@/types/order.types";
+import { ROUTES } from "@/utils/constants/routes.constants";
 import { formatLongDate, shortId } from "@/utils/format";
 
 const NOT_FOUND_STATUSES = new Set([400, 404]);
@@ -33,7 +34,7 @@ const isAwaitingConfirmation = computed(() => order.value?.status === OrderStatu
 
 <template>
   <section class="mx-auto flex w-full max-w-2xl flex-col gap-6">
-    <BaseBackLink :to="{ name: 'my-orders' }" label="Back to orders" />
+    <BaseBackLink :to="{ name: ROUTES.MY_ORDERS.NAME }" label="Back to orders" />
 
     <div v-if="isPending" class="flex flex-col gap-6" aria-hidden="true" data-test="order-skeleton">
       <Skeleton width="50%" height="2.5rem" />
@@ -52,7 +53,7 @@ const isAwaitingConfirmation = computed(() => order.value?.status === OrderStatu
           variant="secondary"
           icon="pi pi-arrow-left"
           label="Back to orders"
-          @click="router.push({ name: 'my-orders' })"
+          @click="router.push({ name: ROUTES.MY_ORDERS.NAME })"
         />
       </template>
     </BaseEmptyState>

@@ -1,14 +1,5 @@
-import { useVuelidate } from "@vuelidate/core";
 import { helpers } from "@vuelidate/validators";
-import {
-  computed,
-  type ComputedRef,
-  type MaybeRefOrGetter,
-  reactive,
-  type Ref,
-  toValue,
-  watch,
-} from "vue";
+import { type ComputedRef, type MaybeRefOrGetter, reactive, type Ref, toValue, watch } from "vue";
 
 import type {
   PersonalInfoErrors,
@@ -17,9 +8,9 @@ import type {
   UpdateMePayload,
   User,
 } from "@/types/user.types";
-import { NAME_MAX } from "@/utils/constants/limits";
+import { NAME_MAX } from "@/utils/constants/limits.constants";
 
-import { useServerFormErrors } from "./useServerFormErrors";
+import { useValidatedForm } from "./useValidatedForm";
 
 const PERSONAL_INFO_FIELDS: readonly PersonalInfoField[] = ["name", "surname", "gender"];
 
@@ -38,7 +29,6 @@ const toNullable = (value: string): string | null => value.trim() || null;
 
 export function usePersonalInfoForm(user: MaybeRefOrGetter<User | null>): PersonalInfoForm {
   const form = reactive<PersonalInfoFormValues>({ name: "", surname: "", gender: "" });
-  const server = useServerFormErrors(PERSONAL_INFO_FIELDS, form);
 
   const rules = {
     name: {
@@ -56,7 +46,11 @@ export function usePersonalInfoForm(user: MaybeRefOrGetter<User | null>): Person
     gender: {},
   };
 
-  const v$ = useVuelidate(rules, form);
+  const { v$, server, errors, touch, validate, formError } = useValidatedForm(
+    PERSONAL_INFO_FIELDS,
+    form,
+    rules
+  );
 
   watch(
     () => toValue(user),
@@ -69,24 +63,6 @@ export function usePersonalInfoForm(user: MaybeRefOrGetter<User | null>): Person
     { immediate: true }
   );
 
-  const errors = computed<PersonalInfoErrors>(() =>
-    Object.fromEntries(
-      PERSONAL_INFO_FIELDS.map((field) => {
-        const clientError = v$.value[field].$errors[0]?.$message;
-        return [field, clientError ? toValue(clientError) : server.fieldErrors.value[field]];
-      })
-    )
-  );
-
-  function touch(field: PersonalInfoField): void {
-    v$.value[field].$touch();
-  }
-
-  async function validate(): Promise<boolean> {
-    server.clear();
-    return v$.value.$validate();
-  }
-
   function toPayload(): UpdateMePayload {
     return {
       name: toNullable(form.name),
@@ -98,7 +74,7 @@ export function usePersonalInfoForm(user: MaybeRefOrGetter<User | null>): Person
   return {
     form,
     errors,
-    formError: server.formError,
+    formError,
     touch,
     validate,
     toPayload,

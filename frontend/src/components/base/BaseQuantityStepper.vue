@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import { MAX_PIZZA_QUANTITY } from "@/utils/constants/limits";
+import { MAX_PIZZA_QUANTITY } from "@/utils/constants/limits.constants";
 
 interface BaseQuantityStepperProps {
   min?: number;

@@ -25,12 +25,7 @@ export interface Cart {
   updatedAt: string;
 }
 
-export interface AddCartItemPayload {
-  pizzaId: string;
-  quantity: number;
-}
-
-export interface UpdateCartItemPayload {
+export interface CartItemPayload {
   pizzaId: string;
   quantity: number;
 }

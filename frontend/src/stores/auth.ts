@@ -1,12 +1,13 @@
-import { isAxiosError } from "axios";
 import { acceptHMRUpdate, defineStore } from "pinia";
 import { computed, ref } from "vue";
 
-import * as authApi from "@/api/auth";
 import { queryClient } from "@/plugins/vue-query";
+import * as authApi from "@/services/api/auth";
+import { getErrorStatus } from "@/services/errors";
 import type { AuthStatus, SignInPayload, SignUpPayload } from "@/types/auth.types";
 import { Role, type User } from "@/types/user.types";
 import { getInitials } from "@/utils/initials";
+import { logError } from "@/utils/logger";
 
 export const useAuthStore = defineStore("auth", () => {
   const user = ref<User | null>(null);
@@ -32,13 +33,20 @@ export const useAuthStore = defineStore("auth", () => {
     try {
       user.value = await authApi.me();
     } catch (error) {
-      if (!isAxiosError(error) || error.response?.status !== 401) {
+      if (getErrorStatus(error) !== 401) {
         throw error;
       }
       user.value = null;
     } finally {
       status.value = "ready";
     }
+  }
+
+  let initialSession: Promise<void> | null = null;
+
+  function ensureSession(): Promise<void> {
+    initialSession ??= restoreSession().catch(logError("Session restore"));
+    return initialSession;
   }
 
   async function signIn(payload: SignInPayload): Promise<User> {
@@ -79,6 +87,7 @@ export const useAuthStore = defineStore("auth", () => {
     initials,
     displayName,
     restoreSession,
+    ensureSession,
     signIn,
     signUp,
     signOut,

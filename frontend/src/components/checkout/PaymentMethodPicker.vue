@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { PaymentMethod } from "@/types/order.types";
-import { PAYMENT_METHOD_META, PAYMENT_METHODS } from "@/utils/constants/payment-method";
+import { PAYMENT_METHOD_META, PAYMENT_METHODS } from "@/utils/constants/order.constants";
 
 interface PaymentMethodPickerProps {
   error?: string;

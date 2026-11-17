@@ -10,8 +10,6 @@ interface BaseModalProps {
 const { header, widthClass = "max-w-lg", persistent } = defineProps<BaseModalProps>();
 
 const visible = defineModel<boolean>("visible", { required: true });
-
-defineSlots<{ default?: () => unknown; footer?: () => unknown }>();
 </script>
 
 <template>

@@ -1,3 +1,5 @@
+import type { FormErrors } from "./form.types";
+
 export const Role = {
   USER: "user",
   ADMIN: "admin",
@@ -41,7 +43,7 @@ export interface PersonalInfoFormValues {
 
 export type PersonalInfoField = keyof PersonalInfoFormValues;
 
-export type PersonalInfoErrors = Partial<Record<PersonalInfoField, string>>;
+export type PersonalInfoErrors = FormErrors<PersonalInfoField>;
 
 export interface ChangePasswordPayload {
   currentPassword: string;
@@ -54,4 +56,4 @@ export interface ChangePasswordFormValues extends ChangePasswordPayload {
 
 export type ChangePasswordField = keyof ChangePasswordFormValues;
 
-export type ChangePasswordErrors = Partial<Record<ChangePasswordField, string>>;
+export type ChangePasswordErrors = FormErrors<ChangePasswordField>;

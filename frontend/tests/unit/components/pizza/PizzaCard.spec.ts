@@ -6,7 +6,7 @@ import { createMemoryHistory, createRouter } from "vue-router";
 import PizzaCard from "@/components/pizza/PizzaCard.vue";
 import { routes } from "@/router/routes";
 import type { Pizza } from "@/types/pizza.types";
-import { MEDIA_PLACEHOLDER_URL } from "@/utils/media-url";
+import { MEDIA_PLACEHOLDER_URL } from "@/utils/media";
 
 const pizza = (overrides: Partial<Pizza> = {}): Pizza => ({
   id: "p1",

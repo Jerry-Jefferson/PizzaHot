@@ -3,7 +3,7 @@ import { computed } from "vue";
 
 import BaseCard from "@/components/base/BaseCard.vue";
 import { DeliveryType, type Order } from "@/types/order.types";
-import { PAYMENT_METHOD_META } from "@/utils/constants/payment-method";
+import { PAYMENT_METHOD_META } from "@/utils/constants/order.constants";
 
 interface OrderDeliveryDetailsCardProps {
   order: Pick<Order, "delivery" | "paymentMethod" | "address" | "comment">;

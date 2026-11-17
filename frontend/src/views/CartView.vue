@@ -4,7 +4,6 @@ import Skeleton from "primevue/skeleton";
 import { computed, ref, watch } from "vue";
 import { RouterLink } from "vue-router";
 
-import { FALLBACK_ERROR_MESSAGE, getErrorMessage } from "@/api/errors";
 import BaseButton from "@/components/base/BaseButton.vue";
 import BaseCard from "@/components/base/BaseCard.vue";
 import BaseEmptyState from "@/components/base/BaseEmptyState.vue";
@@ -14,7 +13,6 @@ import OrderSummaryCard from "@/components/cart/OrderSummaryCard.vue";
 import PromoCodeField from "@/components/cart/PromoCodeField.vue";
 import { useAppToast } from "@/composables/useAppToast";
 import {
-  CART_QUERY_KEY,
   useApplyPromocode,
   useCart,
   useCartItemCount,
@@ -24,7 +22,10 @@ import {
   useUpdateCartItem,
 } from "@/composables/useCart";
 import { useConfirmDanger } from "@/composables/useConfirmDanger";
+import { FALLBACK_ERROR_MESSAGE, getErrorMessage } from "@/services/errors";
 import type { CartItem } from "@/types/cart.types";
+import { QUERY_KEYS } from "@/utils/constants/query-keys.constants";
+import { ROUTES } from "@/utils/constants/routes.constants";
 
 const INVALID_PROMO_MESSAGE = "Invalid or expired promo code.";
 
@@ -78,7 +79,7 @@ function updateQuantity(item: CartItem, quantity: number): void {
 
 async function remove(item: CartItem): Promise<void> {
   if (!item.pizza) {
-    await queryClient.invalidateQueries({ queryKey: CART_QUERY_KEY });
+    await queryClient.invalidateQueries({ queryKey: QUERY_KEYS.cart });
     return;
   }
   try {
@@ -132,7 +133,7 @@ function confirmClearCart(): void {
     <template v-else>
       <header class="flex flex-wrap items-center gap-3">
         <RouterLink
-          :to="{ name: 'menu' }"
+          :to="{ name: ROUTES.HOME.NAME }"
           aria-label="Back to menu"
           class="flex size-10 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
         >
@@ -167,7 +168,12 @@ function confirmClearCart(): void {
 
       <div v-else class="grid items-start gap-6 lg:grid-cols-[1fr_320px]">
         <BaseCard>
-          <div v-if="!cart" class="flex flex-col gap-5" aria-hidden="true" data-test="cart-skeleton">
+          <div
+            v-if="!cart"
+            class="flex flex-col gap-5"
+            aria-hidden="true"
+            data-test="cart-skeleton"
+          >
             <div v-for="index in 2" :key="index" class="flex gap-4">
               <Skeleton width="6rem" height="6rem" border-radius="0.75rem" />
               <div class="flex flex-1 flex-col gap-2">
@@ -206,13 +212,13 @@ function confirmClearCart(): void {
           />
           <template #actions>
             <RouterLink
-              :to="{ name: 'checkout' }"
+              :to="{ name: ROUTES.CHECKOUT.NAME }"
               class="inline-flex h-12 w-full items-center justify-center rounded-control bg-primary px-6 text-base font-medium text-primary-foreground transition-colors hover:bg-primary-hover"
             >
               Proceed to checkout
             </RouterLink>
             <RouterLink
-              :to="{ name: 'menu' }"
+              :to="{ name: ROUTES.HOME.NAME }"
               class="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               Continue shopping

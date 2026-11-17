@@ -4,7 +4,7 @@ import { computed } from "vue";
 import BaseAvatar from "@/components/base/BaseAvatar.vue";
 import BaseCard from "@/components/base/BaseCard.vue";
 import type { UserSummary } from "@/types/user.types";
-import { toMediaUrl } from "@/utils/media-url";
+import { toMediaUrl } from "@/utils/media";
 
 interface ProfileHeaderCardProps {
   user: UserSummary;
