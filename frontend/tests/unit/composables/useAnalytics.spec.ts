@@ -3,10 +3,13 @@ import { flushPromises, mount } from "@vue/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { defineComponent } from "vue";
 
-import { usePopularPizza } from "@/composables/useAnalytics";
+import { useHighestChecks, usePopularPizza } from "@/composables/useAnalytics";
 import * as analyticsApi from "@/services/api/analytics";
 
-vi.mock("@/services/api/analytics", () => ({ getPopularPizza: vi.fn() }));
+vi.mock("@/services/api/analytics", () => ({
+  getPopularPizza: vi.fn(),
+  getHighestChecks: vi.fn(),
+}));
 
 function withQuery<T>(composable: () => T): T {
   let result!: T;
@@ -46,5 +49,27 @@ describe("usePopularPizza", () => {
     await flushPromises();
 
     expect(data.value).toBeNull();
+  });
+});
+
+describe("useHighestChecks", () => {
+  it("loads the customers above the average check", async () => {
+    const customers = [
+      {
+        userId: "u1",
+        email: "ada@example.com",
+        name: "Ada",
+        orderCount: 5,
+        averageCheck: 42,
+        globalAverageCheck: 30,
+      },
+    ];
+    vi.mocked(analyticsApi.getHighestChecks).mockResolvedValue(customers);
+
+    const { data } = withQuery(() => useHighestChecks());
+    await flushPromises();
+
+    expect(analyticsApi.getHighestChecks).toHaveBeenCalledTimes(1);
+    expect(data.value).toEqual(customers);
   });
 });

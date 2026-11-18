@@ -34,5 +34,6 @@ export const QUERY_KEYS = {
   analytics: {
     popularPizza: (month: MaybeRef<number>, year: MaybeRef<number>) =>
       ["analytics", "popular-pizza", month, year] as const,
+    highestChecks: ["analytics", "highest-checks"] as const,
   },
 };

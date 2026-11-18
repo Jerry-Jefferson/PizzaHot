@@ -1,8 +1,8 @@
 import { useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
 import { computed, type MaybeRefOrGetter, toValue } from "vue";
 
-import { getPopularPizza } from "@/services/api/analytics";
-import type { MostOrderedPizza } from "@/types/analytics.types";
+import { getHighestChecks, getPopularPizza } from "@/services/api/analytics";
+import type { MostOrderedPizza, UserAboveAverageCheck } from "@/types/analytics.types";
 import { QUERY_KEYS } from "@/utils/constants/query-keys.constants";
 
 export function usePopularPizza(
@@ -15,5 +15,12 @@ export function usePopularPizza(
   return useQuery({
     queryKey: QUERY_KEYS.analytics.popularPizza(monthValue, yearValue),
     queryFn: () => getPopularPizza(monthValue.value, yearValue.value),
+  });
+}
+
+export function useHighestChecks(): UseQueryReturnType<UserAboveAverageCheck[], Error> {
+  return useQuery({
+    queryKey: QUERY_KEYS.analytics.highestChecks,
+    queryFn: () => getHighestChecks(),
   });
 }
