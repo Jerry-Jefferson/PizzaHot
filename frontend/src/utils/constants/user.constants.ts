@@ -20,3 +20,9 @@ export const ROLE_META: Record<Role, { label: string; tone: StatusTone }> = {
   [Role.ADMIN]: { label: "Admin", tone: "primary" },
   [Role.USER]: { label: "Customer", tone: "neutral" },
 };
+
+export const CUSTOMER_EMAIL_HINT = "Email cannot be changed";
+
+export const ADMIN_EMAIL_HINT = "Contact technical support to change the admin email.";
+
+export const ADMIN_ROLE_BADGE_LABEL = "Administrator";
