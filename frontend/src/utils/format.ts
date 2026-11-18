@@ -8,6 +8,13 @@ const priceFormatter = new Intl.NumberFormat(LOCALE, {
   maximumFractionDigits: 2,
 });
 
+const wholePriceFormatter = new Intl.NumberFormat(LOCALE, {
+  style: "currency",
+  currency: "USD",
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 2,
+});
+
 const dateFormatter = new Intl.DateTimeFormat(LOCALE, {
   month: "short",
   day: "numeric",
@@ -42,6 +49,10 @@ const monthYearFormatter = new Intl.DateTimeFormat(LOCALE, { month: "short", yea
 
 export function formatPrice(value: number | string): string {
   return priceFormatter.format(Number(value));
+}
+
+export function formatWholePrice(value: number | string): string {
+  return wholePriceFormatter.format(Number(value));
 }
 
 export function formatDate(value: string | Date): string {

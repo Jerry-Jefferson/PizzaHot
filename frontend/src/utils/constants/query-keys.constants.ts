@@ -30,6 +30,7 @@ export const QUERY_KEYS = {
       ["users", "list", page, limit, search] as const,
     detail: (id: MaybeRef<string>) => ["users", "detail", id] as const,
   },
+  promocodes: ["promocodes"] as const,
   analytics: {
     popularPizza: (month: MaybeRef<number>, year: MaybeRef<number>) =>
       ["analytics", "popular-pizza", month, year] as const,
