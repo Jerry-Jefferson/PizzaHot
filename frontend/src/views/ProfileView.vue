@@ -7,15 +7,15 @@ import ChangePasswordForm from "@/components/profile/ChangePasswordForm.vue";
 import DangerZoneCard from "@/components/profile/DangerZoneCard.vue";
 import PersonalInfoForm from "@/components/profile/PersonalInfoForm.vue";
 import ProfileHeaderCard from "@/components/profile/ProfileHeaderCard.vue";
-import { useChangePasswordForm } from "@/composables/useChangePasswordForm";
-import { useConfirmDanger } from "@/composables/useConfirmDanger";
-import { useMyOrders } from "@/composables/useMyOrders";
-import { usePersonalInfoForm } from "@/composables/usePersonalInfoForm";
+import { useConfirmDanger } from "@/composables/common/useConfirmDanger";
+import { useMyOrders } from "@/composables/orders/useMyOrders";
+import { useChangePasswordForm } from "@/composables/profile/useChangePasswordForm";
+import { usePersonalInfoForm } from "@/composables/profile/usePersonalInfoForm";
 import {
   useChangePassword,
   useDeleteAccount,
   useUpdateMe,
-} from "@/composables/useProfileMutations";
+} from "@/composables/profile/useProfileMutations";
 import { useAuthStore } from "@/stores/auth";
 
 const { user } = storeToRefs(useAuthStore());

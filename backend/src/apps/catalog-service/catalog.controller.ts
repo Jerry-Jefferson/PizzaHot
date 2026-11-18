@@ -34,7 +34,7 @@ export class CatalogMessagesController {
   list(
     @Payload() payload: { page?: number; limit?: number; search?: string }
   ): Promise<PaginatedResult<PizzaResponseDto>> {
-    return this.pizzas.findAll(payload.page, payload.limit, payload.search);
+    return this.pizzas.findAll(payload.page ?? 1, payload.limit ?? 10, payload.search);
   }
 
   @MessagePattern(RPC.catalog.pizzaFindById)

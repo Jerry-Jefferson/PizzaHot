@@ -5,7 +5,7 @@ import PrimeVue from "primevue/config";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createMemoryHistory, createRouter } from "vue-router";
 
-import { ORDER_POLL_INTERVAL_MS } from "@/composables/useMyOrders";
+import { ORDER_POLL_INTERVAL_MS } from "@/composables/orders/useMyOrders";
 import { routes } from "@/router/routes";
 import * as ordersApi from "@/services/api/orders";
 import { ApiError } from "@/services/errors";

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed, onBeforeUnmount, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { type RouteLocationRaw, useRoute, useRouter } from "vue-router";
 
 import BaseBackLink from "@/components/base/BaseBackLink.vue";
@@ -11,13 +11,14 @@ import PizzaDetailsImage from "@/components/pizza/PizzaDetailsImage.vue";
 import PizzaDetailsInfo from "@/components/pizza/PizzaDetailsInfo.vue";
 import PizzaDetailsSkeleton from "@/components/pizza/PizzaDetailsSkeleton.vue";
 import PizzaOrderPanel from "@/components/pizza/PizzaOrderPanel.vue";
-import { useAppToast } from "@/composables/useAppToast";
-import { useAddToCart, useCart } from "@/composables/useCart";
-import { usePizza } from "@/composables/usePizzas";
+import { useAddToCart, useCart } from "@/composables/cart/useCart";
+import { usePizza } from "@/composables/catalog/usePizzas";
+import { useAppToast } from "@/composables/common/useAppToast";
 import { getErrorStatus } from "@/services/errors";
 import { useAuthStore } from "@/stores/auth";
 import type { PendingAction } from "@/types/pizza.types";
 import { ROUTES } from "@/utils/constants/routes.constants";
+import { formatDocumentTitle } from "@/utils/document-title";
 
 const NOT_FOUND_STATUSES = new Set([400, 404]);
 
@@ -47,17 +48,13 @@ const menuLink = computed<RouteLocationRaw>(() => {
   return { name: ROUTES.HOME.NAME };
 });
 
-const originalTitle = document.title;
 watch(
   () => pizza.value?.name,
   (name) => {
-    document.title = name ?? originalTitle;
+    document.title = formatDocumentTitle(name ?? route.meta.title);
   },
   { immediate: true }
 );
-onBeforeUnmount(() => {
-  document.title = originalTitle;
-});
 
 watch(pizzaId, () => {
   quantity.value = 1;

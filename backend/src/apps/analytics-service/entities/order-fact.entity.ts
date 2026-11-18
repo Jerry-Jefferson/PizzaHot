@@ -19,16 +19,17 @@ export class OrderFact {
     type: "decimal",
     precision: 10,
     scale: 2,
+    nullable: true,
     transformer: {
-      to: (value: number) => value,
-      from: (value: string) => parseFloat(value),
+      to: (value: number | null) => value,
+      from: (value: string | null) => (value === null ? null : parseFloat(value)),
     },
   })
-  finalPrice: number;
+  finalPrice: number | null;
 
   @Index()
-  @Column({ type: "timestamp" })
-  createdAt: Date;
+  @Column({ type: "timestamp", nullable: true })
+  createdAt: Date | null;
 
   @Column({ type: "varchar", default: "pending" })
   status: string;

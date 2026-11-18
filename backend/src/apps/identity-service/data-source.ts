@@ -1,6 +1,7 @@
 import { DataSource } from "typeorm";
 import { User } from "./users/user.entity.ts";
 import { SeedAdminUser1790000000000 } from "./migrations/1790000000000-SeedAdminUser.ts";
+import { NormalizeUserEmails1790000000001 } from "./migrations/1790000000001-NormalizeUserEmails.ts";
 
 export const identityDataSource = new DataSource({
   type: "postgres",
@@ -10,6 +11,6 @@ export const identityDataSource = new DataSource({
   password: process.env.POSTGRES_PASSWORD,
   database: "identity_db",
   entities: [User],
-  migrations: [SeedAdminUser1790000000000],
+  migrations: [SeedAdminUser1790000000000, NormalizeUserEmails1790000000001],
   migrationsTableName: "migrations",
 });

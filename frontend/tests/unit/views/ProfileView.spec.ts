@@ -189,18 +189,39 @@ describe("ProfileView", () => {
       );
     });
 
-    it("validates lengths, difference and confirmation on the client", async () => {
+    it("validates strength, difference and confirmation on the client", async () => {
       const { wrapper } = await setup();
 
       await fillPassword(wrapper, ["short", "short", "other"]);
 
-      expect(fieldError(wrapper, "current-password").text()).toBe(
-        "Current password must be at least 8 characters"
-      );
+      expect(fieldError(wrapper, "current-password").exists()).toBe(false);
       expect(fieldError(wrapper, "new-password").text()).toBe(
-        "New password must be at least 8 characters"
+        "Password must be at least 8 characters"
       );
       expect(fieldError(wrapper, "confirm-new-password").text()).toBe("Passwords do not match");
+      expect(usersApi.changePassword).not.toHaveBeenCalled();
+    });
+
+    it("accepts a legacy short current password", async () => {
+      vi.mocked(usersApi.changePassword).mockResolvedValue();
+      const { wrapper } = await setup();
+
+      await fillPassword(wrapper, ["Old1!x", "NewSecret1!", "NewSecret1!"]);
+
+      expect(usersApi.changePassword).toHaveBeenCalledWith({
+        currentPassword: "Old1!x",
+        newPassword: "NewSecret1!",
+      });
+    });
+
+    it("rejects a new password without the required character kinds", async () => {
+      const { wrapper } = await setup();
+
+      await fillPassword(wrapper, ["OldSecret1!", "aaaaaaaa", "aaaaaaaa"]);
+
+      expect(fieldError(wrapper, "new-password").text()).toBe(
+        "Password must contain at least one uppercase letter"
+      );
       expect(usersApi.changePassword).not.toHaveBeenCalled();
     });
 

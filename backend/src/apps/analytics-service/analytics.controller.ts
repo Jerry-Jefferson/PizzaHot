@@ -41,17 +41,17 @@ export class AnalyticsMessagesController {
     await ack(context, this.logger, EVENTS.orderCreated, async () => {
       const createdAt = new Date(event.createdAt);
 
-      await this.readModel.upsertOrderFact({
+      await this.readModel.recordOrderFact({
         orderId: event.orderId,
         userId: event.userId,
         userEmail: event.userEmail,
         userName: null,
         finalPrice: event.finalPrice,
         createdAt,
-        status: "pending",
       });
 
-      await this.readModel.upsertOrderItemFacts(
+      await this.readModel.replaceOrderItemFacts(
+        event.orderId,
         event.items.map((item) => ({
           orderId: event.orderId,
           pizzaId: item.pizzaId,

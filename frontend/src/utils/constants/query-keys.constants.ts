@@ -28,6 +28,7 @@ export const QUERY_KEYS = {
     all: ["users"] as const,
     list: (page: MaybeRef<number>, limit: MaybeRef<number>, search: MaybeRef<string>) =>
       ["users", "list", page, limit, search] as const,
+    count: (role: string) => ["users", "count", role] as const,
     detail: (id: MaybeRef<string>) => ["users", "detail", id] as const,
   },
   promocodes: ["promocodes"] as const,

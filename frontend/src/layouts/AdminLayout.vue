@@ -6,8 +6,8 @@ import { useRoute } from "vue-router";
 
 import AdminSidebar from "@/components/layout/AdminSidebar.vue";
 import AdminTopbar from "@/components/layout/AdminTopbar.vue";
-import { usePendingOrdersCount } from "@/composables/useAdminOrders";
-import { useSignOut } from "@/composables/useSignOut";
+import { useSignOut } from "@/composables/auth/useSignOut";
+import { usePendingOrdersCount } from "@/composables/orders/useAdminOrders";
 import { useAuthStore } from "@/stores/auth";
 
 const route = useRoute();

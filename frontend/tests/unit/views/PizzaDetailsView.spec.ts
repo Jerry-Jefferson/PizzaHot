@@ -122,15 +122,14 @@ describe("PizzaDetailsView", () => {
     expect(wrapper.get("img").attributes("src")).toBe("/uploads/pizzas/margherita.webp");
     expect(wrapper.get("[data-test='pizza-price']").text()).toBe("$12.50");
     expect(wrapper.get("[data-test='pizza-total']").text()).toBe("$12.50");
-    expect(document.title).toBe("Margherita");
+    expect(document.title).toBe("Margherita · Pizzeria");
   });
 
-  it("restores the document title when leaving", async () => {
-    const { wrapper } = await setup();
+  it("falls back to the route title when the pizza can't be loaded", async () => {
+    vi.mocked(pizzasApi.getPizza).mockRejectedValue(httpError(404, "Pizza not found"));
+    await setup();
 
-    wrapper.unmount();
-
-    expect(document.title).toBe("Pizzeria");
+    expect(document.title).toBe("Pizza · Pizzeria");
   });
 
   it("shows a placeholder when the pizza has no image", async () => {

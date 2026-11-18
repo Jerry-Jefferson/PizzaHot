@@ -12,7 +12,7 @@ import OrderItemsCard from "@/components/order/OrderItemsCard.vue";
 import OrderPlacedBanner from "@/components/order/OrderPlacedBanner.vue";
 import OrderProgressStepper from "@/components/order/OrderProgressStepper.vue";
 import OrderStatusBadge from "@/components/order/OrderStatusBadge.vue";
-import { useMyOrder } from "@/composables/useMyOrders";
+import { useMyOrder } from "@/composables/orders/useMyOrders";
 import { getErrorStatus } from "@/services/errors";
 import { OrderStatus } from "@/types/order.types";
 import { ROUTES } from "@/utils/constants/routes.constants";

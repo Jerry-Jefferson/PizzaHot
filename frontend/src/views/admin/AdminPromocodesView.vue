@@ -11,13 +11,13 @@ import BaseButton from "@/components/base/BaseButton.vue";
 import BaseEmptyState from "@/components/base/BaseEmptyState.vue";
 import BasePagination from "@/components/base/BasePagination.vue";
 import BaseStatusBadge from "@/components/base/BaseStatusBadge.vue";
-import { useAppToast } from "@/composables/useAppToast";
-import { usePromocodeForm } from "@/composables/usePromocodeForm";
+import { usePromocodeForm } from "@/composables/catalog/usePromocodeForm";
 import {
   usePromocodes,
   useSavePromocode,
   useSetPromocodeActive,
-} from "@/composables/usePromocodes";
+} from "@/composables/catalog/usePromocodes";
+import { useAppToast } from "@/composables/common/useAppToast";
 import type { Promocode, PromocodeFormMode } from "@/types/promocode.types";
 import {
   ADMIN_PROMOCODES_PAGE_SIZE,

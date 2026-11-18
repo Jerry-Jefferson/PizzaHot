@@ -7,8 +7,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Monorepo with two independent npm projects — there is **no root `package.json`**, so every `npm`/`npx`/`docker compose` command must run from inside `backend/` or `frontend/`.
 
 - `backend/` — NestJS 11 microservices (ESM, RabbitMQ, PostgreSQL, MongoDB). Has its own `README.md`.
-- `frontend/` — Vue 3 + Vite SPA. Has its own `README.md`. Not yet wired to the backend API.
-- `.github/workflows/ci.yml` — backend-only CI (`working-directory: backend`, triggers on `backend/**`): eslint `--max-warnings=0`, `tsc --noEmit`, build, unit tests with coverage, e2e. There is no frontend CI yet.
+- `frontend/` — Vue 3 + Vite SPA. Has its own `README.md`. Talks to the API gateway through the Vite dev proxy.
+- `.github/workflows/ci.yml` — backend CI (`working-directory: backend`, triggers on `backend/**`): eslint `--max-warnings=0`, `tsc --noEmit`, build, unit tests with coverage, e2e. `.github/workflows/frontend-ci.yml` — frontend CI (triggers on `frontend/**`): lint, type-check, unit tests, build.
 - `.claude/` — after every Write/Edit, `hooks/post-edit-check.mjs` runs lint (with `--fix`) and unit tests for whichever app the edited file is in (`backend/` or `frontend/`; other paths are skipped) and reports failures back with exit code 2. Skills `code-review` and `testing` describe backend conventions.
 - `.mcp.json` — read-only DB access for Claude: `postgres-<identity|catalog|cart|order|promo|analytics>` (one per service DB, Postgres MCP Pro in Docker, `--access-mode=restricted`) and `mongodb` (log-service data, `mongodb-mcp-server --readOnly`). All go through `.claude/mcp/launch.mjs`, which reads credentials from `backend/.env`; start the infra with `docker compose up -d pgdb mongodb` first.
 

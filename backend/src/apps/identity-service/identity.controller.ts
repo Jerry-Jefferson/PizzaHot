@@ -56,11 +56,11 @@ export class IdentityMessagesController {
 
   @MessagePattern(RPC.identity.findAll)
   async findAll(
-    @Payload() payload: { page?: number; limit?: number; search?: string }
+    @Payload() payload: { page?: number; limit?: number; search?: string; role?: Role }
   ): Promise<PaginatedResponseDto<UserResponseDto>> {
     const page = payload.page ?? 1;
     const limit = payload.limit ?? 10;
-    const { data, total } = await this.users.findAll(page, limit, payload.search);
+    const { data, total } = await this.users.findAll(page, limit, payload.search, payload.role);
 
     return new PaginatedResponseDto(data, page, limit, total);
   }

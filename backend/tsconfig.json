@@ -18,6 +18,7 @@
     "types": ["node", "jest"],
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "strict": true,
     "strictPropertyInitialization": false
   }
 }

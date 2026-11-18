@@ -7,9 +7,15 @@ import { UserFact } from "./entities/user-fact.entity.ts";
 import type {
   IAnalyticsRepository,
   MostOrderedPizzaResult,
+  MostOrderedPizzaRow,
+  OrderFactInput,
+  OrderItemFactInput,
   UserAboveAverageCheckResult,
   UserAboveAverageCheckRow,
 } from "./analytics.types.ts";
+
+const CANCELLED_STATUS = "cancelled";
+const INITIAL_STATUS = "pending";
 
 @Injectable()
 export class AnalyticsReadModelRepository implements IAnalyticsRepository {
@@ -26,19 +32,22 @@ export class AnalyticsReadModelRepository implements IAnalyticsRepository {
     month: number,
     year: number
   ): Promise<MostOrderedPizzaResult | null> {
-    const rows = await this.orderItemFacts.query<MostOrderedPizzaResult[]>(
+    const rows = await this.orderItemFacts.query<MostOrderedPizzaRow[]>(
       `
       SELECT
-        f."pizzaName"                   AS "pizzaName",
-        COUNT(DISTINCT f."orderId")::int AS "orderCount"
-      FROM order_item_facts f
-      WHERE EXTRACT(MONTH FROM f."orderedAt") = $1
-        AND EXTRACT(YEAR FROM f."orderedAt") = $2
-      GROUP BY f."pizzaName"
-      ORDER BY "orderCount" DESC
+        (ARRAY_AGG(i."pizzaName" ORDER BY i."orderedAt" DESC))[1] AS "pizzaName",
+        COUNT(DISTINCT i."orderId")::int                          AS "orderCount",
+        SUM(i."quantity")::int                                    AS "totalQuantity"
+      FROM order_item_facts i
+      JOIN order_facts o ON o."orderId" = i."orderId"
+      WHERE EXTRACT(MONTH FROM i."orderedAt") = $1
+        AND EXTRACT(YEAR FROM i."orderedAt") = $2
+        AND o."status" <> $3
+      GROUP BY COALESCE(i."pizzaId"::text, i."pizzaName")
+      ORDER BY "totalQuantity" DESC, "orderCount" DESC
       LIMIT 1
       `,
-      [month, year]
+      [month, year, CANCELLED_STATUS]
     );
 
     if (rows.length === 0) {
@@ -48,14 +57,22 @@ export class AnalyticsReadModelRepository implements IAnalyticsRepository {
     return {
       pizzaName: rows[0].pizzaName,
       orderCount: Number(rows[0].orderCount),
+      totalQuantity: Number(rows[0].totalQuantity),
     };
   }
 
   async getUsersWithAboveAverageCheck(): Promise<UserAboveAverageCheckResult[]> {
-    const rows = await this.orderFacts.query<UserAboveAverageCheckRow[]>(`
-      WITH global_avg AS (
+    const rows = await this.orderFacts.query<UserAboveAverageCheckRow[]>(
+      `
+      WITH counted_orders AS (
+        SELECT o.*
+        FROM order_facts o
+        WHERE o."createdAt" IS NOT NULL
+          AND o."status" <> $1
+      ),
+      global_avg AS (
         SELECT COALESCE(AVG("finalPrice"), 0) AS avg_check
-        FROM order_facts
+        FROM counted_orders
       )
       SELECT
         f."userId"                                        AS "userId",
@@ -64,14 +81,17 @@ export class AnalyticsReadModelRepository implements IAnalyticsRepository {
         COUNT(f."orderId")::int                           AS "orderCount",
         AVG(f."finalPrice")::numeric(10,2)                AS "averageCheck",
         (SELECT avg_check FROM global_avg)::numeric(10,2) AS "globalAverageCheck"
-      FROM order_facts f
+      FROM counted_orders f
       LEFT JOIN user_facts u ON u."userId" = f."userId"
       WHERE f."userId" IS NOT NULL
+        AND COALESCE(u."isDeleted", false) = false
       GROUP BY f."userId", u.email, u.name
       HAVING COUNT(f."orderId") > 3
         AND AVG(f."finalPrice") >= (SELECT avg_check FROM global_avg)
       ORDER BY "averageCheck" DESC
-    `);
+      `,
+      [CANCELLED_STATUS]
+    );
 
     return rows.map((row) => ({
       userId: row.userId,
@@ -83,15 +103,23 @@ export class AnalyticsReadModelRepository implements IAnalyticsRepository {
     }));
   }
 
-  async upsertOrderFact(fact: Partial<OrderFact> & { orderId: string }): Promise<void> {
-    await this.orderFacts.upsert(fact, ["orderId"]);
+  async recordOrderFact(fact: OrderFactInput): Promise<void> {
+    await this.orderFacts
+      .createQueryBuilder()
+      .insert()
+      .into(OrderFact)
+      .values({ ...fact, status: INITIAL_STATUS })
+      .orUpdate(["userId", "userEmail", "userName", "finalPrice", "createdAt"], ["orderId"])
+      .execute();
   }
 
-  async upsertOrderItemFacts(facts: Partial<OrderItemFact>[]): Promise<void> {
-    if (facts.length === 0) {
-      return;
-    }
-    await this.orderItemFacts.upsert(facts, ["orderId", "pizzaName"]);
+  async replaceOrderItemFacts(orderId: string, facts: OrderItemFactInput[]): Promise<void> {
+    await this.orderItemFacts.manager.transaction(async (manager) => {
+      await manager.delete(OrderItemFact, { orderId });
+      if (facts.length > 0) {
+        await manager.insert(OrderItemFact, facts);
+      }
+    });
   }
 
   async upsertUserFact(fact: Partial<UserFact> & { userId: string }): Promise<void> {
@@ -103,6 +131,6 @@ export class AnalyticsReadModelRepository implements IAnalyticsRepository {
   }
 
   async setOrderStatus(orderId: string, status: string): Promise<void> {
-    await this.orderFacts.update({ orderId }, { status });
+    await this.orderFacts.upsert({ orderId, status }, ["orderId"]);
   }
 }

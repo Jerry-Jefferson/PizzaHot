@@ -1,6 +1,5 @@
 import { isAxiosError } from "axios";
 
-import { queryClient } from "@/plugins/vue-query";
 import router from "@/router";
 import { toApiError } from "@/services/errors";
 import { useAuthStore } from "@/stores/auth";
@@ -10,12 +9,12 @@ import { logError } from "@/utils/logger";
 const PATHS_WITHOUT_UNAUTHORIZED_HANDLER = new Set([
   "/auth/me",
   "/auth/login",
+  "/auth/logout",
   "/users/me/password",
 ]);
 
 export async function handleSessionExpired(): Promise<void> {
   useAuthStore().reset();
-  queryClient.clear();
   const current = router.currentRoute.value;
   if (current.meta.guestOnly) {
     return;

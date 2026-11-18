@@ -1,10 +1,14 @@
+import type { ValidationRuleCollection } from "@vuelidate/core";
+import { helpers, maxLength } from "@vuelidate/validators";
+
 export interface PasswordRule {
   id: string;
   message: string;
   test: (password: string) => boolean;
 }
 
-export const PASSWORD_MIN_LENGTH = 6;
+export const PASSWORD_MIN_LENGTH = 8;
+export const PASSWORD_MAX_LENGTH = 72;
 
 export const PASSWORD_RULES: readonly PasswordRule[] = [
   {
@@ -33,3 +37,18 @@ export const PASSWORD_RULES: readonly PasswordRule[] = [
     test: (password) => /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?`~]/.test(password),
   },
 ];
+
+export function passwordRuleValidators(): ValidationRuleCollection {
+  return {
+    ...Object.fromEntries(
+      PASSWORD_RULES.map((rule) => [
+        rule.id,
+        helpers.withMessage(rule.message, (value: string) => value === "" || rule.test(value)),
+      ])
+    ),
+    maxLength: helpers.withMessage(
+      `Password must be at most ${String(PASSWORD_MAX_LENGTH)} characters`,
+      maxLength(PASSWORD_MAX_LENGTH)
+    ),
+  };
+}

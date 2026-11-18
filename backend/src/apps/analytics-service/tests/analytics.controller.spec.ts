@@ -42,10 +42,10 @@ describe("AnalyticsMessagesController", () => {
         .mockResolvedValue([]),
     };
     readModel = {
-      upsertOrderFact: jest
+      recordOrderFact: jest
         .fn<(...args: unknown[]) => Promise<unknown>>()
         .mockResolvedValue(undefined),
-      upsertOrderItemFacts: jest
+      replaceOrderItemFacts: jest
         .fn<(...args: unknown[]) => Promise<unknown>>()
         .mockResolvedValue(undefined),
       setOrderStatus: jest
@@ -79,10 +79,11 @@ describe("AnalyticsMessagesController", () => {
 
       await controller.onOrderCreated(ORDER_CREATED, context);
 
-      expect(readModel.upsertOrderFact).toHaveBeenCalledWith(
-        expect.objectContaining({ orderId: "o1", userId: "u1", finalPrice: 20, status: "pending" })
+      expect(readModel.recordOrderFact).toHaveBeenCalledWith(
+        expect.objectContaining({ orderId: "o1", userId: "u1", finalPrice: 20 })
       );
-      expect(readModel.upsertOrderItemFacts).toHaveBeenCalledWith([
+      expect(readModel.recordOrderFact.mock.calls[0][0]).not.toHaveProperty("status");
+      expect(readModel.replaceOrderItemFacts).toHaveBeenCalledWith("o1", [
         expect.objectContaining({ orderId: "o1", pizzaId: "p1", quantity: 2 }),
       ]);
       expect(channel.ack).toHaveBeenCalled();
@@ -93,13 +94,13 @@ describe("AnalyticsMessagesController", () => {
 
       await controller.onOrderCreated(ORDER_CREATED, context);
 
-      const fact = readModel.upsertOrderFact.mock.calls[0][0] as { createdAt: Date };
+      const fact = readModel.recordOrderFact.mock.calls[0][0] as { createdAt: Date };
       expect(fact.createdAt).toBeInstanceOf(Date);
       expect(fact.createdAt.toISOString()).toBe(ORDER_CREATED.createdAt);
     });
 
     it("sends the message to the DLQ when the write fails", async () => {
-      readModel.upsertOrderFact.mockRejectedValue(new Error("db down"));
+      readModel.recordOrderFact.mockRejectedValue(new Error("db down"));
       const { context, channel } = rmqContext();
 
       await controller.onOrderCreated(ORDER_CREATED, context);

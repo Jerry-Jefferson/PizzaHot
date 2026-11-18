@@ -10,6 +10,7 @@ import { PromocodesController } from "../controllers/promocodes/promocodes.contr
 import { AnalyticsController } from "../controllers/analytics/analytics.controller.ts";
 import { LogsController } from "../controllers/logs/logs.controller.ts";
 import { AuthController } from "../controllers/auth/auth.controller.ts";
+import type { JwtService } from "@nestjs/jwt";
 import type { CatalogClient } from "../clients/catalog.client.ts";
 import type { CartClient } from "../clients/cart.client.ts";
 import type { OrderClient } from "../clients/order.client.ts";
@@ -260,10 +261,10 @@ describe("UsersController", () => {
   });
 
   it("delegates the admin reads", async () => {
-    await controller.findAll({ page: 1, limit: 10, search: "anna" });
+    await controller.findAll({ page: 1, limit: 10, search: "anna", role: "user" });
     await controller.findOne("u2");
 
-    expect(client.findAll).toHaveBeenCalledWith(1, 10, "anna");
+    expect(client.findAll).toHaveBeenCalledWith(1, 10, "anna", "user");
     expect(client.findById).toHaveBeenCalledWith("u2");
   });
 
@@ -296,7 +297,10 @@ describe("UsersController", () => {
     await controller.removeMe(USER, res as unknown as Response);
 
     expect(client.remove).toHaveBeenCalledWith("u1");
-    expect(res.clearCookie).toHaveBeenCalledWith(COOKIE_NAME);
+    expect(res.clearCookie).toHaveBeenCalledWith(
+      COOKIE_NAME,
+      expect.objectContaining({ httpOnly: true, sameSite: "lax" })
+    );
   });
 });
 
@@ -356,8 +360,11 @@ describe("AuthController", () => {
   let client: Record<string, ClientMock>;
   let controller: AuthController;
   let res: { cookie: jest.Mock; clearCookie: jest.Mock };
+  const TOKEN_EXP_SECONDS = 1_900_000_000;
+  const jwtService = { decode: jest.fn(() => ({ exp: TOKEN_EXP_SECONDS })) };
 
   beforeEach(() => {
+    jwtService.decode.mockClear();
     client = clientWith(
       "register",
       "login",
@@ -367,7 +374,10 @@ describe("AuthController", () => {
     );
     client.register.mockResolvedValue({ token: "t", user: { id: "u1" } });
     client.login.mockResolvedValue({ token: "t", user: { id: "u1" } });
-    controller = new AuthController(client as unknown as IdentityClient);
+    controller = new AuthController(
+      client as unknown as IdentityClient,
+      jwtService as unknown as JwtService
+    );
     res = { cookie: jest.fn(), clearCookie: jest.fn() };
   });
 
@@ -384,13 +394,17 @@ describe("AuthController", () => {
       "login",
       async () => controller.login({ email: "a@b.c", password: "p" }, res as unknown as Response),
     ],
-  ])("%s sets an httpOnly cookie and returns the token", async (_name, call) => {
+  ])("%s sets an httpOnly cookie that expires with the token", async (_name, call) => {
     const result = await call();
 
     expect(res.cookie).toHaveBeenCalledWith(
       COOKIE_NAME,
       "t",
-      expect.objectContaining({ httpOnly: true, sameSite: "lax" })
+      expect.objectContaining({
+        httpOnly: true,
+        sameSite: "lax",
+        expires: new Date(TOKEN_EXP_SECONDS * 1000),
+      })
     );
     expect(result).toMatchObject({ accessToken: "t" });
   });
@@ -412,6 +426,21 @@ describe("AuthController", () => {
   it("clears the cookie on logout", () => {
     controller.logout(res as unknown as Response);
 
-    expect(res.clearCookie).toHaveBeenCalledWith(COOKIE_NAME);
+    expect(res.clearCookie).toHaveBeenCalledWith(
+      COOKIE_NAME,
+      expect.objectContaining({ httpOnly: true, sameSite: "lax" })
+    );
+  });
+
+  it("sets a session cookie when the token carries no expiry", async () => {
+    jwtService.decode.mockReturnValueOnce({} as { exp: number });
+
+    await controller.login({ email: "a@b.c", password: "p" }, res as unknown as Response);
+
+    expect(res.cookie).toHaveBeenCalledWith(
+      COOKIE_NAME,
+      "t",
+      expect.objectContaining({ expires: undefined })
+    );
   });
 });

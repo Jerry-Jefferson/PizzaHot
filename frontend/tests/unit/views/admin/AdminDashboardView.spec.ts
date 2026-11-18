@@ -74,7 +74,7 @@ describe("AdminDashboardView", () => {
 
     expect(kpiValue(wrapper, "customers")).toBe("128");
     expect(kpiValue(wrapper, "pending")).toBe("3");
-    expect(usersApi.listUsers).toHaveBeenCalledWith({ page: 1, limit: 1 });
+    expect(usersApi.listUsers).toHaveBeenCalledWith({ page: 1, limit: 1, role: "user" });
     expect(ordersApi.searchOrders).toHaveBeenCalledWith({ status: "pending", limit: 1 });
   });
 

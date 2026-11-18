@@ -26,7 +26,7 @@ export class NotificationsService {
           await channel.send(params);
         } catch (error) {
           this.logger.error(
-            `Failed to send notification [${params.type}] via channel [${channel.channel}]: ${error}`
+            `Failed to send notification [${params.type}] via channel [${channel.channel}]: ${String(error)}`
           );
         }
       })

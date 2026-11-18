@@ -42,9 +42,10 @@ export class IdentityClient {
   findAll(
     page: number,
     limit: number,
-    search?: string
+    search?: string,
+    role?: Role
   ): Promise<PaginatedResponseDto<UserResponseDto>> {
-    return rpc(this.client, RPC.identity.findAll, { page, limit, search });
+    return rpc(this.client, RPC.identity.findAll, { page, limit, search, role });
   }
 
   update(userId: string, dto: UpdateUserDto): Promise<UserResponseDto> {

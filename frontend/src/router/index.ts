@@ -5,6 +5,7 @@ import { useAuthStore } from "@/stores/auth";
 import { Role, type User } from "@/types/user.types";
 import { getHomeRoute } from "@/utils/auth-redirect";
 import { ROUTES } from "@/utils/constants/routes.constants";
+import { formatDocumentTitle } from "@/utils/document-title";
 
 import { routes } from "./routes";
 
@@ -37,6 +38,11 @@ export async function authGuard(to: RouteLocationNormalized): Promise<RouteLocat
   return resolveAuthRedirect(to, auth.user);
 }
 
+export function applyDocumentTitle(to: RouteLocationNormalized): void {
+  document.title = formatDocumentTitle(to.meta.title);
+}
+
 router.beforeEach(authGuard);
+router.afterEach(applyDocumentTitle);
 
 export default router;

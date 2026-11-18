@@ -20,15 +20,23 @@ export const useAuthStore = defineStore("auth", () => {
   const initials = computed(() => (user.value ? getInitials(user.value) : ""));
   const displayName = computed(() => (user.value ? getUserDisplayName(user.value) : ""));
 
+  function setAuthenticatedUser(nextUser: User | null): void {
+    const previousId = user.value?.id;
+    user.value = nextUser;
+    if (previousId !== undefined && previousId !== nextUser?.id) {
+      queryClient.clear();
+    }
+  }
+
   async function restoreSession(): Promise<void> {
     status.value = "loading";
     try {
-      user.value = await authApi.me();
+      setAuthenticatedUser(await authApi.me());
     } catch (error) {
       if (getErrorStatus(error) !== 401) {
         throw error;
       }
-      user.value = null;
+      setAuthenticatedUser(null);
     } finally {
       status.value = "ready";
     }
@@ -43,13 +51,13 @@ export const useAuthStore = defineStore("auth", () => {
 
   async function signIn(payload: SignInPayload): Promise<User> {
     const response = await authApi.signIn(payload);
-    user.value = response.user;
+    setAuthenticatedUser(response.user);
     return response.user;
   }
 
   async function signUp(payload: SignUpPayload): Promise<User> {
     const response = await authApi.signUp(payload);
-    user.value = response.user;
+    setAuthenticatedUser(response.user);
     return response.user;
   }
 
@@ -58,16 +66,15 @@ export const useAuthStore = defineStore("auth", () => {
       await authApi.signOut();
     } finally {
       reset();
-      queryClient.clear();
     }
   }
 
   function setUser(nextUser: User): void {
-    user.value = nextUser;
+    setAuthenticatedUser(nextUser);
   }
 
   function reset(): void {
-    user.value = null;
+    setAuthenticatedUser(null);
   }
 
   return {

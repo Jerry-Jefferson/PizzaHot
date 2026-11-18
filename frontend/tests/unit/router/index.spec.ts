@@ -2,7 +2,7 @@ import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createMemoryHistory, createRouter } from "vue-router";
 
-import { authGuard } from "@/router";
+import { applyDocumentTitle, authGuard } from "@/router";
 import { routes } from "@/router/routes";
 import * as authApi from "@/services/api/auth";
 import { ApiError } from "@/services/errors";
@@ -30,6 +30,7 @@ const ADMIN = user("admin");
 function setup(signedIn: User | null) {
   const router = createRouter({ history: createMemoryHistory(), routes });
   router.beforeEach(authGuard);
+  router.afterEach(applyDocumentTitle);
   if (signedIn) {
     vi.mocked(authApi.me).mockResolvedValue(signedIn);
   } else {
@@ -118,5 +119,18 @@ describe("route guards", () => {
     it.each(["/sign-in", "/sign-up"])("is sent to the dashboard from %s", async (path) => {
       expect((await landOn(ADMIN, path)).name).toBe("admin-dashboard");
     });
+  });
+});
+
+describe("document title", () => {
+  it.each([
+    [CUSTOMER, "/cart", "Cart · Pizzeria"],
+    [CUSTOMER, "/does/not/exist", "Page not found · Pizzeria"],
+    [ADMIN, "/admin/orders", "Orders · Pizzeria"],
+    [null, "/checkout", "Sign in · Pizzeria"],
+  ])("titles the page after the route it lands on", async (signedIn, path, title) => {
+    await landOn(signedIn, path);
+
+    expect(document.title).toBe(title);
   });
 });

@@ -13,11 +13,11 @@ import BaseEmptyState from "@/components/base/BaseEmptyState.vue";
 import BaseInput from "@/components/base/BaseInput.vue";
 import BasePagination from "@/components/base/BasePagination.vue";
 import BaseStatusBadge from "@/components/base/BaseStatusBadge.vue";
-import { useCustomerOrders } from "@/composables/useAdminOrders";
-import { useAppToast } from "@/composables/useAppToast";
-import { useMenuFilters } from "@/composables/useMenuFilters";
-import { useOrderDetails } from "@/composables/useOrderDetails";
-import { useUsers, useUsersCount } from "@/composables/useUsers";
+import { useMenuFilters } from "@/composables/catalog/useMenuFilters";
+import { useAppToast } from "@/composables/common/useAppToast";
+import { useCustomerOrders } from "@/composables/orders/useAdminOrders";
+import { useOrderDetails } from "@/composables/orders/useOrderDetails";
+import { useCustomersCount, useUsers } from "@/composables/profile/useUsers";
 import type { User } from "@/types/user.types";
 import { ADMIN_USERS_PAGE_SIZE, ROLE_META } from "@/utils/constants/user.constants";
 import { formatDate } from "@/utils/format";
@@ -32,14 +32,14 @@ const usersQuery = useUsers(() => ({
   limit: ADMIN_USERS_PAGE_SIZE,
   search: search.value,
 }));
-const usersCount = useUsersCount();
+const customersCount = useCustomersCount();
 
 const users = computed(() => usersQuery.data.value?.data ?? []);
 const totalPages = computed(() => usersQuery.data.value?.totalPages ?? 0);
 const hasLoadError = computed(() => usersQuery.isError.value && !usersQuery.data.value);
 
 const subtitle = computed(() => {
-  const total = usersCount.data.value;
+  const total = customersCount.data.value;
   if (total === undefined) {
     return undefined;
   }

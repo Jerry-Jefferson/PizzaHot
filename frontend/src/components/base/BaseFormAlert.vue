@@ -8,7 +8,7 @@ const { message } = defineProps<BaseFormAlertProps>();
 
 <template>
   <div
-    class="flex items-center gap-2 rounded-control bg-primary/10 px-3 py-2.5 text-sm text-primary"
+    class="flex items-center gap-2 rounded-control bg-primary/10 px-3 py-2.5 text-sm text-primary-hover"
     role="alert"
     data-test="form-error"
   >

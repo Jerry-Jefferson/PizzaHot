@@ -1,4 +1,5 @@
 import type { EmailTemplate } from "./account-registered.template.ts";
+import { escapeHtml } from "./escape-html.util.ts";
 
 export function criticalErrorTemplate(data: Record<string, unknown>): EmailTemplate {
   const errorMessage = typeof data.message === "string" ? data.message : "Unknown error";
@@ -23,23 +24,23 @@ export function criticalErrorTemplate(data: Record<string, unknown>): EmailTempl
         <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
           <tr>
             <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold; background: #f7f7f7;">Error Type</td>
-            <td style="padding: 8px; border: 1px solid #ddd;">${errorType}</td>
+            <td style="padding: 8px; border: 1px solid #ddd;">${escapeHtml(errorType)}</td>
           </tr>
           <tr>
             <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold; background: #f7f7f7;">Status Code</td>
-            <td style="padding: 8px; border: 1px solid #ddd;">${statusCode}</td>
+            <td style="padding: 8px; border: 1px solid #ddd;">${escapeHtml(statusCode)}</td>
           </tr>
           <tr>
             <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold; background: #f7f7f7;">Message</td>
-            <td style="padding: 8px; border: 1px solid #ddd;">${errorMessage}</td>
+            <td style="padding: 8px; border: 1px solid #ddd;">${escapeHtml(errorMessage)}</td>
           </tr>
           <tr>
             <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold; background: #f7f7f7;">Request Path</td>
-            <td style="padding: 8px; border: 1px solid #ddd;">${path}</td>
+            <td style="padding: 8px; border: 1px solid #ddd;">${escapeHtml(path)}</td>
           </tr>
           <tr>
             <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold; background: #f7f7f7;">Timestamp</td>
-            <td style="padding: 8px; border: 1px solid #ddd;">${timestamp}</td>
+            <td style="padding: 8px; border: 1px solid #ddd;">${escapeHtml(timestamp)}</td>
           </tr>
         </table>
         <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />

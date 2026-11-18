@@ -52,8 +52,6 @@ export const ApiGetMeAuth = () =>
 
 export const ApiLogoutAuth = () =>
   applyDecorators(
-    ApiBearerAuth(),
     ApiOperation({ summary: "Log out and clear authentication cookie" }),
-    ApiResponse({ status: 204, description: "Logged out successfully" }),
-    ApiAuth()
+    ApiResponse({ status: 204, description: "Logged out successfully" })
   );

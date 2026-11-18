@@ -18,6 +18,7 @@ const visible = defineModel<boolean>("visible", { required: true });
     :header="header"
     modal
     :closable="!persistent"
+    :close-on-escape="!persistent"
     :dismissable-mask="!persistent"
     :draggable="false"
     :class="['w-[calc(100vw-2rem)]', widthClass]"

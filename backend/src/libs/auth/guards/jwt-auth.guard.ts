@@ -36,16 +36,15 @@ export class JwtAuthGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest<AppRequest>();
-    const token = this.extractToken(request);
+    const candidates = this.extractTokens(request);
 
-    if (!token) {
+    if (candidates.length === 0) {
       throw new UnauthorizedException("Missing authentication token");
     }
 
-    let claims: object;
-    try {
-      claims = await this.jwtService.verifyAsync<object>(token);
-    } catch {
+    const claims = await this.verifyFirstValid(candidates);
+
+    if (!claims) {
       throw new UnauthorizedException("Invalid or expired token");
     }
 
@@ -62,8 +61,21 @@ export class JwtAuthGuard implements CanActivate {
     return true;
   }
 
-  private extractToken(request: AppRequest): string | undefined {
-    return this.extractTokenFromCookie(request) ?? this.extractTokenFromHeader(request);
+  private async verifyFirstValid(tokens: string[]): Promise<object | undefined> {
+    for (const token of tokens) {
+      try {
+        return await this.jwtService.verifyAsync<object>(token);
+      } catch {
+        continue;
+      }
+    }
+    return undefined;
+  }
+
+  private extractTokens(request: AppRequest): string[] {
+    return [this.extractTokenFromCookie(request), this.extractTokenFromHeader(request)].filter(
+      (token): token is string => Boolean(token)
+    );
   }
 
   private extractTokenFromCookie(request: AppRequest): string | undefined {

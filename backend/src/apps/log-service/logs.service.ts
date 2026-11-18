@@ -21,7 +21,7 @@ export class LogsService {
         timestamp: dto.timestamp ?? new Date(),
       });
     } catch (err) {
-      process.stderr.write(`[LogsService] Failed to persist log to MongoDB: ${err}\n`);
+      process.stderr.write(`[LogsService] Failed to persist log to MongoDB: ${String(err)}\n`);
       return null;
     }
   }

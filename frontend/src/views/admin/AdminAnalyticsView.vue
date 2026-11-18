@@ -5,8 +5,8 @@ import { computed } from "vue";
 import AboveAverageCustomersCard from "@/components/admin/AboveAverageCustomersCard.vue";
 import AdminPageHeader from "@/components/admin/AdminPageHeader.vue";
 import MostPopularPizzaCard from "@/components/admin/MostPopularPizzaCard.vue";
-import { useHighestChecks, usePopularPizza } from "@/composables/useAnalytics";
-import { useAnalyticsMonth } from "@/composables/useAnalyticsMonth";
+import { useHighestChecks, usePopularPizza } from "@/composables/analytics/useAnalytics";
+import { useAnalyticsMonth } from "@/composables/analytics/useAnalyticsMonth";
 import { formatMonthYear } from "@/utils/format";
 import { startOfMonth } from "@/utils/route-query";
 

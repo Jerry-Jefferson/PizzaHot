@@ -11,11 +11,11 @@ import DeliveryAddressField from "@/components/checkout/DeliveryAddressField.vue
 import DeliveryInstructionsField from "@/components/checkout/DeliveryInstructionsField.vue";
 import DeliveryMethodPicker from "@/components/checkout/DeliveryMethodPicker.vue";
 import PaymentMethodPicker from "@/components/checkout/PaymentMethodPicker.vue";
-import { useAppToast } from "@/composables/useAppToast";
-import { useCart } from "@/composables/useCart";
-import { useCheckoutForm } from "@/composables/useCheckoutForm";
-import { useCreateOrder } from "@/composables/useCreateOrder";
-import { useRefreshSession } from "@/composables/useRefreshSession";
+import { useRefreshSession } from "@/composables/auth/useRefreshSession";
+import { useCart } from "@/composables/cart/useCart";
+import { useCheckoutForm } from "@/composables/cart/useCheckoutForm";
+import { useAppToast } from "@/composables/common/useAppToast";
+import { useCreateOrder } from "@/composables/orders/useCreateOrder";
 import { getErrorMessage, isEmailNotVerifiedError } from "@/services/errors";
 import { useAuthStore } from "@/stores/auth";
 import { DeliveryType } from "@/types/order.types";
@@ -136,7 +136,7 @@ async function handleOrderError(error: unknown): Promise<void> {
 
     <div
       v-if="orderError"
-      class="flex flex-wrap items-center gap-x-2 gap-y-1 rounded-control bg-primary/10 px-3 py-2.5 text-sm text-primary"
+      class="flex flex-wrap items-center gap-x-2 gap-y-1 rounded-control bg-primary/10 px-3 py-2.5 text-sm text-primary-hover"
       role="alert"
       data-test="order-error"
     >

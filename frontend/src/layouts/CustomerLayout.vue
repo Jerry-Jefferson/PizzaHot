@@ -6,9 +6,9 @@ import { useRoute } from "vue-router";
 import EmailVerificationBanner from "@/components/auth/EmailVerificationBanner.vue";
 import AppFooter from "@/components/layout/AppFooter.vue";
 import AppHeader from "@/components/layout/AppHeader.vue";
-import { useCartItemCount } from "@/composables/useCart";
-import { useRefreshSession } from "@/composables/useRefreshSession";
-import { useSignOut } from "@/composables/useSignOut";
+import { useRefreshSession } from "@/composables/auth/useRefreshSession";
+import { useSignOut } from "@/composables/auth/useSignOut";
+import { useCartItemCount } from "@/composables/cart/useCart";
 import { useAuthStore } from "@/stores/auth";
 
 const route = useRoute();

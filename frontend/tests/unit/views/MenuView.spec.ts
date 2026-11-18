@@ -5,7 +5,7 @@ import PrimeVue from "primevue/config";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createMemoryHistory, createRouter } from "vue-router";
 
-import { SEARCH_DEBOUNCE_MS } from "@/composables/useMenuFilters";
+import { SEARCH_DEBOUNCE_MS } from "@/composables/catalog/useMenuFilters";
 import { routes } from "@/router/routes";
 import * as cartApi from "@/services/api/cart";
 import * as pizzasApi from "@/services/api/pizzas";

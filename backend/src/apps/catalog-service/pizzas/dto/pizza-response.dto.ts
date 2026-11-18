@@ -53,9 +53,9 @@ export class PizzaResponseDto {
     dto.image = pizza.image;
     dto.price = pizza.price;
     if (pizza.pizzaIngredients) {
-      dto.ingredients = pizza.pizzaIngredients
-        .map((pi) => (pi.ingredient ? IngredientResponseDto.fromEntity(pi.ingredient) : null))
-        .filter(Boolean);
+      dto.ingredients = pizza.pizzaIngredients.flatMap((pi) =>
+        pi.ingredient ? [IngredientResponseDto.fromEntity(pi.ingredient)] : []
+      );
     }
     dto.createdAt = pizza.createdAt;
     dto.updatedAt = pizza.updatedAt;

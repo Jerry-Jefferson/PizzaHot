@@ -80,9 +80,10 @@ export class UsersService {
   async findAll(
     page: number,
     limit: number,
-    search?: string
+    search?: string,
+    role?: Role
   ): Promise<PaginatedResult<UserResponseDto>> {
-    const { data, total } = await this.usersRepository.findPaginated(page, limit, search);
+    const { data, total } = await this.usersRepository.findPaginated(page, limit, search, role);
     return { data: UserResponseDto.fromEntities(data), total };
   }
 
