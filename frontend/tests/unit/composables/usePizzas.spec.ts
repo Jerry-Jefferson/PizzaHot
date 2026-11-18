@@ -3,7 +3,14 @@ import { flushPromises, mount } from "@vue/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { defineComponent, ref } from "vue";
 
-import { useDeletePizza, usePizza, usePizzas } from "@/composables/usePizzas";
+import {
+  useCreatePizza,
+  useDeletePizza,
+  usePizza,
+  usePizzas,
+  useUpdatePizza,
+  useUploadPizzaImage,
+} from "@/composables/usePizzas";
 import * as pizzasApi from "@/services/api/pizzas";
 import type { Paginated } from "@/types/pagination.types";
 import type { Pizza, PizzaListQuery } from "@/types/pizza.types";
@@ -14,6 +21,9 @@ vi.mock("@/services/api/pizzas", () => ({
   listPizzas: vi.fn(),
   getPizza: vi.fn(),
   deletePizza: vi.fn(),
+  createPizza: vi.fn(),
+  updatePizza: vi.fn(),
+  uploadPizzaImage: vi.fn(),
 }));
 
 const pageOf = (names: string[], page = 1): Paginated<Pizza> => ({
@@ -120,6 +130,21 @@ describe("usePizza", () => {
   });
 });
 
+describe("usePizza when disabled", () => {
+  it("does not fetch until it is enabled", async () => {
+    const enabled = ref(false);
+    vi.mocked(pizzasApi.getPizza).mockResolvedValue({ id: "p1" } as Pizza);
+    withQuery(() => usePizza("p1", { enabled }));
+    await flushPromises();
+    expect(pizzasApi.getPizza).not.toHaveBeenCalled();
+
+    enabled.value = true;
+    await flushPromises();
+
+    expect(pizzasApi.getPizza).toHaveBeenCalledWith("p1");
+  });
+});
+
 describe("useDeletePizza", () => {
   it("deletes the pizza, drops its details and marks pizza lists stale", async () => {
     vi.mocked(pizzasApi.deletePizza).mockResolvedValue();
@@ -143,5 +168,49 @@ describe("useDeletePizza", () => {
 
     await expect(result.mutateAsync("p1")).rejects.toBe(error);
     expect(queryClient.getQueryData(QUERY_KEYS.pizzas.detail("p1"))).toEqual({ id: "p1" });
+  });
+});
+
+describe("pizza save mutations", () => {
+  const SAVED = { id: "p9", name: "Diavola", price: 12.5 } as Pizza;
+  const PAYLOAD = { name: "Diavola", description: "Spicy", price: 12.5, ingredientIds: ["i1"] };
+
+  function seedList(queryClient: QueryClient): void {
+    queryClient.setQueryData(QUERY_KEYS.pizzas.list(1, 10, ""), pageOf(["Margherita"]));
+  }
+
+  it("creates a pizza, caches its details and marks lists stale", async () => {
+    vi.mocked(pizzasApi.createPizza).mockResolvedValue(SAVED);
+    const { result, queryClient } = withQuery(() => useCreatePizza());
+    seedList(queryClient);
+
+    await expect(result.mutateAsync(PAYLOAD)).resolves.toEqual(SAVED);
+    await flushPromises();
+
+    expect(pizzasApi.createPizza).toHaveBeenCalledWith(PAYLOAD);
+    expect(queryClient.getQueryData(QUERY_KEYS.pizzas.detail("p9"))).toEqual(SAVED);
+    expect(queryClient.getQueryState(QUERY_KEYS.pizzas.list(1, 10, ""))?.isInvalidated).toBe(true);
+  });
+
+  it("updates a pizza with the full payload", async () => {
+    vi.mocked(pizzasApi.updatePizza).mockResolvedValue(SAVED);
+    const { result, queryClient } = withQuery(() => useUpdatePizza());
+
+    await result.mutateAsync({ id: "p9", payload: PAYLOAD });
+
+    expect(pizzasApi.updatePizza).toHaveBeenCalledWith("p9", PAYLOAD);
+    expect(queryClient.getQueryData(QUERY_KEYS.pizzas.detail("p9"))).toEqual(SAVED);
+  });
+
+  it("uploads an image and caches the returned pizza", async () => {
+    const withImage = { ...SAVED, image: "/uploads/pizzas/p9.png" };
+    vi.mocked(pizzasApi.uploadPizzaImage).mockResolvedValue(withImage);
+    const image = new File(["png"], "diavola.png", { type: "image/png" });
+    const { result, queryClient } = withQuery(() => useUploadPizzaImage());
+
+    await result.mutateAsync({ id: "p9", image });
+
+    expect(pizzasApi.uploadPizzaImage).toHaveBeenCalledWith("p9", image);
+    expect(queryClient.getQueryData(QUERY_KEYS.pizzas.detail("p9"))).toEqual(withImage);
   });
 });

@@ -19,7 +19,7 @@ interface ValidatedForm<TField extends string> {
 
 export function useValidatedForm<TField extends string>(
   fields: readonly TField[],
-  form: Record<TField, string>,
+  form: Record<TField, unknown>,
   rules: ValidationArgs
 ): ValidatedForm<TField> {
   const server = useServerFormErrors(fields, form);
