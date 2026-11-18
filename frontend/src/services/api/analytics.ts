@@ -1,4 +1,4 @@
-import type { MostOrderedPizza } from "@/types/analytics.types";
+import type { MostOrderedPizza, UserAboveAverageCheck } from "@/types/analytics.types";
 
 import { apiClient } from "..";
 
@@ -10,4 +10,9 @@ export async function getPopularPizza(
     params: { month, year },
   });
   return data || null;
+}
+
+export async function getHighestChecks(): Promise<UserAboveAverageCheck[]> {
+  const { data } = await apiClient.get<UserAboveAverageCheck[]>("/analytics/highest-checks");
+  return data;
 }

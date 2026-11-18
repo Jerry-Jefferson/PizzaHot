@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { apiClient } from "@/services";
-import { getPopularPizza } from "@/services/api/analytics";
+import { getHighestChecks, getPopularPizza } from "@/services/api/analytics";
 
 const response = (data: unknown) => ({ data }) as Awaited<ReturnType<typeof apiClient.get>>;
 
@@ -27,5 +27,13 @@ describe("analytics api", () => {
     vi.spyOn(apiClient, "get").mockResolvedValue(response(body));
 
     await expect(getPopularPizza(5, 2026)).resolves.toBeNull();
+  });
+
+  it("lists customers above the average check through GET /analytics/highest-checks", async () => {
+    const customers = [{ userId: "u1" }];
+    const get = vi.spyOn(apiClient, "get").mockResolvedValue(response(customers));
+
+    await expect(getHighestChecks()).resolves.toEqual(customers);
+    expect(get).toHaveBeenCalledWith("/analytics/highest-checks");
   });
 });
