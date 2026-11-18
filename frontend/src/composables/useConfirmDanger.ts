@@ -1,7 +1,7 @@
 import type { ConfirmationOptions } from "primevue/confirmationoptions";
 import { useConfirm } from "primevue/useconfirm";
 
-export const CONFIRM_DANGER_GROUP = "danger";
+import { CONFIRM_DANGER_GROUP } from "@/utils/constants/ui.constants";
 
 export interface ConfirmDangerOptions {
   title: string;
@@ -9,6 +9,7 @@ export interface ConfirmDangerOptions {
   confirmLabel?: string;
   cancelLabel?: string;
   onConfirm: () => unknown;
+  onCancel?: () => void;
 }
 
 export interface ConfirmDangerMessage extends ConfirmationOptions {
@@ -18,7 +19,14 @@ export interface ConfirmDangerMessage extends ConfirmationOptions {
 export function useConfirmDanger(): (options: ConfirmDangerOptions) => void {
   const confirm = useConfirm();
 
-  return ({ title, message, confirmLabel = "Delete", cancelLabel = "Cancel", onConfirm }) => {
+  return ({
+    title,
+    message,
+    confirmLabel = "Delete",
+    cancelLabel = "Cancel",
+    onConfirm,
+    onCancel,
+  }) => {
     const confirmation: ConfirmDangerMessage = {
       group: CONFIRM_DANGER_GROUP,
       header: title,
@@ -26,6 +34,8 @@ export function useConfirmDanger(): (options: ConfirmDangerOptions) => void {
       acceptLabel: confirmLabel,
       rejectLabel: cancelLabel,
       onConfirm,
+      reject: onCancel,
+      onHide: onCancel,
     };
     confirm.require(confirmation);
   };

@@ -7,6 +7,7 @@ export const QUERY_KEYS = {
   cartUpdateItem: ["cart", "update-item"] as const,
   pizzas: {
     all: ["pizzas"] as const,
+    lists: ["pizzas", "list"] as const,
     list: (page: MaybeRef<number>, limit: MaybeRef<number>, search: MaybeRef<string>) =>
       ["pizzas", "list", page, limit, search] as const,
     detail: (id: MaybeRef<string>) => ["pizzas", "detail", id] as const,

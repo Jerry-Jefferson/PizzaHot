@@ -23,7 +23,7 @@ export interface ServerFormErrors<TField extends string> {
 
 export function useServerFormErrors<TField extends string>(
   fields: readonly TField[],
-  values: Record<TField, string>
+  values: Record<TField, unknown>
 ): ServerFormErrors<TField> {
   const fieldErrors: ShallowRef<FormErrors<TField>> = shallowRef({});
   const formError = ref<string | null>(null);

@@ -110,4 +110,16 @@ describe("BaseConfirmDialog with useConfirmDanger", () => {
     expect(onConfirm).not.toHaveBeenCalled();
     expect(dialog()).toBeNull();
   });
+
+  it("reports a cancel through onCancel", async () => {
+    const onCancel = vi.fn();
+    const { onConfirm } = setup({ onCancel });
+    await open();
+
+    buttonByText("Cancel")?.click();
+    await flushPromises();
+
+    expect(onCancel).toHaveBeenCalledOnce();
+    expect(onConfirm).not.toHaveBeenCalled();
+  });
 });

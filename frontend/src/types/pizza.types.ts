@@ -1,3 +1,4 @@
+import type { FormErrors } from "./form.types";
 import type { PaginationQuery } from "./pagination.types";
 
 export interface Ingredient {
@@ -24,6 +25,16 @@ export interface PizzaPayload {
   price: number;
   ingredientIds: string[];
 }
+
+export interface PizzaFormValues {
+  name: string;
+  description: string;
+  price: number | null;
+}
+
+export type PizzaField = keyof PizzaFormValues;
+
+export type PizzaFormErrors = FormErrors<PizzaField>;
 
 export type PendingAction = "add" | "order";
 
