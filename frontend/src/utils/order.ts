@@ -1,9 +1,18 @@
-import { DeliveryType, type OrderItem, OrderStatus } from "@/types/order.types";
+import {
+  DeliveryType,
+  type NextOrderStatus,
+  type OrderItem,
+  OrderStatus,
+} from "@/types/order.types";
 import {
   DELIVERY_PROGRESS_STEPS,
   FINAL_ORDER_STATUSES,
+  NEXT_ORDER_STATUSES,
+  ORDER_STATUS_ACTION_LABELS,
   ORDER_STATUSES,
   ORDER_SUMMARY_VISIBLE_ITEMS,
+  PICKUP_NEXT_ORDER_STATUSES,
+  PICKUP_ORDER_STATUS_ACTION_LABELS,
   PICKUP_PROGRESS_STEPS,
   type ProgressStep,
   type ProgressStepState,
@@ -42,4 +51,19 @@ export function getStepState(step: ProgressStep, status: OrderStatus): ProgressS
     return "done";
   }
   return stepRank === statusRank ? "current" : "upcoming";
+}
+
+export function getNextStatuses(
+  status: OrderStatus,
+  delivery: DeliveryType
+): readonly NextOrderStatus[] {
+  const pickupOverride =
+    delivery === DeliveryType.PICKUP ? PICKUP_NEXT_ORDER_STATUSES[status] : undefined;
+  return pickupOverride ?? NEXT_ORDER_STATUSES[status];
+}
+
+export function getStatusActionLabel(status: NextOrderStatus, delivery: DeliveryType): string {
+  const pickupLabel =
+    delivery === DeliveryType.PICKUP ? PICKUP_ORDER_STATUS_ACTION_LABELS[status] : undefined;
+  return pickupLabel ?? ORDER_STATUS_ACTION_LABELS[status];
 }

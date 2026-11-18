@@ -1,7 +1,15 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { apiClient } from "@/services";
-import { createOrder, getMyOrder, listMyOrders, searchOrders } from "@/services/api/orders";
+import {
+  createOrder,
+  getMyOrder,
+  getOrder,
+  getOrdersByUser,
+  listMyOrders,
+  searchOrders,
+  updateOrderStatus,
+} from "@/services/api/orders";
 
 const response = (data: unknown) => ({ data }) as Awaited<ReturnType<typeof apiClient.get>>;
 
@@ -42,5 +50,29 @@ describe("orders api", () => {
 
     await expect(searchOrders(query)).resolves.toEqual(page);
     expect(post).toHaveBeenCalledWith("/orders/search", query);
+  });
+
+  it("gets any order through GET /orders/:id", async () => {
+    const order = { id: "o1" };
+    const get = vi.spyOn(apiClient, "get").mockResolvedValue(response(order));
+
+    await expect(getOrder("o1")).resolves.toEqual(order);
+    expect(get).toHaveBeenCalledWith("/orders/o1");
+  });
+
+  it("lists a user's orders through GET /orders/user/:userId with pagination params", async () => {
+    const page = { data: [], page: 1, limit: 5, total: 0, totalPages: 0 };
+    const get = vi.spyOn(apiClient, "get").mockResolvedValue(response(page));
+
+    await expect(getOrdersByUser("u1", { limit: 5 })).resolves.toEqual(page);
+    expect(get).toHaveBeenCalledWith("/orders/user/u1", { params: { limit: 5 } });
+  });
+
+  it("updates the status through PATCH /orders/:id/status", async () => {
+    const order = { id: "o1", status: "confirmed" };
+    const patch = vi.spyOn(apiClient, "patch").mockResolvedValue(response(order));
+
+    await expect(updateOrderStatus("o1", "confirmed")).resolves.toEqual(order);
+    expect(patch).toHaveBeenCalledWith("/orders/o1/status", { status: "confirmed" });
   });
 });

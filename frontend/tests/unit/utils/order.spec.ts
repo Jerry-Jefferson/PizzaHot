@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { DeliveryType, type OrderStatus } from "@/types/order.types";
+import { DeliveryType, type NextOrderStatus, type OrderStatus } from "@/types/order.types";
 import { ORDER_STATUSES, type ProgressStepState } from "@/utils/constants/order.constants";
 import {
+  getNextStatuses,
   getProgressSteps,
+  getStatusActionLabel,
   getStepState,
   isFinalOrderStatus,
   summarizeOrderItems,
@@ -84,5 +86,34 @@ describe("getStepState", () => {
     ["completed", ["done", "done", "done", "done"]],
   ])("maps the pickup steps for %s", (status, expected) => {
     expect(statesFor(DeliveryType.PICKUP, status)).toEqual(expected);
+  });
+});
+
+describe("getNextStatuses", () => {
+  it.each<[OrderStatus, NextOrderStatus[], NextOrderStatus[]]>([
+    ["pending", ["confirmed", "cancelled"], ["confirmed", "cancelled"]],
+    ["confirmed", ["preparing", "cancelled"], ["preparing", "cancelled"]],
+    ["preparing", ["ready_for_delivery"], ["ready_for_delivery"]],
+    ["ready_for_delivery", ["delivering"], ["completed"]],
+    ["delivering", ["completed"], ["completed"]],
+    ["completed", [], []],
+    ["cancelled", [], []],
+  ])("moves %s to %j for delivery and %j for pickup", (status, forDelivery, forPickup) => {
+    expect(getNextStatuses(status, DeliveryType.DELIVERY)).toEqual(forDelivery);
+    expect(getNextStatuses(status, DeliveryType.PICKUP)).toEqual(forPickup);
+  });
+});
+
+describe("getStatusActionLabel", () => {
+  it.each<[NextOrderStatus, string, string]>([
+    ["confirmed", "Mark as confirmed", "Mark as confirmed"],
+    ["preparing", "Mark as preparing", "Mark as preparing"],
+    ["ready_for_delivery", "Mark as ready", "Mark as ready for pickup"],
+    ["delivering", "Mark as delivering", "Mark as delivering"],
+    ["completed", "Mark as delivered", "Mark as picked up"],
+    ["cancelled", "Mark as cancelled", "Mark as cancelled"],
+  ])("labels %s as %s / %s", (status, deliveryLabel, pickupLabel) => {
+    expect(getStatusActionLabel(status, DeliveryType.DELIVERY)).toBe(deliveryLabel);
+    expect(getStatusActionLabel(status, DeliveryType.PICKUP)).toBe(pickupLabel);
   });
 });
