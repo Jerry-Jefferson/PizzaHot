@@ -7,6 +7,7 @@ import {
   formatMonthYear,
   formatOrderDateTime,
   formatPrice,
+  formatWholePrice,
   shortId,
 } from "@/utils/format";
 
@@ -19,6 +20,16 @@ describe("formatPrice", () => {
     ["13.9", "$13.90"],
   ])("formats %j as %s", (value, expected) => {
     expect(formatPrice(value)).toBe(expected);
+  });
+});
+
+describe("formatWholePrice", () => {
+  it.each([
+    [10, "$10"],
+    [12.5, "$12.5"],
+    [1500, "$1,500"],
+  ])("formats %j as %s", (value, expected) => {
+    expect(formatWholePrice(value)).toBe(expected);
   });
 });
 
@@ -46,9 +57,7 @@ describe("formatDateTime", () => {
 
 describe("formatOrderDateTime", () => {
   it("shows the weekday and a zero-padded time", () => {
-    expect(formatOrderDateTime(new Date(2025, 8, 20, 18, 32))).toBe(
-      "Sat, Sep 20, 2025 · 06:32 PM"
-    );
+    expect(formatOrderDateTime(new Date(2025, 8, 20, 18, 32))).toBe("Sat, Sep 20, 2025 · 06:32 PM");
   });
 });
 
