@@ -79,3 +79,11 @@ export interface CheckoutFormValues {
 export type CheckoutField = keyof CheckoutFormValues;
 
 export type CheckoutErrors = FormErrors<CheckoutField>;
+
+export type NextOrderStatus = Exclude<OrderStatus, typeof OrderStatus.PENDING>;
+
+export interface OrderFilterValues {
+  status: OrderStatus | "";
+  delivery: DeliveryType | "";
+  paymentMethod: PaymentMethod | "";
+}

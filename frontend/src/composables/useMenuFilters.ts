@@ -1,7 +1,8 @@
 import { computed, onWatcherCleanup, type Ref, ref, watch, type WritableComputedRef } from "vue";
-import { type LocationQueryValue, useRoute, useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 import { logError } from "@/utils/logger";
+import { firstQueryValue, parsePageQuery } from "@/utils/route-query";
 
 export const SEARCH_DEBOUNCE_MS = 300;
 
@@ -12,25 +13,15 @@ interface MenuFilters {
   clearSearch: () => void;
 }
 
-function firstValue(value: LocationQueryValue | LocationQueryValue[] | undefined): string {
-  const first = Array.isArray(value) ? value[0] : value;
-  return first ?? "";
-}
-
-function parsePage(value: string): number {
-  const page = Number(value);
-  return Number.isInteger(page) && page > 1 ? page : 1;
-}
-
 export function useMenuFilters(): MenuFilters {
   const route = useRoute();
   const router = useRouter();
 
-  const search = computed(() => firstValue(route.query.search).trim());
+  const search = computed(() => firstQueryValue(route.query.search).trim());
   const searchInput = ref(search.value);
 
   const page = computed({
-    get: () => parsePage(firstValue(route.query.page)),
+    get: () => parsePageQuery(route.query.page),
     set: (value: number) => {
       router
         .push({ query: { ...route.query, page: value > 1 ? String(value) : undefined } })

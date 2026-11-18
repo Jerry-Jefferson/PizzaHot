@@ -1,4 +1,4 @@
-import type { CreateOrderPayload, Order, OrderSearchQuery } from "@/types/order.types";
+import type { CreateOrderPayload, Order, OrderSearchQuery, OrderStatus } from "@/types/order.types";
 import type { Paginated, PaginationQuery } from "@/types/pagination.types";
 
 import { apiClient } from "..";
@@ -20,5 +20,25 @@ export async function getMyOrder(id: string): Promise<Order> {
 
 export async function searchOrders(query: OrderSearchQuery = {}): Promise<Paginated<Order>> {
   const { data } = await apiClient.post<Paginated<Order>>("/orders/search", query);
+  return data;
+}
+
+export async function getOrder(id: string): Promise<Order> {
+  const { data } = await apiClient.get<Order>(`/orders/${id}`);
+  return data;
+}
+
+export async function getOrdersByUser(
+  userId: string,
+  query: PaginationQuery = {}
+): Promise<Paginated<Order>> {
+  const { data } = await apiClient.get<Paginated<Order>>(`/orders/user/${userId}`, {
+    params: query,
+  });
+  return data;
+}
+
+export async function updateOrderStatus(id: string, status: OrderStatus): Promise<Order> {
+  const { data } = await apiClient.patch<Order>(`/orders/${id}/status`, { status });
   return data;
 }

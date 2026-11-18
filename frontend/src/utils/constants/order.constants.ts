@@ -1,4 +1,9 @@
-import { OrderStatus, PaymentMethod } from "@/types/order.types";
+import {
+  DeliveryType,
+  type NextOrderStatus,
+  OrderStatus,
+  PaymentMethod,
+} from "@/types/order.types";
 import type { StatusTone } from "@/types/ui.types";
 
 interface OrderStatusMeta {
@@ -65,3 +70,41 @@ export const PAYMENT_METHOD_META: Record<PaymentMethod, PaymentMethodMeta> = {
 };
 
 export const PAYMENT_METHODS = Object.values(PaymentMethod);
+
+export const DELIVERY_TYPE_LABELS: Record<DeliveryType, string> = {
+  [DeliveryType.DELIVERY]: "Delivery",
+  [DeliveryType.PICKUP]: "Pickup",
+};
+
+export const DELIVERY_TYPES = Object.values(DeliveryType);
+
+export const ADMIN_ORDERS_PAGE_SIZE = 10;
+
+export const NEXT_ORDER_STATUSES: Record<OrderStatus, readonly NextOrderStatus[]> = {
+  [OrderStatus.PENDING]: [OrderStatus.CONFIRMED, OrderStatus.CANCELLED],
+  [OrderStatus.CONFIRMED]: [OrderStatus.PREPARING, OrderStatus.CANCELLED],
+  [OrderStatus.PREPARING]: [OrderStatus.READY_FOR_DELIVERY],
+  [OrderStatus.READY_FOR_DELIVERY]: [OrderStatus.DELIVERING],
+  [OrderStatus.DELIVERING]: [OrderStatus.COMPLETED],
+  [OrderStatus.COMPLETED]: [],
+  [OrderStatus.CANCELLED]: [],
+};
+
+export const PICKUP_NEXT_ORDER_STATUSES: Partial<Record<OrderStatus, readonly NextOrderStatus[]>> =
+  {
+    [OrderStatus.READY_FOR_DELIVERY]: [OrderStatus.COMPLETED],
+  };
+
+export const ORDER_STATUS_ACTION_LABELS: Record<NextOrderStatus, string> = {
+  [OrderStatus.CONFIRMED]: "Mark as confirmed",
+  [OrderStatus.PREPARING]: "Mark as preparing",
+  [OrderStatus.READY_FOR_DELIVERY]: "Mark as ready",
+  [OrderStatus.DELIVERING]: "Mark as delivering",
+  [OrderStatus.COMPLETED]: "Mark as delivered",
+  [OrderStatus.CANCELLED]: "Mark as cancelled",
+};
+
+export const PICKUP_ORDER_STATUS_ACTION_LABELS: Partial<Record<NextOrderStatus, string>> = {
+  [OrderStatus.READY_FOR_DELIVERY]: "Mark as ready for pickup",
+  [OrderStatus.COMPLETED]: "Mark as picked up",
+};
