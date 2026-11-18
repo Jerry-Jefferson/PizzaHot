@@ -6,10 +6,11 @@ import BaseFormField from "@/components/base/BaseFormField.vue";
 import BaseInput from "@/components/base/BaseInput.vue";
 import BaseSelect from "@/components/base/BaseSelect.vue";
 import type { Gender, PersonalInfoErrors, PersonalInfoField } from "@/types/user.types";
-import { GENDER_LABELS, GENDERS } from "@/utils/constants/user.constants";
+import { CUSTOMER_EMAIL_HINT, GENDER_LABELS, GENDERS } from "@/utils/constants/user.constants";
 
 interface PersonalInfoFormProps {
   email: string;
+  emailHint?: string;
   errors?: PersonalInfoErrors;
   formError?: string | null;
   loading?: boolean;
@@ -20,7 +21,13 @@ interface PersonalInfoFormEmits {
   blur: [field: PersonalInfoField];
 }
 
-const { email, errors = {}, formError = null, loading } = defineProps<PersonalInfoFormProps>();
+const {
+  email,
+  emailHint = CUSTOMER_EMAIL_HINT,
+  errors = {},
+  formError = null,
+  loading,
+} = defineProps<PersonalInfoFormProps>();
 const emit = defineEmits<PersonalInfoFormEmits>();
 
 const name = defineModel<string>("name", { required: true });
@@ -90,7 +97,7 @@ const GENDER_OPTIONS: { label: string; value: Gender | "" }[] = [
         v-slot="{ id, describedBy }"
         input-id="profile-email"
         label="Email"
-        hint="Email cannot be changed"
+        :hint="emailHint"
       >
         <BaseInput
           :id="id"
