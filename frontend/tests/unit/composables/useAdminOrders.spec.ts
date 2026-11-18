@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { defineComponent, ref } from "vue";
 
 import {
+  useCustomerOrders,
   useOrderSearch,
   usePendingOrdersCount,
   useUpdateOrderStatus,
@@ -11,9 +12,16 @@ import {
 import * as ordersApi from "@/services/api/orders";
 import type { Order, OrderSearchQuery } from "@/types/order.types";
 import type { Paginated } from "@/types/pagination.types";
-import { PENDING_ORDERS_REFETCH_MS } from "@/utils/constants/order.constants";
+import {
+  CUSTOMER_ORDERS_PAGE_SIZE,
+  PENDING_ORDERS_REFETCH_MS,
+} from "@/utils/constants/order.constants";
 
-vi.mock("@/services/api/orders", () => ({ searchOrders: vi.fn(), updateOrderStatus: vi.fn() }));
+vi.mock("@/services/api/orders", () => ({
+  getOrdersByUser: vi.fn(),
+  searchOrders: vi.fn(),
+  updateOrderStatus: vi.fn(),
+}));
 
 const pageWithTotal = (total: number): Paginated<Order> => ({
   data: [],
@@ -119,5 +127,59 @@ describe("useUpdateOrderStatus", () => {
 
     await expect(mutateAsync({ id: "o1", status: "confirmed" })).rejects.toThrow("Server error");
     expect(invalidate).not.toHaveBeenCalled();
+  });
+});
+
+describe("useCustomerOrders", () => {
+  const orderPage = (page: number, totalPages: number): Paginated<Order> => ({
+    data: [{ id: `o${String(page)}` } as Order],
+    page,
+    limit: CUSTOMER_ORDERS_PAGE_SIZE,
+    total: totalPages,
+    totalPages,
+  });
+
+  it("loads the customer's orders a page at a time", async () => {
+    vi.mocked(ordersApi.getOrdersByUser).mockImplementation((_userId, query = {}) =>
+      Promise.resolve(orderPage(query.page ?? 1, 2))
+    );
+
+    const orders = withQuery(() => useCustomerOrders("u1"));
+    await flushPromises();
+
+    expect(ordersApi.getOrdersByUser).toHaveBeenCalledWith("u1", {
+      page: 1,
+      limit: CUSTOMER_ORDERS_PAGE_SIZE,
+    });
+    expect(orders.hasNextPage.value).toBe(true);
+
+    await orders.fetchNextPage();
+    await flushPromises();
+
+    expect(ordersApi.getOrdersByUser).toHaveBeenLastCalledWith("u1", {
+      page: 2,
+      limit: CUSTOMER_ORDERS_PAGE_SIZE,
+    });
+    expect(orders.data.value?.pages.flatMap((page) => page.data.map((order) => order.id))).toEqual([
+      "o1",
+      "o2",
+    ]);
+    expect(orders.hasNextPage.value).toBe(false);
+  });
+
+  it("waits until a customer is chosen", async () => {
+    const userId = ref<string | null>(null);
+    withQuery(() => useCustomerOrders(userId));
+    await flushPromises();
+    expect(ordersApi.getOrdersByUser).not.toHaveBeenCalled();
+
+    vi.mocked(ordersApi.getOrdersByUser).mockResolvedValue(orderPage(1, 1));
+    userId.value = "u2";
+    await flushPromises();
+
+    expect(ordersApi.getOrdersByUser).toHaveBeenCalledWith("u2", {
+      page: 1,
+      limit: CUSTOMER_ORDERS_PAGE_SIZE,
+    });
   });
 });

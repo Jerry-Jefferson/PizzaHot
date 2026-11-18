@@ -80,6 +80,8 @@ export const DELIVERY_TYPES = Object.values(DeliveryType);
 
 export const ADMIN_ORDERS_PAGE_SIZE = 10;
 
+export const CUSTOMER_ORDERS_PAGE_SIZE = 5;
+
 export const NEXT_ORDER_STATUSES: Record<OrderStatus, readonly NextOrderStatus[]> = {
   [OrderStatus.PENDING]: [OrderStatus.CONFIRMED, OrderStatus.CANCELLED],
   [OrderStatus.CONFIRMED]: [OrderStatus.PREPARING, OrderStatus.CANCELLED],

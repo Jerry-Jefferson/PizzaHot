@@ -22,6 +22,7 @@ export const QUERY_KEYS = {
   orders: {
     all: ["orders"] as const,
     search: (query: MaybeRef<OrderSearchQuery>) => ["orders", "search", query] as const,
+    byUser: (userId: MaybeRef<string>) => ["orders", "user", userId] as const,
   },
   users: {
     all: ["users"] as const,

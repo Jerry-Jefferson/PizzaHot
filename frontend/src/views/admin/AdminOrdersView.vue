@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Column from "primevue/column";
 import Skeleton from "primevue/skeleton";
-import { computed, ref } from "vue";
+import { computed } from "vue";
 
 import AdminOrderDetailsModal from "@/components/admin/AdminOrderDetailsModal.vue";
 import AdminPageHeader from "@/components/admin/AdminPageHeader.vue";
@@ -13,33 +13,26 @@ import BaseEmptyState from "@/components/base/BaseEmptyState.vue";
 import BasePagination from "@/components/base/BasePagination.vue";
 import BaseStatusBadge from "@/components/base/BaseStatusBadge.vue";
 import OrderStatusBadge from "@/components/order/OrderStatusBadge.vue";
-import { useOrderSearch, useUpdateOrderStatus } from "@/composables/useAdminOrders";
-import { useAppToast } from "@/composables/useAppToast";
-import { useConfirmDanger } from "@/composables/useConfirmDanger";
+import { useOrderSearch } from "@/composables/useAdminOrders";
+import { useOrderDetails } from "@/composables/useOrderDetails";
 import { useOrderFilters } from "@/composables/useOrderFilters";
 import { useUsersByIds } from "@/composables/useUsers";
-import { type NextOrderStatus, type Order, OrderStatus } from "@/types/order.types";
+import type { Order } from "@/types/order.types";
 import type { User } from "@/types/user.types";
 import { DELIVERY_TYPE_LABELS, PAYMENT_METHOD_META } from "@/utils/constants/order.constants";
 import { formatDateTime, formatPrice, shortId } from "@/utils/format";
 import { getCustomerLabel } from "@/utils/user";
-
-const { showSuccess, showError } = useAppToast();
-const confirmDanger = useConfirmDanger();
 
 const { status, delivery, paymentMethod, page, hasFilters, searchQuery, clearFilters } =
   useOrderFilters();
 
 const ordersQuery = useOrderSearch(searchQuery);
 const allOrdersQuery = useOrderSearch({ limit: 1 });
-const updateStatus = useUpdateOrderStatus();
+const { selectedOrder, detailsVisible, updating, openOrder, changeStatus } = useOrderDetails();
 
 const orders = computed(() => ordersQuery.data.value?.data ?? []);
 const totalPages = computed(() => ordersQuery.data.value?.totalPages ?? 0);
 const hasLoadError = computed(() => ordersQuery.isError.value && !ordersQuery.data.value);
-
-const selectedOrder = ref<Order | null>(null);
-const detailsVisible = ref(false);
 
 const customers = useUsersByIds(() => [
   ...orders.value.map((order) => order.userId),
@@ -56,38 +49,6 @@ const subtitle = computed(() => {
 
 function customerOf(order: Order): User | null | undefined {
   return order.userId === null ? undefined : customers.value.get(order.userId);
-}
-
-function openOrder(order: Order): void {
-  selectedOrder.value = order;
-  detailsVisible.value = true;
-}
-
-async function applyStatus(order: Order, nextStatus: NextOrderStatus): Promise<void> {
-  selectedOrder.value = await updateStatus.mutateAsync({ id: order.id, status: nextStatus });
-  showSuccess("Order status updated");
-}
-
-async function changeStatus(nextStatus: NextOrderStatus): Promise<void> {
-  const order = selectedOrder.value;
-  if (!order) {
-    return;
-  }
-  if (nextStatus === OrderStatus.CANCELLED) {
-    confirmDanger({
-      title: "Cancel this order?",
-      message: `Order ${shortId(order.id)} will be marked as cancelled. This can't be undone.`,
-      confirmLabel: "Cancel order",
-      cancelLabel: "Keep order",
-      onConfirm: () => applyStatus(order, nextStatus),
-    });
-    return;
-  }
-  try {
-    await applyStatus(order, nextStatus);
-  } catch (error) {
-    showError(error, "Couldn't update the order status");
-  }
 }
 </script>
 
@@ -204,7 +165,7 @@ async function changeStatus(nextStatus: NextOrderStatus): Promise<void> {
       v-model:visible="detailsVisible"
       :order="selectedOrder"
       :customer="customerOf(selectedOrder)"
-      :updating="updateStatus.isPending.value"
+      :updating="updating"
       @change-status="changeStatus"
     />
   </section>

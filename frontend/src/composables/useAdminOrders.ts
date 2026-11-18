@@ -1,5 +1,8 @@
 import {
+  type InfiniteData,
   keepPreviousData,
+  useInfiniteQuery,
+  type UseInfiniteQueryReturnType,
   useMutation,
   type UseMutationReturnType,
   useQuery,
@@ -8,10 +11,13 @@ import {
 } from "@tanstack/vue-query";
 import { computed, type MaybeRefOrGetter, toValue } from "vue";
 
-import { searchOrders, updateOrderStatus } from "@/services/api/orders";
+import { getOrdersByUser, searchOrders, updateOrderStatus } from "@/services/api/orders";
 import { type Order, type OrderSearchQuery, OrderStatus } from "@/types/order.types";
 import type { Paginated } from "@/types/pagination.types";
-import { PENDING_ORDERS_REFETCH_MS } from "@/utils/constants/order.constants";
+import {
+  CUSTOMER_ORDERS_PAGE_SIZE,
+  PENDING_ORDERS_REFETCH_MS,
+} from "@/utils/constants/order.constants";
 import { QUERY_KEYS } from "@/utils/constants/query-keys.constants";
 
 const PENDING_COUNT_QUERY: OrderSearchQuery = { status: OrderStatus.PENDING, limit: 1 };
@@ -53,5 +59,24 @@ export function useUpdateOrderStatus(): UseMutationReturnType<
   return useMutation({
     mutationFn: ({ id, status }) => updateOrderStatus(id, status),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: QUERY_KEYS.orders.all }),
+  });
+}
+
+export function useCustomerOrders(
+  userId: MaybeRefOrGetter<string | null>
+): UseInfiniteQueryReturnType<InfiniteData<Paginated<Order>, number>, Error> {
+  const customerId = computed(() => toValue(userId));
+
+  return useInfiniteQuery({
+    queryKey: QUERY_KEYS.orders.byUser(computed(() => customerId.value ?? "")),
+    queryFn: ({ pageParam }) =>
+      getOrdersByUser(customerId.value ?? "", {
+        page: pageParam,
+        limit: CUSTOMER_ORDERS_PAGE_SIZE,
+      }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) =>
+      lastPage.page < lastPage.totalPages ? lastPage.page + 1 : undefined,
+    enabled: computed(() => customerId.value !== null),
   });
 }
