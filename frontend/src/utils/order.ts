@@ -67,3 +67,7 @@ export function getStatusActionLabel(status: NextOrderStatus, delivery: Delivery
     delivery === DeliveryType.PICKUP ? PICKUP_ORDER_STATUS_ACTION_LABELS[status] : undefined;
   return pickupLabel ?? ORDER_STATUS_ACTION_LABELS[status];
 }
+
+export function countOrderItems(items: Pick<OrderItem, "quantity">[]): number {
+  return items.reduce((count, item) => count + item.quantity, 0);
+}

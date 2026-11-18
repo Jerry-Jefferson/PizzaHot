@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { DeliveryType, type NextOrderStatus, type OrderStatus } from "@/types/order.types";
 import { ORDER_STATUSES, type ProgressStepState } from "@/utils/constants/order.constants";
 import {
+  countOrderItems,
   getNextStatuses,
   getProgressSteps,
   getStatusActionLabel,
@@ -115,5 +116,15 @@ describe("getStatusActionLabel", () => {
   ])("labels %s as %s / %s", (status, deliveryLabel, pickupLabel) => {
     expect(getStatusActionLabel(status, DeliveryType.DELIVERY)).toBe(deliveryLabel);
     expect(getStatusActionLabel(status, DeliveryType.PICKUP)).toBe(pickupLabel);
+  });
+});
+
+describe("countOrderItems", () => {
+  it("adds up the quantities", () => {
+    expect(countOrderItems([{ quantity: 2 }, { quantity: 3 }])).toBe(5);
+  });
+
+  it("is zero for no items", () => {
+    expect(countOrderItems([])).toBe(0);
   });
 });

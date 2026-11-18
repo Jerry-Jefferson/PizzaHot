@@ -11,6 +11,7 @@ describe("BaseStatusBadge", () => {
     ["info", ["bg-status-info-bg", "text-status-info-fg"]],
     ["processing", ["bg-status-processing-bg", "text-status-processing-fg"]],
     ["danger", ["bg-primary/10", "text-primary"]],
+    ["primary", ["bg-primary/10", "text-primary"]],
     ["neutral", ["bg-secondary", "text-secondary-foreground"]],
   ])("maps the %s tone to its token classes", (tone, classes) => {
     const wrapper = mount(BaseStatusBadge, { props: { tone }, slots: { default: "Label" } });

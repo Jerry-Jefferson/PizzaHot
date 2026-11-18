@@ -3,10 +3,11 @@ import { flushPromises, mount } from "@vue/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { defineComponent, ref } from "vue";
 
-import { useUserById, useUsersByIds, useUsersCount } from "@/composables/useUsers";
+import { useUserById, useUsers, useUsersByIds, useUsersCount } from "@/composables/useUsers";
 import * as usersApi from "@/services/api/users";
 import type { User } from "@/types/user.types";
 import { QUERY_KEYS } from "@/utils/constants/query-keys.constants";
+import { ADMIN_USERS_PAGE_SIZE } from "@/utils/constants/user.constants";
 
 vi.mock("@/services/api/users", () => ({ getUser: vi.fn(), listUsers: vi.fn() }));
 
@@ -117,5 +118,45 @@ describe("useUsersCount", () => {
 
     expect(usersApi.listUsers).toHaveBeenCalledWith({ page: 1, limit: 1 });
     expect(result.data.value).toBe(42);
+  });
+});
+
+describe("useUsers", () => {
+  const page = (data: User[]) => ({ data, page: 1, limit: 10, total: data.length, totalPages: 1 });
+
+  it("lists the first page of users by default", async () => {
+    vi.mocked(usersApi.listUsers).mockResolvedValue(page([user("u1")]));
+
+    const { result } = withQuery(() => useUsers());
+    await flushPromises();
+
+    expect(usersApi.listUsers).toHaveBeenCalledWith({ page: 1, limit: ADMIN_USERS_PAGE_SIZE });
+    expect(result.data.value?.data).toEqual([user("u1")]);
+  });
+
+  it("sends a trimmed search and leaves out a blank one", async () => {
+    vi.mocked(usersApi.listUsers).mockResolvedValue(page([]));
+    const query = ref({ page: 2, limit: 5, search: "  ada " });
+
+    withQuery(() => useUsers(query));
+    await flushPromises();
+    expect(usersApi.listUsers).toHaveBeenLastCalledWith({ page: 2, limit: 5, search: "ada" });
+
+    query.value = { page: 1, limit: 5, search: "   " };
+    await flushPromises();
+    expect(usersApi.listUsers).toHaveBeenLastCalledWith({ page: 1, limit: 5 });
+  });
+
+  it("keeps the previous page on screen while the next one loads", async () => {
+    vi.mocked(usersApi.listUsers).mockResolvedValueOnce(page([user("u1")]));
+    vi.mocked(usersApi.listUsers).mockReturnValueOnce(new Promise(() => undefined));
+    const query = ref({ page: 1 });
+
+    const { result } = withQuery(() => useUsers(query));
+    await flushPromises();
+    query.value = { page: 2 };
+    await flushPromises();
+
+    expect(result.data.value?.data).toEqual([user("u1")]);
   });
 });
