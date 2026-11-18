@@ -41,7 +41,8 @@ describe("useSignUpForm", () => {
   });
 
   it.each([
-    ["Sh1!a", "Password must be at least 6 characters"],
+    ["Sh1!abc", "Password must be at least 8 characters"],
+    [`Aa1!${"a".repeat(69)}`, "Password must be at most 72 characters"],
     ["secret1!", "Password must contain at least one uppercase letter"],
     ["SECRET1!", "Password must contain at least one lowercase letter"],
     ["Secret!!", "Password must contain at least one digit"],
@@ -58,7 +59,7 @@ describe("useSignUpForm", () => {
 
     await form.validate();
 
-    expect(form.errors.value.password).toBe("Password must be at least 6 characters");
+    expect(form.errors.value.password).toBe("Password must be at least 8 characters");
   });
 
   it("rejects a mismatched confirmation", async () => {

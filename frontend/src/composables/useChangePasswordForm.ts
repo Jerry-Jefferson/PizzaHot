@@ -1,5 +1,4 @@
-import type { ValidationArgs } from "@vuelidate/core";
-import { helpers, maxLength, minLength, required, sameAs } from "@vuelidate/validators";
+import { helpers, required, sameAs } from "@vuelidate/validators";
 import { type ComputedRef, reactive, type Ref, toRef } from "vue";
 
 import { getErrorStatus } from "@/services/errors";
@@ -9,11 +8,10 @@ import type {
   ChangePasswordFormValues,
   ChangePasswordPayload,
 } from "@/types/user.types";
+import { passwordRuleValidators } from "@/utils/password-rules";
 
 import { useValidatedForm } from "./useValidatedForm";
 
-const PASSWORD_CHANGE_MIN = 8;
-const PASSWORD_CHANGE_MAX = 128;
 const INCORRECT_CURRENT_PASSWORD_MESSAGE = "Current password is incorrect";
 
 const CHANGE_PASSWORD_FIELDS: readonly ChangePasswordField[] = [
@@ -33,20 +31,6 @@ interface ChangePasswordForm {
   reset: () => void;
 }
 
-function lengthRules(label: string): ValidationArgs {
-  return {
-    required: helpers.withMessage(`${label} is required`, required),
-    minLength: helpers.withMessage(
-      `${label} must be at least ${String(PASSWORD_CHANGE_MIN)} characters`,
-      minLength(PASSWORD_CHANGE_MIN)
-    ),
-    maxLength: helpers.withMessage(
-      `${label} must be at most ${String(PASSWORD_CHANGE_MAX)} characters`,
-      maxLength(PASSWORD_CHANGE_MAX)
-    ),
-  };
-}
-
 export function useChangePasswordForm(): ChangePasswordForm {
   const form = reactive<ChangePasswordFormValues>({
     currentPassword: "",
@@ -55,9 +39,12 @@ export function useChangePasswordForm(): ChangePasswordForm {
   });
 
   const rules = {
-    currentPassword: lengthRules("Current password"),
+    currentPassword: {
+      required: helpers.withMessage("Current password is required", required),
+    },
     newPassword: {
-      ...lengthRules("New password"),
+      required: helpers.withMessage("New password is required", required),
+      ...passwordRuleValidators(),
       differsFromCurrent: helpers.withMessage(
         "New password must be different from the current password",
         (value: string) => value === "" || value !== form.currentPassword

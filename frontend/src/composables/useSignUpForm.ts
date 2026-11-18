@@ -10,7 +10,7 @@ import type {
 } from "@/types/auth.types";
 import { TOO_MANY_ATTEMPTS_MESSAGE } from "@/utils/constants/auth.constants";
 import { NAME_MAX } from "@/utils/constants/limits.constants";
-import { PASSWORD_RULES } from "@/utils/password-rules";
+import { passwordRuleValidators } from "@/utils/password-rules";
 
 import { useValidatedForm } from "./useValidatedForm";
 
@@ -36,13 +36,6 @@ interface SignUpForm {
 }
 
 const fitsNameLength = (value: string): boolean => value.trim().length <= NAME_MAX;
-
-const passwordRuleValidators = Object.fromEntries(
-  PASSWORD_RULES.map((rule) => [
-    rule.id,
-    helpers.withMessage(rule.message, (value: string) => value === "" || rule.test(value)),
-  ])
-);
 
 export function useSignUpForm(): SignUpForm {
   const form = reactive<SignUpFormValues>({
@@ -74,7 +67,7 @@ export function useSignUpForm(): SignUpForm {
     },
     password: {
       required: helpers.withMessage("Password is required", required),
-      ...passwordRuleValidators,
+      ...passwordRuleValidators(),
     },
     confirmPassword: {
       required: helpers.withMessage("Please confirm your password", required),

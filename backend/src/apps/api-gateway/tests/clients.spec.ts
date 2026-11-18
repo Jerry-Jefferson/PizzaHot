@@ -28,7 +28,9 @@ describe("gateway clients", () => {
 
   describe("CatalogClient", () => {
     let client: CatalogClient;
-    beforeEach(() => (client = new CatalogClient(proxy)));
+    beforeEach(() => {
+      client = new CatalogClient(proxy);
+    });
 
     it("wraps the pizza page in a PaginatedResponseDto", async () => {
       send.mockReturnValue(of({ data: [{ id: "p1" }], total: 25 }));
@@ -105,7 +107,9 @@ describe("gateway clients", () => {
 
   describe("CartClient", () => {
     let client: CartClient;
-    beforeEach(() => (client = new CartClient(proxy)));
+    beforeEach(() => {
+      client = new CartClient(proxy);
+    });
 
     it.each([
       ["getCart", () => client.getCart("u1"), RPC.cart.get, { userId: "u1" }],
@@ -148,7 +152,9 @@ describe("gateway clients", () => {
 
   describe("IdentityClient", () => {
     let client: IdentityClient;
-    beforeEach(() => (client = new IdentityClient(proxy)));
+    beforeEach(() => {
+      client = new IdentityClient(proxy);
+    });
 
     it.each([
       ["getProfile", () => client.getProfile("u1"), RPC.identity.findById, { id: "u1" }],
@@ -188,13 +194,18 @@ describe("gateway clients", () => {
       send.mockReturnValue(of(page));
 
       await expect(client.findAll(1, 2, undefined)).resolves.toEqual(page);
-      expect(lastCall()).toEqual([RPC.identity.findAll, { page: 1, limit: 2, search: undefined }]);
+      expect(lastCall()).toEqual([
+        RPC.identity.findAll,
+        { page: 1, limit: 2, search: undefined, role: undefined },
+      ]);
     });
   });
 
   describe("OrderClient", () => {
     let client: OrderClient;
-    beforeEach(() => (client = new OrderClient(proxy)));
+    beforeEach(() => {
+      client = new OrderClient(proxy);
+    });
 
     it("sends the whole query object for a search", async () => {
       send.mockReturnValue(of({ data: [], total: 0 }));
@@ -230,7 +241,9 @@ describe("gateway clients", () => {
 
   describe("PromocodeClient", () => {
     let client: PromocodeClient;
-    beforeEach(() => (client = new PromocodeClient(proxy)));
+    beforeEach(() => {
+      client = new PromocodeClient(proxy);
+    });
 
     it.each([
       ["findAll", () => client.findAll(), RPC.promocode.list, {}],

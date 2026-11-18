@@ -73,6 +73,23 @@ describe("JwtAuthGuard", () => {
     await guard.canActivate(contextFor(request));
 
     expect(verifyAsync).toHaveBeenCalledWith("cookie-token");
+    expect(verifyAsync).not.toHaveBeenCalledWith("header-token");
+  });
+
+  it("falls back to the header when the cookie is stale", async () => {
+    verifyAsync.mockImplementation((token) =>
+      token === "stale-cookie"
+        ? Promise.reject(new Error("jwt expired"))
+        : Promise.resolve(VALID_CLAIMS)
+    );
+    const request: FakeRequest = {
+      headers: { authorization: "Bearer header-token" },
+      cookies: { [COOKIE_NAME]: "stale-cookie" },
+    };
+
+    await expect(guard.canActivate(contextFor(request))).resolves.toBe(true);
+    expect(verifyAsync).toHaveBeenCalledWith("header-token");
+    expect(request.user).toEqual(VALID_CLAIMS);
   });
 
   it("refuses when no token is supplied", async () => {

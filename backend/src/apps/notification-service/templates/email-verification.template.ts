@@ -1,15 +1,20 @@
 import type { EmailTemplate } from "./account-registered.template.ts";
+import { escapeHtml } from "./escape-html.util.ts";
 
 export function emailVerificationTemplate(
   data: Record<string, unknown>,
   backendUrl: string
 ): EmailTemplate {
   const token = typeof data.verificationToken === "string" ? data.verificationToken : "";
-  const name = typeof data.name === "string" ? data.name : "there";
+  const name = typeof data.name === "string" ? escapeHtml(data.name) : "there";
   const baseUrl = backendUrl.replace(/\/+$/, "");
   const apiPrefix = baseUrl.endsWith("/api") ? "" : "/api";
-  const acceptLink = `${baseUrl}${apiPrefix}/auth/verify-email/accept?token=${encodeURIComponent(token)}`;
-  const declineLink = `${baseUrl}${apiPrefix}/auth/verify-email/decline?token=${encodeURIComponent(token)}`;
+  const acceptLink = escapeHtml(
+    `${baseUrl}${apiPrefix}/auth/verify-email/accept?token=${encodeURIComponent(token)}`
+  );
+  const declineLink = escapeHtml(
+    `${baseUrl}${apiPrefix}/auth/verify-email/decline?token=${encodeURIComponent(token)}`
+  );
 
   return {
     subject: "Verify your PizzaHot email",

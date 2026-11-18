@@ -3,7 +3,7 @@ import { flushPromises, mount } from "@vue/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { defineComponent, ref } from "vue";
 
-import { useUserById, useUsers, useUsersByIds, useUsersCount } from "@/composables/useUsers";
+import { useCustomersCount, useUserById, useUsers, useUsersByIds } from "@/composables/useUsers";
 import * as usersApi from "@/services/api/users";
 import type { User } from "@/types/user.types";
 import { QUERY_KEYS } from "@/utils/constants/query-keys.constants";
@@ -104,8 +104,8 @@ describe("useUsersByIds", () => {
   });
 });
 
-describe("useUsersCount", () => {
-  it("returns the total number of users from a one-item page", async () => {
+describe("useCustomersCount", () => {
+  it("returns the number of accounts with the customer role", async () => {
     vi.mocked(usersApi.listUsers).mockResolvedValue({
       data: [user("u1")],
       page: 1,
@@ -113,10 +113,10 @@ describe("useUsersCount", () => {
       total: 42,
       totalPages: 42,
     });
-    const { result } = withQuery(() => useUsersCount());
+    const { result } = withQuery(() => useCustomersCount());
     await flushPromises();
 
-    expect(usersApi.listUsers).toHaveBeenCalledWith({ page: 1, limit: 1 });
+    expect(usersApi.listUsers).toHaveBeenCalledWith({ page: 1, limit: 1, role: "user" });
     expect(result.data.value).toBe(42);
   });
 });

@@ -32,6 +32,7 @@ export type UserSummary = Pick<User, "name" | "surname" | "email" | "image">;
 
 export interface UserListQuery extends PaginationQuery {
   search?: string;
+  role?: Role;
 }
 
 export interface UpdateMePayload {

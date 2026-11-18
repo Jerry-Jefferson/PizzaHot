@@ -1,12 +1,14 @@
 import { z } from "zod";
+import { emailSchema } from "./email.schema.ts";
 import { passwordSchema } from "./password.schema.ts";
+import { personNameSchema } from "./person-name.schema.ts";
 import { Gender } from "../../users/constants/gender.constant.ts";
 
 export const signupSchema = z
   .object({
-    name: z.string({ error: "Name must be a string" }).optional(),
-    surname: z.string({ error: "Surname must be a string" }).optional(),
-    email: z.email({ error: "Invalid email format" }),
+    name: personNameSchema("Name").optional(),
+    surname: personNameSchema("Surname").optional(),
+    email: emailSchema,
     gender: z
       .enum(Gender, {
         error: `Gender must be one of: ${Object.values(Gender).join(", ")}`,
@@ -24,7 +26,7 @@ export const signupSchema = z
 export type SignUp = z.infer<typeof signupSchema>;
 
 export const loginSchema = z.object({
-  email: z.email({ error: "Invalid email format" }),
+  email: emailSchema,
   password: z.string().min(1, { message: "Password is required" }),
 });
 

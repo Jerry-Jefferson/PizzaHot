@@ -7,7 +7,7 @@ const SEVERITY_STYLES: Record<string, { classes: string; icon: string }> = {
     icon: "pi pi-check-circle",
   },
   error: {
-    classes: "bg-primary/10 text-primary border-primary/20",
+    classes: "bg-primary/10 text-primary-hover border-primary/20",
     icon: "pi pi-exclamation-circle",
   },
   info: {

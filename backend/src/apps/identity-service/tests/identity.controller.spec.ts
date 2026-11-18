@@ -88,14 +88,14 @@ describe("IdentityMessagesController", () => {
     it("builds the page the gateway forwards", async () => {
       const result = await controller.findAll({ page: 2, limit: 2 });
 
-      expect(users.findAll).toHaveBeenCalledWith(2, 2, undefined);
+      expect(users.findAll).toHaveBeenCalledWith(2, 2, undefined, undefined);
       expect(result).toMatchObject({ page: 2, limit: 2, total: 4, totalPages: 2 });
     });
 
     it("defaults the page and limit", async () => {
       await controller.findAll({});
 
-      expect(users.findAll).toHaveBeenCalledWith(1, 10, undefined);
+      expect(users.findAll).toHaveBeenCalledWith(1, 10, undefined, undefined);
     });
   });
 

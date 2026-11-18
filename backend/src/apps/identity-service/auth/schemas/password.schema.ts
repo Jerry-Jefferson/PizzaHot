@@ -1,8 +1,20 @@
 import { z } from "zod";
 
+export const PASSWORD_MIN_LENGTH = 8;
+export const PASSWORD_MAX_LENGTH = 72;
+const BCRYPT_MAX_BYTES = 72;
+
 export const passwordSchema = z
   .string({ error: "Password is required" })
-  .min(6, { message: "Password must be at least 6 characters" })
+  .min(PASSWORD_MIN_LENGTH, {
+    message: `Password must be at least ${String(PASSWORD_MIN_LENGTH)} characters`,
+  })
+  .max(PASSWORD_MAX_LENGTH, {
+    message: `Password must be at most ${String(PASSWORD_MAX_LENGTH)} characters`,
+  })
+  .refine((val) => Buffer.byteLength(val, "utf8") <= BCRYPT_MAX_BYTES, {
+    message: "Password is too long",
+  })
   .refine((val) => /[A-Z]/.test(val), {
     message: "Password must contain at least one uppercase letter",
   })

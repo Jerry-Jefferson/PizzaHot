@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed, onBeforeUnmount, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { type RouteLocationRaw, useRoute, useRouter } from "vue-router";
 
 import BaseBackLink from "@/components/base/BaseBackLink.vue";
@@ -18,6 +18,7 @@ import { getErrorStatus } from "@/services/errors";
 import { useAuthStore } from "@/stores/auth";
 import type { PendingAction } from "@/types/pizza.types";
 import { ROUTES } from "@/utils/constants/routes.constants";
+import { formatDocumentTitle } from "@/utils/document-title";
 
 const NOT_FOUND_STATUSES = new Set([400, 404]);
 
@@ -47,17 +48,13 @@ const menuLink = computed<RouteLocationRaw>(() => {
   return { name: ROUTES.HOME.NAME };
 });
 
-const originalTitle = document.title;
 watch(
   () => pizza.value?.name,
   (name) => {
-    document.title = name ?? originalTitle;
+    document.title = formatDocumentTitle(name ?? route.meta.title);
   },
   { immediate: true }
 );
-onBeforeUnmount(() => {
-  document.title = originalTitle;
-});
 
 watch(pizzaId, () => {
   quantity.value = 1;

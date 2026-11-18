@@ -84,7 +84,7 @@ const cartLabel = computed(() =>
           :class="[
             'rounded-lg px-4 py-2 text-sm font-medium transition-colors',
             isActive(item)
-              ? 'bg-primary/10 text-primary'
+              ? 'bg-primary/10 text-primary-hover'
               : 'text-muted-foreground hover:text-foreground',
           ]"
         >
@@ -166,7 +166,7 @@ const cartLabel = computed(() =>
           :aria-current="isActive(item) ? 'page' : undefined"
           :class="[
             'rounded-lg px-4 py-3 text-sm font-medium',
-            isActive(item) ? 'bg-primary/10 text-primary' : 'text-foreground hover:bg-muted',
+            isActive(item) ? 'bg-primary/10 text-primary-hover' : 'text-foreground hover:bg-muted',
           ]"
           @click="isDrawerOpen = false"
         >

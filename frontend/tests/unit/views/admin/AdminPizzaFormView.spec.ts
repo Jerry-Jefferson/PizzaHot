@@ -3,7 +3,7 @@ import { flushPromises, mount, type VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import PrimeVue from "primevue/config";
 import ConfirmationService from "primevue/confirmationservice";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { defineComponent, h } from "vue";
 import { createMemoryHistory, createRouter, type Router, RouterView } from "vue-router";
 
@@ -135,6 +135,13 @@ async function submit(target: VueWrapper): Promise<void> {
 }
 
 const chips = (target: VueWrapper) => target.findAll("li").map((chip) => chip.text());
+
+beforeAll(async () => {
+  await Promise.all([
+    import("@/views/admin/AdminPizzaFormView.vue"),
+    import("@/views/admin/AdminPizzasView.vue"),
+  ]);
+});
 
 beforeEach(() => {
   vi.resetAllMocks();

@@ -24,14 +24,17 @@ export class UsersRepository implements IUsersRepository {
   async findPaginated(
     page: number,
     limit: number,
-    search?: string
+    search?: string,
+    role?: Role
   ): Promise<PaginatedResult<User>> {
-    const where = search
+    const roleFilter = role ? { role } : {};
+    const pattern = search ? ILike(`%${search.replace(/[%_]/g, "\\$&")}%`) : undefined;
+    const where = pattern
       ? [
-          { name: ILike(`%${search.replace(/[%_]/g, "\\$&")}%`) },
-          { surname: ILike(`%${search.replace(/[%_]/g, "\\$&")}%`) },
+          { ...roleFilter, name: pattern },
+          { ...roleFilter, surname: pattern },
         ]
-      : {};
+      : roleFilter;
 
     const [data, total] = await this.repository.findAndCount({
       where,

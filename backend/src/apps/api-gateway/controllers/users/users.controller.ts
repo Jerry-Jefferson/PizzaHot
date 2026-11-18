@@ -46,7 +46,8 @@ import {
   updateUserRoleSchema,
 } from "../../../identity-service/users/user.schema.ts";
 import { IdentityClient } from "../../clients/identity.client.ts";
-import { COOKIE_NAME } from "../../../../libs/auth/auth.constant.ts";
+import { COOKIE_NAME, type Role } from "../../../../libs/auth/auth.constant.ts";
+import { authCookieOptions } from "../../../../libs/auth/auth-cookie.util.ts";
 import { Can } from "../../../../libs/auth/decorators/can.decorator.ts";
 import { Permission } from "../../../../libs/auth/permission.constant.ts";
 import { UpdateUserRoleDto } from "../../../identity-service/users/dto/update-user-role.dto.ts";
@@ -66,9 +67,10 @@ export class UsersController {
       page: number;
       limit: number;
       search?: string;
+      role?: Role;
     }
   ): Promise<PaginatedResponseDto<UserResponseDto>> {
-    return this.usersService.findAll(query.page, query.limit, query.search);
+    return this.usersService.findAll(query.page, query.limit, query.search, query.role);
   }
 
   @Get(":id")
@@ -131,6 +133,6 @@ export class UsersController {
     @Res({ passthrough: true }) res: Response
   ): Promise<void> {
     await this.usersService.remove(currentUser.sub);
-    res.clearCookie(COOKIE_NAME);
+    res.clearCookie(COOKIE_NAME, authCookieOptions());
   }
 }

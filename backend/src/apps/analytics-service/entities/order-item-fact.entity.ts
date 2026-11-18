@@ -1,18 +1,18 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("order_item_facts")
-@Index(["orderId", "pizzaName"], { unique: true })
 export class OrderItemFact {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
+  @Index()
   @Column({ type: "uuid" })
   orderId: string;
 
+  @Index()
   @Column({ type: "uuid", nullable: true })
   pizzaId: string | null;
 
-  @Index()
   @Column({ type: "varchar" })
   pizzaName: string;
 

@@ -136,7 +136,7 @@ async function handleOrderError(error: unknown): Promise<void> {
 
     <div
       v-if="orderError"
-      class="flex flex-wrap items-center gap-x-2 gap-y-1 rounded-control bg-primary/10 px-3 py-2.5 text-sm text-primary"
+      class="flex flex-wrap items-center gap-x-2 gap-y-1 rounded-control bg-primary/10 px-3 py-2.5 text-sm text-primary-hover"
       role="alert"
       data-test="order-error"
     >

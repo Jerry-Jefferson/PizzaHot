@@ -87,7 +87,7 @@ describe("handleUnauthorized", () => {
     expect(useAuthStore().user).toBeNull();
   });
 
-  it.each(["/auth/me", "/auth/login", "/users/me/password"])(
+  it.each(["/auth/me", "/auth/login", "/auth/logout", "/users/me/password"])(
     "keeps the session for a 401 from %s",
     async (path) => {
       await openAs(CUSTOMER, "/cart");

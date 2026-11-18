@@ -1,10 +1,12 @@
+import { escapeHtml } from "./escape-html.util.ts";
+
 export interface EmailTemplate {
   subject: string;
   html: string;
 }
 
 export function accountRegisteredTemplate(data: Record<string, unknown>): EmailTemplate {
-  const name = typeof data.name === "string" ? data.name : "there";
+  const name = typeof data.name === "string" ? escapeHtml(data.name) : "there";
 
   return {
     subject: "Welcome to PizzaHot!",

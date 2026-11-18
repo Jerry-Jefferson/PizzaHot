@@ -21,7 +21,9 @@ describe("AdminProfileHeader", () => {
     expect(wrapper.get("[data-test='admin-email']").text()).toBe("admin@pizzahot.io");
     const badge = wrapper.get("[data-test='admin-badge']");
     expect(badge.text()).toBe("Administrator");
-    expect(badge.classes()).toEqual(expect.arrayContaining(["bg-primary/10", "text-primary"]));
+    expect(badge.classes()).toEqual(
+      expect.arrayContaining(["bg-primary/10", "text-primary-hover"])
+    );
   });
 
   it("falls back to the email when the admin has no name", () => {

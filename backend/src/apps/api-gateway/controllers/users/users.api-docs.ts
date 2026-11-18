@@ -1,4 +1,5 @@
 import { applyDecorators } from "@nestjs/common";
+import { ROLES } from "../../../../libs/auth/auth.constant.ts";
 import {
   ApiBody,
   ApiConsumes,
@@ -24,6 +25,7 @@ export const ApiFindAllUser = () =>
     ApiOperation({ summary: "Get all users (paginated)" }),
     ApiPaginationQuery(),
     ApiQuery({ name: "search", required: false, type: String }),
+    ApiQuery({ name: "role", required: false, enum: ROLES }),
     ApiResponse({
       status: 200,
       description: "Paginated list of users",

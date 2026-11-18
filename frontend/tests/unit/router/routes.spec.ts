@@ -48,22 +48,30 @@ describe("routes", () => {
   });
 
   it.each(["sign-in", "sign-up"])("%s is guest-only with the auth layout", (name) => {
-    expect(metaOf(name)).toEqual({ layout: "auth", guestOnly: true });
+    expect(metaOf(name)).toMatchObject({ layout: "auth", guestOnly: true });
+    expect(metaOf(name)).not.toHaveProperty("requiresAuth");
   });
 
   it.each(["menu", "pizza-details", "not-found"])(
     "%s is public with the customer layout",
     (name) => {
-      expect(metaOf(name)).toEqual({ layout: "customer" });
+      expect({ ...metaOf(name), title: undefined }).toEqual({ layout: "customer" });
     }
   );
 
   it.each(["cart", "checkout", "my-orders", "my-order-details", "profile"])(
     "%s requires auth with the customer layout",
     (name) => {
-      expect(metaOf(name)).toEqual({ layout: "customer", requiresAuth: true });
+      expect({ ...metaOf(name), title: undefined }).toEqual({
+        layout: "customer",
+        requiresAuth: true,
+      });
     }
   );
+
+  it.each(routes.map((route) => String(route.name)))("%s has a page title", (name) => {
+    expect(metaOf(name)?.title).toEqual(expect.any(String));
+  });
 
   it.each(ADMIN_ROUTES)("%s requires the admin role and has a title", (name) => {
     expect(metaOf(name)).toMatchObject({ layout: "admin", requiresAuth: true, role: "admin" });

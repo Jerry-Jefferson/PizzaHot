@@ -44,7 +44,7 @@ const altText = computed(() => {
 <template>
   <span
     :class="[
-      'inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary/10 font-semibold text-primary',
+      'inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary/10 font-semibold text-primary-hover',
       SIZE_CLASSES[size],
     ]"
   >

@@ -8,7 +8,7 @@ import { computed, type ComputedRef, type MaybeRefOrGetter, toValue } from "vue"
 
 import { getUser, listUsers } from "@/services/api/users";
 import type { Paginated } from "@/types/pagination.types";
-import type { User, UserListQuery } from "@/types/user.types";
+import { Role, type User, type UserListQuery } from "@/types/user.types";
 import { QUERY_KEYS } from "@/utils/constants/query-keys.constants";
 import { ADMIN_USERS_PAGE_SIZE, USER_DETAILS_STALE_MS } from "@/utils/constants/user.constants";
 
@@ -54,10 +54,10 @@ export function useUsersByIds(
   });
 }
 
-export function useUsersCount(): UseQueryReturnType<number, Error> {
+export function useCustomersCount(): UseQueryReturnType<number, Error> {
   return useQuery({
-    queryKey: QUERY_KEYS.users.list(1, 1, ""),
-    queryFn: () => listUsers({ page: 1, limit: 1 }),
+    queryKey: QUERY_KEYS.users.count(Role.USER),
+    queryFn: () => listUsers({ page: 1, limit: 1, role: Role.USER }),
     select: (page) => page.total,
   });
 }

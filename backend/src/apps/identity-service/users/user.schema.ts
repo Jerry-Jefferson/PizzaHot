@@ -1,31 +1,19 @@
 import { z } from "zod";
 import { Gender } from "./constants/gender.constant.ts";
+import { emailSchema } from "../auth/schemas/email.schema.ts";
+import { passwordSchema } from "../auth/schemas/password.schema.ts";
+import { personNameSchema } from "../auth/schemas/person-name.schema.ts";
 import { paginationSchema } from "../../../libs/pagination/pagination.schema.ts";
 import { ROLES } from "../../../libs/auth/auth.constant.ts";
 
 export const createUserSchema = z.object({
-  email: z
-    .email({ error: "Invalid email format" })
-    .max(255, { message: "Email must be at most 255 characters" }),
+  email: emailSchema,
 
-  password: z
-    .string({ error: "Password is required" })
-    .min(8, { message: "Password must be at least 8 characters" })
-    .max(128, { message: "Password must be at most 128 characters" }),
+  password: passwordSchema,
 
-  name: z
-    .string({ error: "Name must be a string" })
-    .min(1, { message: "Name must not be empty" })
-    .max(100, { message: "Name must be at most 100 characters" })
-    .trim()
-    .optional(),
+  name: personNameSchema("Name").optional(),
 
-  surname: z
-    .string({ error: "Surname must be a string" })
-    .min(1, { message: "Surname must not be empty" })
-    .max(100, { message: "Surname must be at most 100 characters" })
-    .trim()
-    .optional(),
+  surname: personNameSchema("Surname").optional(),
 
   gender: z
     .enum(Gender, {
@@ -35,21 +23,9 @@ export const createUserSchema = z.object({
 });
 
 export const updateUserSchema = z.object({
-  name: z
-    .string({ error: "Name must be a string" })
-    .min(1, { message: "Name must not be empty" })
-    .max(100, { message: "Name must be at most 100 characters" })
-    .trim()
-    .nullable()
-    .default(null),
+  name: personNameSchema("Name").nullable().default(null),
 
-  surname: z
-    .string({ error: "Surname must be a string" })
-    .min(1, { message: "Surname must not be empty" })
-    .max(100, { message: "Surname must be at most 100 characters" })
-    .trim()
-    .nullable()
-    .default(null),
+  surname: personNameSchema("Surname").nullable().default(null),
 
   gender: z
     .enum(Gender, {
@@ -65,19 +41,16 @@ export const updateUserRoleSchema = z.object({
 
 export const listUsersQuerySchema = paginationSchema.extend({
   search: z.string({ error: "Search must be a string" }).optional(),
+  role: z.enum(ROLES, { error: `Role must be one of: ${ROLES.join(", ")}` }).optional(),
 });
 
 export const changePasswordSchema = z
   .object({
     currentPassword: z
       .string({ error: "Current password is required" })
-      .min(8, { message: "Current password must be at least 8 characters" })
-      .max(128, { message: "Current password must be at most 128 characters" }),
+      .min(1, { message: "Current password is required" }),
 
-    newPassword: z
-      .string({ error: "New password is required" })
-      .min(8, { message: "New password must be at least 8 characters" })
-      .max(128, { message: "New password must be at most 128 characters" }),
+    newPassword: passwordSchema,
   })
   .refine((data) => data.currentPassword !== data.newPassword, {
     message: "New password must be different from the current password",

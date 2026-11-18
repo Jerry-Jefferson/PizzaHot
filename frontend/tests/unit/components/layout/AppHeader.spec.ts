@@ -35,7 +35,9 @@ describe("AppHeader", () => {
     const active = desktopNav(setup({ currentRouteName })).get("[aria-current='page']");
 
     expect(active.text()).toBe(label);
-    expect(active.classes()).toEqual(expect.arrayContaining(["bg-primary/10", "text-primary"]));
+    expect(active.classes()).toEqual(
+      expect.arrayContaining(["bg-primary/10", "text-primary-hover"])
+    );
   });
 
   it("highlights nothing on an unrelated route", () => {

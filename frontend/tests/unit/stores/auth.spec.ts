@@ -76,6 +76,17 @@ describe("auth store", () => {
       expect(auth.status).toBe("ready");
     });
 
+    it("clears the query cache when the previous user's session has expired", async () => {
+      vi.mocked(authApi.me).mockRejectedValue(httpError(401));
+      const auth = useAuthStore();
+      auth.setUser(user());
+      const clear = vi.spyOn(queryClient, "clear");
+
+      await auth.restoreSession();
+
+      expect(clear).toHaveBeenCalledOnce();
+    });
+
     it("keeps the current user and re-throws other errors", async () => {
       const error = httpError(500);
       vi.mocked(authApi.me).mockRejectedValue(error);
@@ -139,6 +150,42 @@ describe("auth store", () => {
     await expect(auth.signUp(payload)).resolves.toEqual(user());
     expect(authApi.signUp).toHaveBeenCalledWith(payload);
     expect(auth.user).toEqual(user());
+  });
+
+  describe("query cache scoping", () => {
+    it("clears the cache when a different user signs in", async () => {
+      vi.mocked(authApi.signIn).mockResolvedValue({
+        accessToken: "t",
+        user: user({ id: "u2" }),
+      });
+      const auth = useAuthStore();
+      auth.setUser(user());
+      const clear = vi.spyOn(queryClient, "clear");
+
+      await auth.signIn(CREDENTIALS);
+
+      expect(clear).toHaveBeenCalledOnce();
+    });
+
+    it("keeps the cache when the same user is refreshed", () => {
+      const auth = useAuthStore();
+      auth.setUser(user());
+      const clear = vi.spyOn(queryClient, "clear");
+
+      auth.setUser(user({ isEmailVerified: false }));
+
+      expect(clear).not.toHaveBeenCalled();
+    });
+
+    it("keeps the cache when a guest signs in", async () => {
+      vi.mocked(authApi.signIn).mockResolvedValue({ accessToken: "t", user: user() });
+      const auth = useAuthStore();
+      const clear = vi.spyOn(queryClient, "clear");
+
+      await auth.signIn(CREDENTIALS);
+
+      expect(clear).not.toHaveBeenCalled();
+    });
   });
 
   describe("signOut", () => {

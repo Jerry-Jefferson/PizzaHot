@@ -145,7 +145,7 @@ describe("UsersService", () => {
 
       const result = await service.findAll(1, 10, "anna");
 
-      expect(repository.findPaginated).toHaveBeenCalledWith(1, 10, "anna");
+      expect(repository.findPaginated).toHaveBeenCalledWith(1, 10, "anna", undefined);
       expect(result.total).toBe(7);
       expect(result.data.every((dto) => !("passwordHash" in dto))).toBe(true);
     });

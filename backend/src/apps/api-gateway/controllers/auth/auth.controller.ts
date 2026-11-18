@@ -20,13 +20,17 @@ import { LoginDto } from "../../../identity-service/auth/dto/login.dto.ts";
 import { SignupDto } from "../../../identity-service/auth/dto/signup.dto.ts";
 import type { JwtPayload } from "../../../../libs/auth/jwt-payload.schema.ts";
 import { loginSchema, signupSchema } from "../../../identity-service/auth/schemas/auth.schema.ts";
-import { COOKIE_MAX_AGE_MS } from "../../../../libs/auth/auth.constant.ts";
 import { COOKIE_NAME } from "../../../../libs/auth/auth.constant.ts";
+import { authCookieOptions } from "../../../../libs/auth/auth-cookie.util.ts";
+import { JwtService } from "@nestjs/jwt";
 
 @ApiTags("Auth")
 @Controller("auth")
 export class AuthController {
-  constructor(private readonly authService: IdentityClient) {}
+  constructor(
+    private readonly authService: IdentityClient,
+    private readonly jwtService: JwtService
+  ) {}
 
   @Public()
   @Throttle({ default: { limit: 5, ttl: 60000 } })
@@ -75,19 +79,20 @@ export class AuthController {
     return this.authService.getProfile(user.sub);
   }
 
+  @Public()
   @Post("logout")
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiLogoutAuth()
   logout(@Res({ passthrough: true }) res: Response): void {
-    res.clearCookie(COOKIE_NAME);
+    res.clearCookie(COOKIE_NAME, authCookieOptions());
   }
 
   private setTokenCookie(res: Response, token: string): void {
-    res.cookie(COOKIE_NAME, token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: COOKIE_MAX_AGE_MS,
-    });
+    res.cookie(COOKIE_NAME, token, { ...authCookieOptions(), expires: this.tokenExpiry(token) });
+  }
+
+  private tokenExpiry(token: string): Date | undefined {
+    const claims = this.jwtService.decode<{ exp?: unknown } | null>(token);
+    return typeof claims?.exp === "number" ? new Date(claims.exp * 1000) : undefined;
   }
 }

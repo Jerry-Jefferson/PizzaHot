@@ -1,8 +1,7 @@
 import { useToast } from "primevue/usetoast";
 
 import { getErrorMessage } from "@/services/errors";
-
-const TOAST_LIFE_MS = 3000;
+import { GENERIC_ERROR_TITLE, TOAST_LIFE_MS } from "@/utils/constants/ui.constants";
 
 interface AppToast {
   showSuccess: (summary: string, detail?: string) => void;
@@ -16,7 +15,7 @@ export function useAppToast(): AppToast {
     showSuccess: (summary, detail) => {
       toast.add({ severity: "success", summary, detail, life: TOAST_LIFE_MS });
     },
-    showError: (error, summary = "Something went wrong") => {
+    showError: (error, summary = GENERIC_ERROR_TITLE) => {
       const detail = typeof error === "string" ? error : getErrorMessage(error);
       toast.add({ severity: "error", summary, detail, life: TOAST_LIFE_MS });
     },
