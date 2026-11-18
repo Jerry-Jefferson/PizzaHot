@@ -11,16 +11,16 @@ import BaseBackLink from "@/components/base/BaseBackLink.vue";
 import BaseButton from "@/components/base/BaseButton.vue";
 import BaseEmptyState from "@/components/base/BaseEmptyState.vue";
 import BaseFormAlert from "@/components/base/BaseFormAlert.vue";
-import { useAppToast } from "@/composables/useAppToast";
-import { useConfirmDanger } from "@/composables/useConfirmDanger";
-import { useCreateIngredient, useIngredients } from "@/composables/useIngredients";
-import { usePizzaForm } from "@/composables/usePizzaForm";
+import { useCreateIngredient, useIngredients } from "@/composables/catalog/useIngredients";
+import { usePizzaForm } from "@/composables/catalog/usePizzaForm";
 import {
   useCreatePizza,
   usePizza,
   useUpdatePizza,
   useUploadPizzaImage,
-} from "@/composables/usePizzas";
+} from "@/composables/catalog/usePizzas";
+import { useAppToast } from "@/composables/common/useAppToast";
+import { useConfirmDanger } from "@/composables/common/useConfirmDanger";
 import { getErrorMessage } from "@/services/errors";
 import type { Ingredient, Pizza } from "@/types/pizza.types";
 import { ROUTES } from "@/utils/constants/routes.constants";

@@ -8,7 +8,7 @@ import { defineComponent, h } from "vue";
 import { createMemoryHistory, createRouter } from "vue-router";
 
 import BaseConfirmDialog from "@/components/base/BaseConfirmDialog.vue";
-import { SEARCH_DEBOUNCE_MS } from "@/composables/useMenuFilters";
+import { SEARCH_DEBOUNCE_MS } from "@/composables/catalog/useMenuFilters";
 import { routes } from "@/router/routes";
 import * as ordersApi from "@/services/api/orders";
 import * as usersApi from "@/services/api/users";

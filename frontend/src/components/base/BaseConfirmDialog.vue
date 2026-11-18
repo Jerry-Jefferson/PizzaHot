@@ -2,8 +2,8 @@
 import ConfirmDialog from "primevue/confirmdialog";
 import { ref } from "vue";
 
-import { useAppToast } from "@/composables/useAppToast";
-import type { ConfirmDangerMessage } from "@/composables/useConfirmDanger";
+import { useAppToast } from "@/composables/common/useAppToast";
+import type { ConfirmDangerMessage } from "@/composables/common/useConfirmDanger";
 import { CONFIRM_DANGER_GROUP } from "@/utils/constants/ui.constants";
 
 import BaseButton from "./BaseButton.vue";

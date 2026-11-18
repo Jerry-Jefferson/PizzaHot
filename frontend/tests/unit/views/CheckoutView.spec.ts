@@ -5,7 +5,7 @@ import PrimeVue from "primevue/config";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createMemoryHistory, createRouter } from "vue-router";
 
-import { CART_CLEAR_REFETCH_DELAY_MS } from "@/composables/useCreateOrder";
+import { CART_CLEAR_REFETCH_DELAY_MS } from "@/composables/orders/useCreateOrder";
 import { routes } from "@/router/routes";
 import * as authApi from "@/services/api/auth";
 import * as cartApi from "@/services/api/cart";

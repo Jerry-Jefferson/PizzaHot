@@ -8,7 +8,7 @@ import { defineComponent, h } from "vue";
 import { createMemoryHistory, createRouter } from "vue-router";
 
 import BaseConfirmDialog from "@/components/base/BaseConfirmDialog.vue";
-import { SEARCH_DEBOUNCE_MS } from "@/composables/useMenuFilters";
+import { SEARCH_DEBOUNCE_MS } from "@/composables/catalog/useMenuFilters";
 import { routes } from "@/router/routes";
 import * as pizzasApi from "@/services/api/pizzas";
 import type { Paginated } from "@/types/pagination.types";

@@ -8,7 +8,7 @@ import BaseEmptyState from "@/components/base/BaseEmptyState.vue";
 import BasePagination from "@/components/base/BasePagination.vue";
 import IconCircle from "@/components/icon/IconCircle.vue";
 import OrderListCard from "@/components/order/OrderListCard.vue";
-import { useMyOrders } from "@/composables/useMyOrders";
+import { useMyOrders } from "@/composables/orders/useMyOrders";
 import { MY_ORDERS_PAGE_SIZE } from "@/utils/constants/order.constants";
 import { ROUTES } from "@/utils/constants/routes.constants";
 import { logError } from "@/utils/logger";

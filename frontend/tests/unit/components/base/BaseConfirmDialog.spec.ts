@@ -7,7 +7,7 @@ import { defineComponent, h } from "vue";
 
 import BaseConfirmDialog from "@/components/base/BaseConfirmDialog.vue";
 import BaseToast from "@/components/base/BaseToast.vue";
-import { type ConfirmDangerOptions, useConfirmDanger } from "@/composables/useConfirmDanger";
+import { type ConfirmDangerOptions, useConfirmDanger } from "@/composables/common/useConfirmDanger";
 
 let wrapper: VueWrapper | undefined;
 

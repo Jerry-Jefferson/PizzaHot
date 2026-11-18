@@ -3,8 +3,8 @@ import { nextTick, ref, useTemplateRef } from "vue";
 import { RouterLink, useRouter } from "vue-router";
 
 import SignUpForm from "@/components/auth/SignUpForm.vue";
-import { useAppToast } from "@/composables/useAppToast";
-import { useSignUpForm } from "@/composables/useSignUpForm";
+import { useSignUpForm } from "@/composables/auth/useSignUpForm";
+import { useAppToast } from "@/composables/common/useAppToast";
 import { useAuthStore } from "@/stores/auth";
 import type { SignUpFormExpose } from "@/types/auth.types";
 import { ROUTES } from "@/utils/constants/routes.constants";

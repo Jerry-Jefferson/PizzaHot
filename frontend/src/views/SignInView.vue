@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
 
 import SignInForm from "@/components/auth/SignInForm.vue";
-import { useSignInForm } from "@/composables/useSignInForm";
+import { useSignInForm } from "@/composables/auth/useSignInForm";
 import { useAuthStore } from "@/stores/auth";
 import { getPostSignInRoute } from "@/utils/auth-redirect";
 import { ROUTES } from "@/utils/constants/routes.constants";

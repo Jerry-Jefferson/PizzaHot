@@ -5,9 +5,9 @@ import AdminPageHeader from "@/components/admin/AdminPageHeader.vue";
 import AdminProfileHeader from "@/components/admin/AdminProfileHeader.vue";
 import ChangePasswordForm from "@/components/profile/ChangePasswordForm.vue";
 import PersonalInfoForm from "@/components/profile/PersonalInfoForm.vue";
-import { useChangePasswordForm } from "@/composables/useChangePasswordForm";
-import { usePersonalInfoForm } from "@/composables/usePersonalInfoForm";
-import { useChangePassword, useUpdateMe } from "@/composables/useProfileMutations";
+import { useChangePasswordForm } from "@/composables/profile/useChangePasswordForm";
+import { usePersonalInfoForm } from "@/composables/profile/usePersonalInfoForm";
+import { useChangePassword, useUpdateMe } from "@/composables/profile/useProfileMutations";
 import { useAuthStore } from "@/stores/auth";
 import { ADMIN_EMAIL_HINT } from "@/utils/constants/user.constants";
 

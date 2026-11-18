@@ -3,9 +3,9 @@ import { computed } from "vue";
 
 import AdminKpiCard from "@/components/admin/AdminKpiCard.vue";
 import RecentOrdersCard from "@/components/admin/RecentOrdersCard.vue";
-import { useOrderSearch, usePendingOrdersCount } from "@/composables/useAdminOrders";
-import { usePopularPizza } from "@/composables/useAnalytics";
-import { useCustomersCount, useUsersByIds } from "@/composables/useUsers";
+import { usePopularPizza } from "@/composables/analytics/useAnalytics";
+import { useOrderSearch, usePendingOrdersCount } from "@/composables/orders/useAdminOrders";
+import { useCustomersCount, useUsersByIds } from "@/composables/profile/useUsers";
 import { RECENT_ORDERS_LIMIT } from "@/utils/constants/order.constants";
 
 const today = new Date();

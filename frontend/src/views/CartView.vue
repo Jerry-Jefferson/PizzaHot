@@ -11,7 +11,6 @@ import CartItemRow from "@/components/cart/CartItemRow.vue";
 import EmptyCartState from "@/components/cart/EmptyCartState.vue";
 import OrderSummaryCard from "@/components/cart/OrderSummaryCard.vue";
 import PromoCodeField from "@/components/cart/PromoCodeField.vue";
-import { useAppToast } from "@/composables/useAppToast";
 import {
   useApplyPromocode,
   useCart,
@@ -20,8 +19,9 @@ import {
   useRemoveCartItem,
   useRemovePromocode,
   useUpdateCartItem,
-} from "@/composables/useCart";
-import { useConfirmDanger } from "@/composables/useConfirmDanger";
+} from "@/composables/cart/useCart";
+import { useAppToast } from "@/composables/common/useAppToast";
+import { useConfirmDanger } from "@/composables/common/useConfirmDanger";
 import { FALLBACK_ERROR_MESSAGE, getErrorMessage } from "@/services/errors";
 import type { CartItem } from "@/types/cart.types";
 import { QUERY_KEYS } from "@/utils/constants/query-keys.constants";
