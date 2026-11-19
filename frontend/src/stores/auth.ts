@@ -3,9 +3,9 @@ import { computed, ref } from "vue";
 
 import { queryClient } from "@/plugins/vue-query";
 import * as authApi from "@/services/api/auth";
-import { getErrorStatus } from "@/services/errors";
 import type { AuthStatus, SignInPayload, SignUpPayload } from "@/types/auth.types";
 import { Role, type User } from "@/types/user.types";
+import { getErrorStatus } from "@/utils/errors";
 import { getInitials } from "@/utils/initials";
 import { logError } from "@/utils/logger";
 import { getUserDisplayName } from "@/utils/user";

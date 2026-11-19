@@ -11,7 +11,6 @@ import {
 } from "vue";
 
 import { useValidatedForm } from "@/composables/common/useValidatedForm";
-import { getErrorStatus } from "@/services/errors";
 import type {
   Pizza,
   PizzaField,
@@ -20,6 +19,7 @@ import type {
   PizzaPayload,
 } from "@/types/pizza.types";
 import { PIZZA_NAME_TAKEN_MESSAGE } from "@/utils/constants/pizza.constants";
+import { getErrorStatus } from "@/utils/errors";
 
 const PIZZA_FIELDS: readonly PizzaField[] = ["name", "description", "price"];
 

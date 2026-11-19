@@ -21,9 +21,9 @@ import {
 } from "@/composables/catalog/usePizzas";
 import { useAppToast } from "@/composables/common/useAppToast";
 import { useConfirmDanger } from "@/composables/common/useConfirmDanger";
-import { getErrorMessage } from "@/services/errors";
 import type { Ingredient, Pizza } from "@/types/pizza.types";
 import { ROUTES } from "@/utils/constants/routes.constants";
+import { getErrorMessage } from "@/utils/errors";
 import { toMediaUrl } from "@/utils/media";
 
 const route = useRoute();

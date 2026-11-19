@@ -2,7 +2,6 @@ import { email, helpers, required, sameAs } from "@vuelidate/validators";
 import { type ComputedRef, reactive, type Ref, toRef } from "vue";
 
 import { useValidatedForm } from "@/composables/common/useValidatedForm";
-import { getErrorStatus } from "@/services/errors";
 import type {
   SignUpErrors,
   SignUpField,
@@ -11,6 +10,7 @@ import type {
 } from "@/types/auth.types";
 import { TOO_MANY_ATTEMPTS_MESSAGE } from "@/utils/constants/auth.constants";
 import { NAME_MAX } from "@/utils/constants/limits.constants";
+import { getErrorStatus } from "@/utils/errors";
 import { passwordRuleValidators } from "@/utils/password-rules";
 
 export const EMAIL_TAKEN_MESSAGE = "An account with this email already exists";

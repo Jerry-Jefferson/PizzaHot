@@ -1,7 +1,7 @@
 import { useToast } from "primevue/usetoast";
 
-import { getErrorMessage } from "@/services/errors";
 import { GENERIC_ERROR_TITLE, TOAST_LIFE_MS } from "@/utils/constants/ui.constants";
+import { getErrorMessage } from "@/utils/errors";
 
 interface AppToast {
   showSuccess: (summary: string, detail?: string) => void;

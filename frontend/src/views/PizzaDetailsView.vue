@@ -14,11 +14,11 @@ import PizzaOrderPanel from "@/components/pizza/PizzaOrderPanel.vue";
 import { useAddToCart, useCart } from "@/composables/cart/useCart";
 import { usePizza } from "@/composables/catalog/usePizzas";
 import { useAppToast } from "@/composables/common/useAppToast";
-import { getErrorStatus } from "@/services/errors";
 import { useAuthStore } from "@/stores/auth";
 import type { PendingAction } from "@/types/pizza.types";
 import { ROUTES } from "@/utils/constants/routes.constants";
 import { formatDocumentTitle } from "@/utils/document-title";
+import { getErrorStatus } from "@/utils/errors";
 
 const NOT_FOUND_STATUSES = new Set([400, 404]);
 
