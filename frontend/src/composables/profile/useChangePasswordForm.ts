@@ -2,13 +2,13 @@ import { helpers, required, sameAs } from "@vuelidate/validators";
 import { type ComputedRef, reactive, type Ref, toRef } from "vue";
 
 import { useValidatedForm } from "@/composables/common/useValidatedForm";
-import { getErrorStatus } from "@/services/errors";
 import type {
   ChangePasswordErrors,
   ChangePasswordField,
   ChangePasswordFormValues,
   ChangePasswordPayload,
 } from "@/types/user.types";
+import { getErrorStatus } from "@/utils/errors";
 import { passwordRuleValidators } from "@/utils/password-rules";
 
 const INCORRECT_CURRENT_PASSWORD_MESSAGE = "Current password is incorrect";

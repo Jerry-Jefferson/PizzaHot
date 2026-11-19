@@ -6,9 +6,10 @@ import { createMemoryHistory, createRouter } from "vue-router";
 
 import { routes } from "@/router/routes";
 import * as authApi from "@/services/api/auth";
-import { ApiError, type FieldErrors, NETWORK_ERROR_MESSAGE } from "@/services/errors";
+import { ApiError, type FieldErrors } from "@/services/errors";
 import { useAuthStore } from "@/stores/auth";
 import type { User } from "@/types/user.types";
+import { NETWORK_ERROR_MESSAGE } from "@/utils/constants/errors.constants";
 import SignInView from "@/views/SignInView.vue";
 
 vi.mock("@/services/api/auth", () => ({ signIn: vi.fn(), signUp: vi.fn(), me: vi.fn(), signOut: vi.fn() }));

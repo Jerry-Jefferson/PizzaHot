@@ -1,7 +1,7 @@
 import { type Ref, ref, type ShallowRef, shallowRef, watch } from "vue";
 
-import { getErrorMessage, getErrorStatus, getFirstFieldErrors } from "@/services/errors";
 import type { FormErrors } from "@/types/form.types";
+import { getErrorMessage, getErrorStatus, getFirstFieldErrors } from "@/utils/errors";
 
 function withMessage<TField extends string>(
   messages: FormErrors<TField>,

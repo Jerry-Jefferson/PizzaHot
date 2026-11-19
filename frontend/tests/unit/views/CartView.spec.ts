@@ -10,11 +10,12 @@ import { createMemoryHistory, createRouter } from "vue-router";
 import BaseConfirmDialog from "@/components/base/BaseConfirmDialog.vue";
 import { routes } from "@/router/routes";
 import * as cartApi from "@/services/api/cart";
-import { ApiError, FALLBACK_ERROR_MESSAGE, type FieldErrors } from "@/services/errors";
+import { ApiError, type FieldErrors } from "@/services/errors";
 import { useAuthStore } from "@/stores/auth";
 import type { Cart, CartItem } from "@/types/cart.types";
 import { DiscountMode } from "@/types/promocode.types";
 import type { User } from "@/types/user.types";
+import { FALLBACK_ERROR_MESSAGE } from "@/utils/constants/errors.constants";
 import CartView from "@/views/CartView.vue";
 
 vi.mock("@/services/api/cart", () => ({

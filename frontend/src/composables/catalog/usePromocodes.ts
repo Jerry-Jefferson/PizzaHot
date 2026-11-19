@@ -13,9 +13,9 @@ import {
   restorePromocode,
   updatePromocode,
 } from "@/services/api/promocodes";
-import { getErrorStatus } from "@/services/errors";
 import type { Promocode, PromocodePayload } from "@/types/promocode.types";
 import { QUERY_KEYS } from "@/utils/constants/query-keys.constants";
+import { getErrorStatus } from "@/utils/errors";
 
 export function usePromocodes(): UseQueryReturnType<Promocode[], Error> {
   return useQuery({

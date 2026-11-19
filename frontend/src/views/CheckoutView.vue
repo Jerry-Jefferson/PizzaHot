@@ -16,10 +16,10 @@ import { useCart } from "@/composables/cart/useCart";
 import { useCheckoutForm } from "@/composables/cart/useCheckoutForm";
 import { useAppToast } from "@/composables/common/useAppToast";
 import { useCreateOrder } from "@/composables/orders/useCreateOrder";
-import { getErrorMessage, isEmailNotVerifiedError } from "@/services/errors";
 import { useAuthStore } from "@/stores/auth";
 import { DeliveryType } from "@/types/order.types";
 import { ROUTES } from "@/utils/constants/routes.constants";
+import { getErrorMessage, isEmailNotVerifiedError } from "@/utils/errors";
 import { formatPrice } from "@/utils/format";
 import { logError } from "@/utils/logger";
 

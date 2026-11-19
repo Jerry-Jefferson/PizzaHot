@@ -2,7 +2,6 @@ import { helpers } from "@vuelidate/validators";
 import { type ComputedRef, type MaybeRefOrGetter, reactive, type Ref, ref, toValue } from "vue";
 
 import { useValidatedForm } from "@/composables/common/useValidatedForm";
-import { getErrorStatus } from "@/services/errors";
 import {
   DiscountMode,
   type Promocode,
@@ -18,6 +17,7 @@ import {
   PROMOCODE_CODE_MAX_LENGTH,
   PROMOCODE_CODE_TAKEN_MESSAGE,
 } from "@/utils/constants/promocode.constants";
+import { getErrorStatus } from "@/utils/errors";
 import { startOfTomorrow, toExpiryDay, toExpiryTimestamp } from "@/utils/promocode";
 
 const PROMOCODE_FIELDS: readonly PromocodeField[] = [

@@ -22,10 +22,11 @@ import {
 } from "@/composables/cart/useCart";
 import { useAppToast } from "@/composables/common/useAppToast";
 import { useConfirmDanger } from "@/composables/common/useConfirmDanger";
-import { FALLBACK_ERROR_MESSAGE, getErrorMessage } from "@/services/errors";
 import type { CartItem } from "@/types/cart.types";
+import { FALLBACK_ERROR_MESSAGE } from "@/utils/constants/errors.constants";
 import { QUERY_KEYS } from "@/utils/constants/query-keys.constants";
 import { ROUTES } from "@/utils/constants/routes.constants";
+import { getErrorMessage } from "@/utils/errors";
 
 const INVALID_PROMO_MESSAGE = "Invalid or expired promo code.";
 

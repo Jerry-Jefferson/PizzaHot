@@ -13,9 +13,9 @@ import OrderPlacedBanner from "@/components/order/OrderPlacedBanner.vue";
 import OrderProgressStepper from "@/components/order/OrderProgressStepper.vue";
 import OrderStatusBadge from "@/components/order/OrderStatusBadge.vue";
 import { useMyOrder } from "@/composables/orders/useMyOrders";
-import { getErrorStatus } from "@/services/errors";
 import { OrderStatus } from "@/types/order.types";
 import { ROUTES } from "@/utils/constants/routes.constants";
+import { getErrorStatus } from "@/utils/errors";
 import { formatLongDate, shortId } from "@/utils/format";
 
 const NOT_FOUND_STATUSES = new Set([400, 404]);
